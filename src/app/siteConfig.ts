@@ -1,7 +1,7 @@
 export const siteConfig = {
-  name: "Planner",
+  name: "Loans Online",
   url: "https://planner.tremor.so",
-  description: "The simplest dashboard template.",
+  description: "Loans Online Dashboard",
   baseLinks: {
     quotes: {
       overview: "/quotes/overview",
