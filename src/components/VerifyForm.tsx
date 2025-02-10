@@ -63,9 +63,9 @@ export function VerifyForm({
                 </Button>
               </div>
               <div className="text-center text-sm">
-                Didn&apos;t receive the code?{" "}
+                Didn&apos;t receive OTP?{" "}
                 <a href="#" className="underline underline-offset-4">
-                  Resend Code
+                  Resend OTP
                 </a>
               </div>
             </div>
