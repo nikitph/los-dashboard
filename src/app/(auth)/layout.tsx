@@ -1,13 +1,8 @@
-import { SidebarProvider, SidebarTrigger } from "@/components/Sidebar"
-import { AppSidebar } from "@/components/ui/navigation/AppSidebar"
-import { Breadcrumbs } from "@/components/ui/navigation/Breadcrumbs"
 import type { Metadata } from "next"
 import { ThemeProvider } from "next-themes"
-import localFont from "next/font/local"
 import { cookies } from "next/headers"
 import "../globals.css"
 import { siteConfig } from "../siteConfig"
-
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://yoururl.com"),
@@ -41,8 +36,8 @@ export const metadata: Metadata = {
 }
 
 export default async function RootLayout({
-                                           children,
-                                         }: {
+  children,
+}: {
   children: React.ReactNode
 }) {
   const cookieStore = await cookies()
@@ -50,19 +45,17 @@ export default async function RootLayout({
 
   return (
     <html lang="en" className="h-full" suppressHydrationWarning>
-    <body
-      className={`bg-white-50 h-full antialiased dark:bg-gray-950`}
-    >
-    <ThemeProvider
-      defaultTheme="system"
-      disableTransitionOnChange
-      attribute="class"
-    >
-        <div className="w-full">
-          <main>{children}</main>
-        </div>
-    </ThemeProvider>
-    </body>
+      <body className={`bg-white-50 h-full antialiased dark:bg-gray-950`}>
+        <ThemeProvider
+          defaultTheme="light"
+          disableTransitionOnChange
+          attribute="class"
+        >
+          <div className="w-full">
+            <main>{children}</main>
+          </div>
+        </ThemeProvider>
+      </body>
     </html>
   )
 }
