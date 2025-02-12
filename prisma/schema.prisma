@@ -1,0 +1,185 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// Prisma Schema for Loan Operating System (Los)
+// Enums for role-based access and statuses
+enum RoleType {
+  CLERK
+  INSPECTOR
+  LOAN_OFFICER
+  CEO
+  LOAN_COMMITTEE
+  BOARD
+  BANK_ADMIN
+  SAAS_ADMIN
+}
+
+enum LoanType {
+  PERSONAL
+  VEHICLE
+  HOUSE_CONSTRUCTION
+  PLOT_PURCHASE
+  MORTGAGE
+}
+
+enum LoanStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  UNDER_REVIEW
+}
+
+enum VerificationType {
+  RESIDENCE
+  BUSINESS
+  VEHICLE
+  PROPERTY
+}
+
+enum VerificationStatus {
+  PENDING
+  COMPLETED
+  FAILED
+}
+
+// Models
+
+model User {
+  id               String            @id @default(dbgenerated()) @map("auth_id") // Reference to Supabase Auth User ID
+  email            String?
+  firstName        String
+  phoneNumber      String            @unique
+  lastName         String
+  roleAssignments  RoleAssignment[]
+  loanApplications LoanApplication[]
+
+  isOnboarded Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  Verification Verification[]
+
+  AuditLog AuditLog[]
+}
+
+model RoleAssignment {
+  id     Int      @id @default(autoincrement())
+  userId String
+  role   RoleType
+  bankId Int?
+
+  user User  @relation(fields: [userId], references: [id])
+  bank Bank? @relation(fields: [bankId], references: [id])
+
+  assignedAt DateTime @default(now())
+}
+
+model Permission {
+  id       Int      @id @default(autoincrement())
+  action   String
+  resource String
+  role     RoleType
+}
+
+model Bank {
+  id               Int                 @id @default(autoincrement())
+  name             String
+  subscription     Subscription?
+  roleAssignments  RoleAssignment[]
+  loanApplications LoanApplication[]
+  configurations   BankConfiguration[]
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
+}
+
+model Subscription {
+  id        Int       @id @default(autoincrement())
+  bankId    Int       @unique
+  startDate DateTime
+  endDate   DateTime?
+  status    String
+  amount    Float
+
+  bank Bank @relation(fields: [bankId], references: [id])
+}
+
+model BankConfiguration {
+  id             Int    @id @default(autoincrement())
+  bankId         Int
+  maxLoanAmount  Float
+  approvalLimits Json
+  interestRates  Json // e.g., { "PERSONAL": 7.5, "VEHICLE": 6.0 }
+  loanDurations  Json // e.g., { "PERSONAL": [12, 24, 36], "VEHICLE": [24, 48, 60] }
+  currency       String // e.g., "USD", "INR"
+
+  bank Bank @relation(fields: [bankId], references: [id])
+}
+
+model LoanApplication {
+  id              Int            @id @default(autoincrement())
+  applicantId     String
+  bankId          Int
+  loanType        LoanType
+  amountRequested Float
+  status          LoanStatus
+  documents       Document[]
+  verifications   Verification[]
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  applicant User @relation(fields: [applicantId], references: [id])
+  bank      Bank @relation(fields: [bankId], references: [id])
+}
+
+model Document {
+  id                 Int                @id @default(autoincrement())
+  loanApplicationId  Int
+  documentType       String
+  fileUrl            String
+  storageType        String // "hot" or "cold"
+  verificationStatus VerificationStatus @default(PENDING)
+  metadata           Json?
+  uploadedAt         DateTime           @default(now())
+
+  loanApplication LoanApplication @relation(fields: [loanApplicationId], references: [id])
+}
+
+model Verification {
+  id                Int                @id @default(autoincrement())
+  loanApplicationId Int
+  type              VerificationType
+  status            VerificationStatus
+  verifiedById      String?
+  verifiedAt        DateTime?
+  notes             String?
+  feedback          String?
+
+  loanApplication LoanApplication @relation(fields: [loanApplicationId], references: [id])
+  verifiedBy      User?           @relation(fields: [verifiedById], references: [id])
+}
+
+model AuditLog {
+  id         Int      @id @default(autoincrement())
+  action     String
+  userId     String
+  targetId   Int?
+  timestamp  DateTime @default(now())
+  metadata   Json?
+  ipAddress  String?
+  deviceInfo String?
+
+  user User @relation(fields: [userId], references: [id])
+}
