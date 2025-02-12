@@ -1,9 +1,6 @@
 import { prisma } from "@/lib/prisma"
 import {
-  AuditLog,
   Bank,
-  BankConfiguration,
-  Document,
   LoanApplication,
   Permission,
   RoleAssignment,
@@ -133,9 +130,7 @@ export const listSubscriptions = async () => {
 }
 
 // BankConfiguration Utilities
-export const createBankConfiguration = async (
-  data: Omit<BankConfiguration, "id">,
-) => {
+export const createBankConfiguration = async (data: any) => {
   return prisma.bankConfiguration.create({ data })
 }
 
@@ -143,10 +138,7 @@ export const getBankConfigurationById = async (id: number) => {
   return prisma.bankConfiguration.findUnique({ where: { id } })
 }
 
-export const updateBankConfiguration = async (
-  id: number,
-  data: Partial<BankConfiguration>,
-) => {
+export const updateBankConfiguration = async (id: number, data: any) => {
   return prisma.bankConfiguration.update({ where: { id }, data })
 }
 
@@ -185,9 +177,7 @@ export const listLoanApplications = async () => {
 }
 
 // Document Utilities
-export const createDocument = async (
-  data: Omit<Document, "id" | "uploadedAt">,
-) => {
+export const createDocument = async (data: any) => {
   return prisma.document.create({ data })
 }
 
@@ -195,7 +185,7 @@ export const getDocumentById = async (id: number) => {
   return prisma.document.findUnique({ where: { id } })
 }
 
-export const updateDocument = async (id: number, data: Partial<Document>) => {
+export const updateDocument = async (id: number, data: any) => {
   return prisma.document.update({ where: { id }, data })
 }
 
@@ -232,9 +222,7 @@ export const listVerifications = async () => {
 }
 
 // AuditLog Utilities
-export const createAuditLog = async (
-  data: Omit<AuditLog, "id" | "timestamp">,
-) => {
+export const createAuditLog = async (data: any) => {
   return prisma.auditLog.create({ data })
 }
 
@@ -242,7 +230,7 @@ export const getAuditLogById = async (id: number) => {
   return prisma.auditLog.findUnique({ where: { id } })
 }
 
-export const updateAuditLog = async (id: number, data: Partial<AuditLog>) => {
+export const updateAuditLog = async (id: number, data: any) => {
   return prisma.auditLog.update({ where: { id }, data })
 }
 
