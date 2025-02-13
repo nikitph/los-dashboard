@@ -1,5 +1,5 @@
-import { ChevronRight } from "lucide-react"
-import Link from "next/link"
+import { ChevronRight } from "lucide-react";
+import Link from "next/link";
 
 export function Breadcrumbs() {
   return (
@@ -14,10 +14,7 @@ export function Breadcrumbs() {
               Home
             </Link>
           </li>
-          <ChevronRight
-            className="size-4 shrink-0 text-gray-600 dark:text-gray-400"
-            aria-hidden="true"
-          />
+          <ChevronRight className="size-4 shrink-0 text-gray-600 dark:text-gray-400" aria-hidden="true" />
           <li className="flex">
             <div className="flex items-center">
               <Link
@@ -25,12 +22,12 @@ export function Breadcrumbs() {
                 // aria-current={page.current ? 'page' : undefined}
                 className="text-gray-900 dark:text-gray-50"
               >
-                Quotes
+                Banks
               </Link>
             </div>
           </li>
         </ol>
       </nav>
     </>
-  )
+  );
 }

@@ -1,6 +1,6 @@
-"use client"
-import { Divider } from "@/components/Divider"
-import { Input } from "@/components/Input"
+"use client";
+import { Divider } from "@/components/Divider";
+import { Input } from "@/components/Input";
 import {
   Sidebar,
   SidebarContent,
@@ -13,13 +13,13 @@ import {
   SidebarMenuItem,
   SidebarMenuSub,
   SidebarSubLink,
-} from "@/components/Sidebar"
-import { cx, focusRing } from "@/lib/utils"
-import { RiArrowDownSFill } from "@remixicon/react"
-import { BookText, House, PackageSearch } from "lucide-react"
-import * as React from "react"
-import { Logo } from "../../../../public/Logo"
-import { UserProfile } from "./UserProfile"
+} from "@/components/Sidebar";
+import { cx, focusRing } from "@/lib/utils";
+import { RiArrowDownSFill } from "@remixicon/react";
+import { BookText, House, PackageSearch } from "lucide-react";
+import * as React from "react";
+import { Logo } from "../../../../public/Logo";
+import { UserProfile } from "./UserProfile";
 
 const navigation = [
   {
@@ -36,26 +36,26 @@ const navigation = [
     notifications: 2,
     active: false,
   },
-] as const
+] as const;
 
 const navigation2 = [
   {
-    name: "Sales",
+    name: "Institutions",
     href: "#",
     icon: BookText,
     children: [
       {
-        name: "Quotes",
+        name: "Banks",
         href: "#",
         active: true,
       },
       {
-        name: "Orders",
+        name: "Employees",
         href: "#",
         active: false,
       },
       {
-        name: "Insights & Reports",
+        name: "Subscriptions",
         href: "#",
         active: false,
       },
@@ -83,20 +83,15 @@ const navigation2 = [
       },
     ],
   },
-] as const
+] as const;
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const [openMenus, setOpenMenus] = React.useState<string[]>([
-    navigation2[0].name,
-    navigation2[1].name,
-  ])
+  const [openMenus, setOpenMenus] = React.useState<string[]>([navigation2[0].name, navigation2[1].name]);
   const toggleMenu = (name: string) => {
     setOpenMenus((prev: string[]) =>
-      prev.includes(name)
-        ? prev.filter((item: string) => item !== name)
-        : [...prev, name],
-    )
-  }
+      prev.includes(name) ? prev.filter((item: string) => item !== name) : [...prev, name],
+    );
+  };
   return (
     <Sidebar {...props} className="bg-gray-50 dark:bg-gray-925">
       <SidebarHeader className="px-3 py-4">
@@ -105,23 +100,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <Logo className="size-6 text-blue-500 dark:text-blue-500" />
           </span>
           <div>
-            <span className="block text-sm font-semibold text-gray-900 dark:text-gray-50">
-              Innovex Systems
-            </span>
-            <span className="block text-xs text-gray-900 dark:text-gray-50">
-              Premium Starter Plan
-            </span>
+            <span className="block text-sm font-semibold text-gray-900 dark:text-gray-50">Credit IQ</span>
+            <span className="block text-xs text-gray-900 dark:text-gray-50">SaaS dashboard</span>
           </div>
         </div>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent>
-            <Input
-              type="search"
-              placeholder="Search items..."
-              className="[&>input]:sm:py-1.5"
-            />
+            <Input type="search" placeholder="Search items..." className="[&>input]:sm:py-1.5" />
           </SidebarGroupContent>
         </SidebarGroup>
         <SidebarGroup className="pt-0">
@@ -129,12 +116,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarMenu className="space-y-1">
               {navigation.map((item) => (
                 <SidebarMenuItem key={item.name}>
-                  <SidebarLink
-                    href="#"
-                    isActive={item.active}
-                    icon={item.icon}
-                    notifications={item.notifications}
-                  >
+                  <SidebarLink href="#" isActive={item.active} icon={item.icon} notifications={item.notifications}>
                     {item.name}
                   </SidebarLink>
                 </SidebarMenuItem>
@@ -159,17 +141,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     )}
                   >
                     <div className="flex items-center gap-2.5">
-                      <item.icon
-                        className="size-[18px] shrink-0"
-                        aria-hidden="true"
-                      />
+                      <item.icon className="size-[18px] shrink-0" aria-hidden="true" />
                       {item.name}
                     </div>
                     <RiArrowDownSFill
                       className={cx(
-                        openMenus.includes(item.name)
-                          ? "rotate-0"
-                          : "-rotate-90",
+                        openMenus.includes(item.name) ? "rotate-0" : "-rotate-90",
                         "size-5 shrink-0 transform text-gray-400 transition-transform duration-150 ease-in-out dark:text-gray-600",
                       )}
                       aria-hidden="true"
@@ -180,10 +157,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                       <div className="absolute inset-y-0 left-4 w-px bg-gray-300 dark:bg-gray-800" />
                       {item.children.map((child) => (
                         <SidebarMenuItem key={child.name}>
-                          <SidebarSubLink
-                            href={child.href}
-                            isActive={child.active}
-                          >
+                          <SidebarSubLink href={child.href} isActive={child.active}>
                             {child.name}
                           </SidebarSubLink>
                         </SidebarMenuItem>
@@ -201,5 +175,5 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <UserProfile />
       </SidebarFooter>
     </Sidebar>
-  )
+  );
 }
