@@ -1,8 +1,9 @@
-import type { Metadata } from "next"
-import { ThemeProvider } from "next-themes"
-import { cookies } from "next/headers"
-import "../../globals.css"
-import { siteConfig } from "../../siteConfig"
+import type { Metadata } from "next";
+import { ThemeProvider } from "next-themes";
+import { cookies } from "next/headers";
+import "../../globals.css";
+import { siteConfig } from "../../siteConfig";
+import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://yoururl.com"),
@@ -33,29 +34,22 @@ export const metadata: Metadata = {
   icons: {
     icon: "/favicon.ico",
   },
-}
+};
 
-export default async function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
-  const cookieStore = await cookies()
-  const defaultOpen = cookieStore.get("sidebar:state")?.value === "true"
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const cookieStore = await cookies();
+  const defaultOpen = cookieStore.get("sidebar:state")?.value === "true";
 
   return (
     <html lang="en" className="h-full" suppressHydrationWarning>
       <body className={`bg-white-50 h-full antialiased dark:bg-gray-950`}>
-        <ThemeProvider
-          defaultTheme="light"
-          disableTransitionOnChange
-          attribute="class"
-        >
+        <ThemeProvider defaultTheme="light" disableTransitionOnChange attribute="class">
           <div className="w-full">
             <main>{children}</main>
           </div>
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>
-  )
+  );
 }
