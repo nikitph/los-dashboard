@@ -8,7 +8,7 @@ import { createBankAction, updateBankAction } from "@/app/saas/(private)/banks/a
 
 interface BankFormProps {
   bank?: {
-    id: number;
+    id: string;
     name: string;
   };
 }

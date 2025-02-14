@@ -17,14 +17,14 @@ export async function createBankAction(data: Omit<Bank, "id" | "createdAt" | "up
 }
 
 // Update a bank
-export async function updateBankAction(id: number, data: Partial<Bank>) {
+export async function updateBankAction(id: string, data: Partial<Bank>) {
   const bank = await updateBank(id, data);
   revalidatePath("/banks");
   return bank;
 }
 
 // Delete a bank
-export async function deleteBankAction(id: number) {
+export async function deleteBankAction(id: string) {
   await deleteBank(id);
   revalidatePath("/banks");
 }

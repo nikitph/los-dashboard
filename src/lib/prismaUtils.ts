@@ -1,243 +1,433 @@
-import { prisma } from "@/lib/prisma"
+import { prisma } from "@/lib/prisma";
+import { z } from "zod";
 import {
-  Bank,
-  LoanApplication,
-  Permission,
-  RoleAssignment,
-  Subscription,
-  User,
-  Verification,
-} from "@prisma/client"
+  ApplicantSchema,
+  AuditLogSchema,
+  BankConfigurationSchema,
+  BankSchema,
+  DocumentSchema,
+  IncomeDetailSchema,
+  IncomeSchema,
+  LoanApplicationSchema,
+  LoanObligationDetailSchema,
+  LoanObligationSchema,
+  PermissionSchema,
+  RoleAssignmentSchema,
+  SubscriptionSchema,
+  UserSchema,
+  VerificationSchema,
+} from "@/schemas/zodSchemas";
 
-// User Utilities
-export const createUser = async (
-  data: Omit<User, "id" | "createdAt" | "updatedAt">,
-) => {
-  return prisma.user.create({ data })
-}
+const UUIDSchema = z.string().uuid();
+
+// ==================== USER UTILITIES ====================
+const CreateUserSchema = UserSchema.omit({ id: true, createdAt: true, updatedAt: true });
+const UpdateUserSchema = CreateUserSchema.partial();
+
+export const createUser = async (data: z.infer<typeof CreateUserSchema>) => {
+  const validatedData = CreateUserSchema.parse(data);
+  return prisma.user.create({ data: validatedData });
+};
 
 export const getUserById = async (id: string) => {
-  return prisma.user.findUnique({ where: { id } })
-}
+  UUIDSchema.parse(id);
+  return prisma.user.findUnique({ where: { id } });
+};
 
-export const updateUser = async (id: string, data: Partial<User>) => {
-  return prisma.user.update({ where: { id }, data })
-}
+export const updateUser = async (id: string, data: z.infer<typeof UpdateUserSchema>) => {
+  UUIDSchema.parse(id);
+  const validatedData = UpdateUserSchema.parse(data);
+  return prisma.user.update({ where: { id }, data: validatedData });
+};
 
 export const deleteUser = async (id: string) => {
-  return prisma.user.delete({ where: { id } })
-}
+  UUIDSchema.parse(id);
+  return prisma.user.delete({ where: { id } });
+};
 
-export const listUsers = async () => {
-  return prisma.user.findMany()
-}
+export const listUsers = async () => prisma.user.findMany();
 
-// RoleAssignment Utilities
-export const createRoleAssignment = async (
-  data: Omit<RoleAssignment, "id" | "assignedAt">,
+// ==================== APPLICANT UTILITIES ====================
+const CreateApplicantSchema = ApplicantSchema.omit({ id: true, createdAt: true, updatedAt: true });
+const UpdateApplicantSchema = CreateApplicantSchema.partial();
+
+export const createApplicant = async (data: z.infer<typeof CreateApplicantSchema>) => {
+  const validatedData = CreateApplicantSchema.parse(data);
+  return prisma.applicant.create({ data: validatedData });
+};
+
+export const getApplicantById = async (id: string) => {
+  UUIDSchema.parse(id);
+  return prisma.applicant.findUnique({ where: { id } });
+};
+
+export const updateApplicant = async (id: string, data: z.infer<typeof UpdateApplicantSchema>) => {
+  UUIDSchema.parse(id);
+  const validatedData = UpdateApplicantSchema.parse(data);
+  return prisma.applicant.update({ where: { id }, data: validatedData });
+};
+
+export const deleteApplicant = async (id: string) => {
+  UUIDSchema.parse(id);
+  return prisma.applicant.delete({ where: { id } });
+};
+
+export const listApplicants = async () => prisma.applicant.findMany();
+
+// ==================== LOAN OBLIGATION UTILITIES ====================
+const CreateLoanObligationSchema = LoanObligationSchema.omit({ id: true, createdAt: true, updatedAt: true });
+const UpdateLoanObligationSchema = CreateLoanObligationSchema.partial();
+
+export const createLoanObligation = async (data: z.infer<typeof CreateLoanObligationSchema>) => {
+  const validatedData = CreateLoanObligationSchema.parse(data);
+  return prisma.loanObligation.create({ data: validatedData });
+};
+
+export const getLoanObligationById = async (id: string) => {
+  UUIDSchema.parse(id);
+  return prisma.loanObligation.findUnique({ where: { id } });
+};
+
+export const updateLoanObligation = async (id: string, data: z.infer<typeof UpdateLoanObligationSchema>) => {
+  UUIDSchema.parse(id);
+  const validatedData = UpdateLoanObligationSchema.parse(data);
+  return prisma.loanObligation.update({ where: { id }, data: validatedData });
+};
+
+export const deleteLoanObligation = async (id: string) => {
+  UUIDSchema.parse(id);
+  return prisma.loanObligation.delete({ where: { id } });
+};
+
+export const listLoanObligations = async () => prisma.loanObligation.findMany();
+
+// ==================== LOAN OBLIGATION DETAIL UTILITIES ====================
+const CreateLoanObligationDetailSchema = LoanObligationDetailSchema.omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+const UpdateLoanObligationDetailSchema = CreateLoanObligationDetailSchema.partial();
+
+export const createLoanObligationDetail = async (data: z.infer<typeof CreateLoanObligationDetailSchema>) => {
+  const validatedData = CreateLoanObligationDetailSchema.parse(data);
+  return prisma.loanObligationDetail.create({ data: validatedData });
+};
+
+export const getLoanObligationDetailById = async (id: string) => {
+  UUIDSchema.parse(id);
+  return prisma.loanObligationDetail.findUnique({ where: { id } });
+};
+
+export const updateLoanObligationDetail = async (
+  id: string,
+  data: z.infer<typeof UpdateLoanObligationDetailSchema>,
 ) => {
-  return prisma.roleAssignment.create({ data })
-}
+  UUIDSchema.parse(id);
+  const validatedData = UpdateLoanObligationDetailSchema.parse(data);
+  return prisma.loanObligationDetail.update({ where: { id }, data: validatedData });
+};
 
-export const getRoleAssignmentById = async (id: number) => {
-  return prisma.roleAssignment.findUnique({ where: { id } })
-}
+export const deleteLoanObligationDetail = async (id: string) => {
+  UUIDSchema.parse(id);
+  return prisma.loanObligationDetail.delete({ where: { id } });
+};
 
-export const updateRoleAssignment = async (
-  id: number,
-  data: Partial<RoleAssignment>,
-) => {
-  return prisma.roleAssignment.update({ where: { id }, data })
-}
+export const listLoanObligationDetails = async () => prisma.loanObligationDetail.findMany();
 
-export const deleteRoleAssignment = async (id: number) => {
-  return prisma.roleAssignment.delete({ where: { id } })
-}
+// ==================== INCOME UTILITIES ====================
+const CreateIncomeSchema = IncomeSchema.omit({ id: true, createdAt: true, updatedAt: true });
+const UpdateIncomeSchema = CreateIncomeSchema.partial();
 
-export const listRoleAssignments = async () => {
-  return prisma.roleAssignment.findMany()
-}
+export const createIncome = async (data: z.infer<typeof CreateIncomeSchema>) => {
+  const validatedData = CreateIncomeSchema.parse(data);
+  return prisma.income.create({ data: validatedData });
+};
 
-// Permission Utilities
-export const createPermission = async (data: Omit<Permission, "id">) => {
-  return prisma.permission.create({ data })
-}
+export const getIncomeById = async (id: string) => {
+  UUIDSchema.parse(id);
+  return prisma.income.findUnique({ where: { id } });
+};
 
-export const getPermissionById = async (id: number) => {
-  return prisma.permission.findUnique({ where: { id } })
-}
+export const updateIncome = async (id: string, data: z.infer<typeof UpdateIncomeSchema>) => {
+  UUIDSchema.parse(id);
+  const validatedData = UpdateIncomeSchema.parse(data);
+  return prisma.income.update({ where: { id }, data: validatedData });
+};
 
-export const updatePermission = async (
-  id: number,
-  data: Partial<Permission>,
-) => {
-  return prisma.permission.update({ where: { id }, data })
-}
+export const deleteIncome = async (id: string) => {
+  UUIDSchema.parse(id);
+  return prisma.income.delete({ where: { id } });
+};
 
-export const deletePermission = async (id: number) => {
-  return prisma.permission.delete({ where: { id } })
-}
+export const listIncomes = async () => prisma.income.findMany();
 
-export const listPermissions = async () => {
-  return prisma.permission.findMany()
-}
+// ==================== INCOME DETAIL UTILITIES ====================
+const CreateIncomeDetailSchema = IncomeDetailSchema.omit({ id: true, createdAt: true, updatedAt: true });
+const UpdateIncomeDetailSchema = CreateIncomeDetailSchema.partial();
 
-// Bank Utilities
-export const createBank = async (
-  data: Omit<Bank, "id" | "createdAt" | "updatedAt">,
-) => {
-  return prisma.bank.create({ data })
-}
+export const createIncomeDetail = async (data: z.infer<typeof CreateIncomeDetailSchema>) => {
+  const validatedData = CreateIncomeDetailSchema.parse(data);
+  return prisma.incomeDetail.create({ data: validatedData });
+};
 
-export const getBankById = async (id: number) => {
-  return prisma.bank.findUnique({ where: { id } })
-}
+export const getIncomeDetailById = async (id: string) => {
+  UUIDSchema.parse(id);
+  return prisma.incomeDetail.findUnique({ where: { id } });
+};
 
-export const updateBank = async (id: number, data: Partial<Bank>) => {
-  return prisma.bank.update({ where: { id }, data })
-}
+export const updateIncomeDetail = async (id: string, data: z.infer<typeof UpdateIncomeDetailSchema>) => {
+  UUIDSchema.parse(id);
+  const validatedData = UpdateIncomeDetailSchema.parse(data);
+  return prisma.incomeDetail.update({ where: { id }, data: validatedData });
+};
 
-export const deleteBank = async (id: number) => {
-  return prisma.bank.delete({ where: { id } })
-}
+export const deleteIncomeDetail = async (id: string) => {
+  UUIDSchema.parse(id);
+  return prisma.incomeDetail.delete({ where: { id } });
+};
 
-export const listBanks = async () => {
-  return prisma.bank.findMany()
-}
+export const listIncomeDetails = async () => prisma.incomeDetail.findMany();
 
-// Subscription Utilities
-export const createSubscription = async (data: Omit<Subscription, "id">) => {
-  return prisma.subscription.create({ data })
-}
+// ==================== ROLE ASSIGNMENT UTILITIES ====================
+const CreateRoleAssignmentSchema = RoleAssignmentSchema.omit({ id: true, assignedAt: true });
+const UpdateRoleAssignmentSchema = CreateRoleAssignmentSchema.partial();
 
-export const getSubscriptionById = async (id: number) => {
-  return prisma.subscription.findUnique({ where: { id } })
-}
+export const createRoleAssignment = async (data: z.infer<typeof CreateRoleAssignmentSchema>) => {
+  const validatedData = CreateRoleAssignmentSchema.parse(data);
+  return prisma.roleAssignment.create({ data: validatedData });
+};
 
-export const updateSubscription = async (
-  id: number,
-  data: Partial<Subscription>,
-) => {
-  return prisma.subscription.update({ where: { id }, data })
-}
+export const getRoleAssignmentById = async (id: string) => {
+  UUIDSchema.parse(id);
+  return prisma.roleAssignment.findUnique({ where: { id } });
+};
 
-export const deleteSubscription = async (id: number) => {
-  return prisma.subscription.delete({ where: { id } })
-}
+export const updateRoleAssignment = async (id: string, data: z.infer<typeof UpdateRoleAssignmentSchema>) => {
+  UUIDSchema.parse(id);
+  const validatedData = UpdateRoleAssignmentSchema.parse(data);
+  return prisma.roleAssignment.update({ where: { id }, data: validatedData });
+};
 
-export const listSubscriptions = async () => {
-  return prisma.subscription.findMany()
-}
+export const deleteRoleAssignment = async (id: string) => {
+  UUIDSchema.parse(id);
+  return prisma.roleAssignment.delete({ where: { id } });
+};
 
-// BankConfiguration Utilities
-export const createBankConfiguration = async (data: any) => {
-  return prisma.bankConfiguration.create({ data })
-}
+export const listRoleAssignments = async () => prisma.roleAssignment.findMany();
 
-export const getBankConfigurationById = async (id: number) => {
-  return prisma.bankConfiguration.findUnique({ where: { id } })
-}
+// ==================== PERMISSION UTILITIES ====================
+const CreatePermissionSchema = PermissionSchema.omit({ id: true });
+const UpdatePermissionSchema = CreatePermissionSchema.partial();
 
-export const updateBankConfiguration = async (id: number, data: any) => {
-  return prisma.bankConfiguration.update({ where: { id }, data })
-}
+export const createPermission = async (data: z.infer<typeof CreatePermissionSchema>) => {
+  const validatedData = CreatePermissionSchema.parse(data);
+  return prisma.permission.create({ data: validatedData });
+};
 
-export const deleteBankConfiguration = async (id: number) => {
-  return prisma.bankConfiguration.delete({ where: { id } })
-}
+export const getPermissionById = async (id: string) => {
+  UUIDSchema.parse(id);
+  return prisma.permission.findUnique({ where: { id } });
+};
 
-export const listBankConfigurations = async () => {
-  return prisma.bankConfiguration.findMany()
-}
+export const updatePermission = async (id: string, data: z.infer<typeof UpdatePermissionSchema>) => {
+  UUIDSchema.parse(id);
+  const validatedData = UpdatePermissionSchema.parse(data);
+  return prisma.permission.update({ where: { id }, data: validatedData });
+};
 
-// LoanApplication Utilities
-export const createLoanApplication = async (
-  data: Omit<LoanApplication, "id" | "createdAt" | "updatedAt">,
-) => {
-  return prisma.loanApplication.create({ data })
-}
+export const deletePermission = async (id: string) => {
+  UUIDSchema.parse(id);
+  return prisma.permission.delete({ where: { id } });
+};
 
-export const getLoanApplicationById = async (id: number) => {
-  return prisma.loanApplication.findUnique({ where: { id } })
-}
+export const listPermissions = async () => prisma.permission.findMany();
 
-export const updateLoanApplication = async (
-  id: number,
-  data: Partial<LoanApplication>,
-) => {
-  return prisma.loanApplication.update({ where: { id }, data })
-}
+// ==================== BANK UTILITIES ====================
+const CreateBankSchema = BankSchema.omit({ id: true, createdAt: true, updatedAt: true });
+const UpdateBankSchema = CreateBankSchema.partial();
 
-export const deleteLoanApplication = async (id: number) => {
-  return prisma.loanApplication.delete({ where: { id } })
-}
+export const createBank = async (data: z.infer<typeof CreateBankSchema>) => {
+  const validatedData = CreateBankSchema.parse(data);
+  return prisma.bank.create({ data: validatedData });
+};
 
-export const listLoanApplications = async () => {
-  return prisma.loanApplication.findMany()
-}
+export const getBankById = async (id: string) => {
+  UUIDSchema.parse(id);
+  return prisma.bank.findUnique({ where: { id } });
+};
 
-// Document Utilities
-export const createDocument = async (data: any) => {
-  return prisma.document.create({ data })
-}
+export const updateBank = async (id: string, data: z.infer<typeof UpdateBankSchema>) => {
+  UUIDSchema.parse(id);
+  const validatedData = UpdateBankSchema.parse(data);
+  return prisma.bank.update({ where: { id }, data: validatedData });
+};
 
-export const getDocumentById = async (id: number) => {
-  return prisma.document.findUnique({ where: { id } })
-}
+export const deleteBank = async (id: string) => {
+  UUIDSchema.parse(id);
+  return prisma.bank.delete({ where: { id } });
+};
 
-export const updateDocument = async (id: number, data: any) => {
-  return prisma.document.update({ where: { id }, data })
-}
+export const listBanks = async () => prisma.bank.findMany();
 
-export const deleteDocument = async (id: number) => {
-  return prisma.document.delete({ where: { id } })
-}
+// ==================== SUBSCRIPTION UTILITIES ====================
+const CreateSubscriptionSchema = SubscriptionSchema.omit({ id: true });
+const UpdateSubscriptionSchema = CreateSubscriptionSchema.partial();
 
-export const listDocuments = async () => {
-  return prisma.document.findMany()
-}
+export const createSubscription = async (data: z.infer<typeof CreateSubscriptionSchema>) => {
+  const validatedData = CreateSubscriptionSchema.parse(data);
+  return prisma.subscription.create({ data: validatedData });
+};
 
-// Verification Utilities
-export const createVerification = async (data: Omit<Verification, "id">) => {
-  return prisma.verification.create({ data })
-}
+export const getSubscriptionById = async (id: string) => {
+  UUIDSchema.parse(id);
+  return prisma.subscription.findUnique({ where: { id } });
+};
 
-export const getVerificationById = async (id: number) => {
-  return prisma.verification.findUnique({ where: { id } })
-}
+export const updateSubscription = async (id: string, data: z.infer<typeof UpdateSubscriptionSchema>) => {
+  UUIDSchema.parse(id);
+  const validatedData = UpdateSubscriptionSchema.parse(data);
+  return prisma.subscription.update({ where: { id }, data: validatedData });
+};
 
-export const updateVerification = async (
-  id: number,
-  data: Partial<Verification>,
-) => {
-  return prisma.verification.update({ where: { id }, data })
-}
+export const deleteSubscription = async (id: string) => {
+  UUIDSchema.parse(id);
+  return prisma.subscription.delete({ where: { id } });
+};
 
-export const deleteVerification = async (id: number) => {
-  return prisma.verification.delete({ where: { id } })
-}
+export const listSubscriptions = async () => prisma.subscription.findMany();
 
-export const listVerifications = async () => {
-  return prisma.verification.findMany()
-}
+// ==================== BANK CONFIGURATION UTILITIES ====================
+const CreateBankConfigurationSchema = BankConfigurationSchema.omit({ id: true });
+const UpdateBankConfigurationSchema = CreateBankConfigurationSchema.partial();
 
-// AuditLog Utilities
-export const createAuditLog = async (data: any) => {
-  return prisma.auditLog.create({ data })
-}
+export const createBankConfiguration = async (data: z.infer<typeof CreateBankConfigurationSchema>) => {
+  const validatedData = CreateBankConfigurationSchema.parse(data);
+  return prisma.bankConfiguration.create({ data: validatedData });
+};
 
-export const getAuditLogById = async (id: number) => {
-  return prisma.auditLog.findUnique({ where: { id } })
-}
+export const getBankConfigurationById = async (id: string) => {
+  UUIDSchema.parse(id);
+  return prisma.bankConfiguration.findUnique({ where: { id } });
+};
 
-export const updateAuditLog = async (id: number, data: any) => {
-  return prisma.auditLog.update({ where: { id }, data })
-}
+export const updateBankConfiguration = async (id: string, data: z.infer<typeof UpdateBankConfigurationSchema>) => {
+  UUIDSchema.parse(id);
+  const validatedData = UpdateBankConfigurationSchema.parse(data);
+  return prisma.bankConfiguration.update({ where: { id }, data: validatedData });
+};
 
-export const deleteAuditLog = async (id: number) => {
-  return prisma.auditLog.delete({ where: { id } })
-}
+export const deleteBankConfiguration = async (id: string) => {
+  UUIDSchema.parse(id);
+  return prisma.bankConfiguration.delete({ where: { id } });
+};
 
-export const listAuditLogs = async () => {
-  return prisma.auditLog.findMany()
-}
+export const listBankConfigurations = async () => prisma.bankConfiguration.findMany();
+
+// ==================== LOAN APPLICATION UTILITIES ====================
+const CreateLoanApplicationSchema = LoanApplicationSchema.omit({ id: true, createdAt: true, updatedAt: true });
+const UpdateLoanApplicationSchema = CreateLoanApplicationSchema.partial();
+
+export const createLoanApplication = async (data: z.infer<typeof CreateLoanApplicationSchema>) => {
+  const validatedData = CreateLoanApplicationSchema.parse(data);
+  return prisma.loanApplication.create({ data: validatedData });
+};
+
+export const getLoanApplicationById = async (id: string) => {
+  UUIDSchema.parse(id);
+  return prisma.loanApplication.findUnique({ where: { id } });
+};
+
+export const updateLoanApplication = async (id: string, data: z.infer<typeof UpdateLoanApplicationSchema>) => {
+  UUIDSchema.parse(id);
+  const validatedData = UpdateLoanApplicationSchema.parse(data);
+  return prisma.loanApplication.update({ where: { id }, data: validatedData });
+};
+
+export const deleteLoanApplication = async (id: string) => {
+  UUIDSchema.parse(id);
+  return prisma.loanApplication.delete({ where: { id } });
+};
+
+export const listLoanApplications = async () => prisma.loanApplication.findMany();
+
+// ==================== DOCUMENT UTILITIES ====================
+const CreateDocumentSchema = DocumentSchema.omit({ id: true, uploadedAt: true });
+const UpdateDocumentSchema = CreateDocumentSchema.partial();
+
+export const createDocument = async (data: z.infer<typeof CreateDocumentSchema>) => {
+  const validatedData = CreateDocumentSchema.parse(data);
+  return prisma.document.create({ data: validatedData });
+};
+
+export const getDocumentById = async (id: string) => {
+  UUIDSchema.parse(id);
+  return prisma.document.findUnique({ where: { id } });
+};
+
+export const updateDocument = async (id: string, data: z.infer<typeof UpdateDocumentSchema>) => {
+  UUIDSchema.parse(id);
+  const validatedData = UpdateDocumentSchema.parse(data);
+  return prisma.document.update({ where: { id }, data: validatedData });
+};
+
+export const deleteDocument = async (id: string) => {
+  UUIDSchema.parse(id);
+  return prisma.document.delete({ where: { id } });
+};
+
+export const listDocuments = async () => prisma.document.findMany();
+
+// ==================== VERIFICATION UTILITIES ====================
+const CreateVerificationSchema = VerificationSchema.omit({ id: true });
+const UpdateVerificationSchema = CreateVerificationSchema.partial();
+
+export const createVerification = async (data: z.infer<typeof CreateVerificationSchema>) => {
+  const validatedData = CreateVerificationSchema.parse(data);
+  return prisma.verification.create({ data: validatedData });
+};
+
+export const getVerificationById = async (id: string) => {
+  UUIDSchema.parse(id);
+  return prisma.verification.findUnique({ where: { id } });
+};
+
+export const updateVerification = async (id: string, data: z.infer<typeof UpdateVerificationSchema>) => {
+  UUIDSchema.parse(id);
+  const validatedData = UpdateVerificationSchema.parse(data);
+  return prisma.verification.update({ where: { id }, data: validatedData });
+};
+
+export const deleteVerification = async (id: string) => {
+  UUIDSchema.parse(id);
+  return prisma.verification.delete({ where: { id } });
+};
+
+export const listVerifications = async () => prisma.verification.findMany();
+
+// ==================== AUDIT LOG UTILITIES ====================
+const CreateAuditLogSchema = AuditLogSchema.omit({ id: true, timestamp: true });
+const UpdateAuditLogSchema = CreateAuditLogSchema.partial();
+
+export const createAuditLog = async (data: z.infer<typeof CreateAuditLogSchema>) => {
+  const validatedData = CreateAuditLogSchema.parse(data);
+  return prisma.auditLog.create({ data: validatedData });
+};
+
+export const getAuditLogById = async (id: string) => {
+  UUIDSchema.parse(id);
+  return prisma.auditLog.findUnique({ where: { id } });
+};
+
+export const updateAuditLog = async (id: string, data: z.infer<typeof UpdateAuditLogSchema>) => {
+  UUIDSchema.parse(id);
+  const validatedData = UpdateAuditLogSchema.parse(data);
+  return prisma.auditLog.update({ where: { id }, data: validatedData });
+};
+
+export const deleteAuditLog = async (id: string) => {
+  UUIDSchema.parse(id);
+  return prisma.auditLog.delete({ where: { id } });
+};
+
+export const listAuditLogs = async () => prisma.auditLog.findMany();

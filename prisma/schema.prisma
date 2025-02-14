@@ -1,9 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,8 +11,9 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-// Prisma Schema for Loan Operating System (Los)
-// Enums for role-based access and statuses
+// Prisma Schema for Loan Operating System (LOS)
+
+// Enums
 enum RoleType {
   CLERK
   INSPECTOR
@@ -58,28 +56,109 @@ enum VerificationStatus {
 // Models
 
 model User {
-  id               String            @id @default(dbgenerated()) @map("auth_id") // Reference to Supabase Auth User ID
-  email            String?
-  firstName        String
-  phoneNumber      String            @unique
-  lastName         String
-  roleAssignments  RoleAssignment[]
-  loanApplications LoanApplication[]
+  id              String           @id @default(dbgenerated()) @map("auth_id") // Reference to Supabase Auth User ID
+  email           String?
+  firstName       String
+  phoneNumber     String           @unique
+  lastName        String
+  roleAssignments RoleAssignment[]
 
   isOnboarded Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
+  AuditLog     AuditLog[]
+  Applicant    Applicant[]
   Verification Verification[]
+}
 
-  AuditLog AuditLog[]
+model Applicant {
+  id                       String            @id @default(dbgenerated())
+  userId                   String
+  user                     User              @relation(fields: [userId], references: [id])
+  loanApplications         LoanApplication[]
+  createdAt                DateTime          @default(now())
+  updatedAt                DateTime          @updatedAt
+  dateOfBirth              DateTime
+  addressState             String
+  addressCity              String
+  addressFull              String
+  addressPinCode           String
+  aadharNumber             String
+  panNumber                String
+  aadharVerificationStatus Boolean           @default(false)
+  panVerificationStatus    Boolean           @default(false)
+  photoUrl                 String
+  incomes                  Income[]
+  dependents               Dependent[]
+  loanObligations          LoanObligation[]
+}
+
+model LoanObligation {
+  id          String                 @id @default(dbgenerated())
+  applicantId String
+  applicant   Applicant              @relation(fields: [applicantId], references: [id])
+  cibilScore  Float?
+  totalLoan   Float?
+  totalEmi    Float?
+  loanDetails LoanObligationDetail[]
+  createdAt   DateTime               @default(now())
+  updatedAt   DateTime               @updatedAt
+}
+
+model LoanObligationDetail {
+  id               String         @id @default(dbgenerated())
+  loanObligationId String
+  loanObligation   LoanObligation @relation(fields: [loanObligationId], references: [id])
+  outstandingLoan  Float
+  emiAmount        Float
+  loanDate         DateTime
+  loanType         String
+  bankName         String
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+}
+
+model Income {
+  id            String         @id @default(dbgenerated())
+  applicantId   String
+  applicant     Applicant      @relation(fields: [applicantId], references: [id])
+  type          String
+  incomeDetails IncomeDetail[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
+
+model IncomeDetail {
+  id                 String   @id @default(dbgenerated())
+  incomeId           String
+  income             Income   @relation(fields: [incomeId], references: [id])
+  year               Int
+  taxableIncome      Float?
+  taxPaid            Float?
+  grossIncome        Float?
+  rentalIncome       Float?
+  incomeFromBusiness Float?
+  depreciation       Float?
+  grossCashIncome    Float?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
+
+model Dependent {
+  id                        String    @id @default(dbgenerated())
+  applicantId               String
+  applicant                 Applicant @relation(fields: [applicantId], references: [id])
+  averageMonthlyExpenditure Float
+  createdAt                 DateTime  @default(now())
+  updatedAt                 DateTime  @updatedAt
 }
 
 model RoleAssignment {
-  id     Int      @id @default(autoincrement())
+  id     String   @id @default(dbgenerated())
   userId String
   role   RoleType
-  bankId Int?
+  bankId String?
 
   user User  @relation(fields: [userId], references: [id])
   bank Bank? @relation(fields: [bankId], references: [id])
@@ -88,14 +167,14 @@ model RoleAssignment {
 }
 
 model Permission {
-  id       Int      @id @default(autoincrement())
+  id       String   @id @default(dbgenerated())
   action   String
   resource String
   role     RoleType
 }
 
 model Bank {
-  id               Int                 @id @default(autoincrement())
+  id               String              @id @default(dbgenerated())
   name             String
   subscription     Subscription?
   roleAssignments  RoleAssignment[]
@@ -106,8 +185,8 @@ model Bank {
 }
 
 model Subscription {
-  id        Int       @id @default(autoincrement())
-  bankId    Int       @unique
+  id        String    @id @default(dbgenerated())
+  bankId    String    @unique
   startDate DateTime
   endDate   DateTime?
   status    String
@@ -117,21 +196,21 @@ model Subscription {
 }
 
 model BankConfiguration {
-  id             Int    @id @default(autoincrement())
-  bankId         Int
+  id             String @id @default(dbgenerated())
+  bankId         String
   maxLoanAmount  Float
   approvalLimits Json
-  interestRates  Json // e.g., { "PERSONAL": 7.5, "VEHICLE": 6.0 }
-  loanDurations  Json // e.g., { "PERSONAL": [12, 24, 36], "VEHICLE": [24, 48, 60] }
-  currency       String // e.g., "USD", "INR"
+  interestRates  Json
+  loanDurations  Json
+  currency       String
 
   bank Bank @relation(fields: [bankId], references: [id])
 }
 
 model LoanApplication {
-  id              Int            @id @default(autoincrement())
+  id              String         @id @default(dbgenerated())
   applicantId     String
-  bankId          Int
+  bankId          String
   loanType        LoanType
   amountRequested Float
   status          LoanStatus
@@ -140,16 +219,16 @@ model LoanApplication {
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
 
-  applicant User @relation(fields: [applicantId], references: [id])
-  bank      Bank @relation(fields: [bankId], references: [id])
+  applicant Applicant @relation(fields: [applicantId], references: [id])
+  bank      Bank      @relation(fields: [bankId], references: [id])
 }
 
 model Document {
-  id                 Int                @id @default(autoincrement())
-  loanApplicationId  Int
+  id                 String             @id @default(dbgenerated())
+  loanApplicationId  String
   documentType       String
   fileUrl            String
-  storageType        String // "hot" or "cold"
+  storageType        String
   verificationStatus VerificationStatus @default(PENDING)
   metadata           Json?
   uploadedAt         DateTime           @default(now())
@@ -158,8 +237,8 @@ model Document {
 }
 
 model Verification {
-  id                Int                @id @default(autoincrement())
-  loanApplicationId Int
+  id                String             @id @default(dbgenerated())
+  loanApplicationId String
   type              VerificationType
   status            VerificationStatus
   verifiedById      String?
@@ -172,10 +251,10 @@ model Verification {
 }
 
 model AuditLog {
-  id         Int      @id @default(autoincrement())
+  id         String   @id @default(dbgenerated())
   action     String
   userId     String
-  targetId   Int?
+  targetId   String?
   timestamp  DateTime @default(now())
   metadata   Json?
   ipAddress  String?
