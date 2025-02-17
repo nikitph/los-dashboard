@@ -18,8 +18,10 @@ import { cx, focusRing } from "@/lib/utils";
 import { RiArrowDownSFill } from "@remixicon/react";
 import { BookText, House, PackageSearch } from "lucide-react";
 import * as React from "react";
+import { useState } from "react";
 import { Logo } from "../../../../public/Logo";
 import { UserProfile } from "./UserProfile";
+import LoanSteps from "@/components/LoanSteps";
 
 const navigation = [
   {
@@ -91,6 +93,23 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     setOpenMenus((prev: string[]) =>
       prev.includes(name) ? prev.filter((item: string) => item !== name) : [...prev, name],
     );
+  };
+  const [currentStep, setCurrentStep] = useState(0);
+
+  const steps: Step[] = [
+    { label: "Personal Details", status: "current" },
+    { label: "Income Details", status: "upcoming" },
+    { label: "Loan Verification", status: "upcoming" },
+    { label: "Eligibility", status: "upcoming" },
+    { label: "Offer", status: "upcoming" },
+    { label: "Verification", status: "upcoming" },
+  ];
+
+  const updateSteps = (stepIndex: number) => {
+    return steps.map((step, index) => ({
+      ...step,
+      status: index === stepIndex ? "current" : index < stepIndex ? "completed" : "upcoming",
+    })) as Step[];
   };
   return (
     <Sidebar {...props} className="bg-gray-50 dark:bg-gray-925">
@@ -169,6 +188,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+        <LoanSteps steps={updateSteps(currentStep)} currentStep={currentStep} />
       </SidebarContent>
       <SidebarFooter>
         <div className="border-t border-gray-200 dark:border-gray-800" />

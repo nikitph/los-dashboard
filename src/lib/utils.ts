@@ -1,12 +1,12 @@
-import { type ClassValue, clsx } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
 
 export function cx(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
 
 export const focusInput = [
@@ -16,7 +16,7 @@ export const focusInput = [
   "focus:ring-blue-200 focus:dark:ring-blue-700/30",
   // border color
   "focus:border-blue-500 focus:dark:border-blue-700",
-]
+];
 
 // Tremor Raw focusRing [v0.0.1]
 
@@ -25,7 +25,7 @@ export const focusRing = [
   "outline outline-offset-2 outline-0 focus-visible:outline-2",
   // outline color
   "outline-blue-500 dark:outline-blue-500",
-]
+];
 
 // Tremor Raw hasErrorInput [v0.0.1]
 
@@ -36,48 +36,44 @@ export const hasErrorInput = [
   "border-red-500 dark:border-red-700",
   // ring color
   "ring-red-200 dark:ring-red-700/30",
-]
+];
 
 interface CurrencyParams {
-  number: number
-  maxFractionDigits?: number
-  currency?: string
+  number: number;
+  maxFractionDigits?: number;
+  currency?: string;
 }
 
 interface PercentageParams {
-  number: number
-  decimals?: number
+  number: number;
+  decimals?: number;
 }
 
 interface MillionParams {
-  number: number
-  decimals?: number
+  number: number;
+  decimals?: number;
 }
 
 type FormatterFunctions = {
-  currency: (params: CurrencyParams) => string
-  unit: (number: number) => string
-  percentage: (params: PercentageParams) => string
-  million: (params: MillionParams) => string
-}
+  currency: (params: CurrencyParams) => string;
+  unit: (number: number) => string;
+  percentage: (params: PercentageParams) => string;
+  million: (params: MillionParams) => string;
+};
 
 export const formatters: FormatterFunctions = {
-  currency: ({
-    number,
-    maxFractionDigits = 2,
-    currency = "USD",
-  }: CurrencyParams): string => {
+  currency: ({ number, maxFractionDigits = 2, currency = "USD" }: CurrencyParams): string => {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
       currency,
       maximumFractionDigits: maxFractionDigits,
-    }).format(number)
+    }).format(number);
   },
 
   unit: (number: number): string => {
     return new Intl.NumberFormat("en-US", {
       style: "decimal",
-    }).format(number)
+    }).format(number);
   },
 
   percentage: ({ number, decimals = 1 }: PercentageParams): string => {
@@ -85,7 +81,7 @@ export const formatters: FormatterFunctions = {
       style: "percent",
       minimumFractionDigits: decimals,
       maximumFractionDigits: decimals,
-    }).format(number)
+    }).format(number);
   },
 
   million: ({ number, decimals = 1 }: MillionParams): string => {
@@ -93,6 +89,46 @@ export const formatters: FormatterFunctions = {
       style: "decimal",
       minimumFractionDigits: decimals,
       maximumFractionDigits: decimals,
-    }).format(number)}M`
+    }).format(number)}M`;
   },
-}
+};
+
+export // List of all Indian states and union territories
+const indianStates = [
+  "Andhra Pradesh",
+  "Arunachal Pradesh",
+  "Assam",
+  "Bihar",
+  "Chhattisgarh",
+  "Goa",
+  "Gujarat",
+  "Haryana",
+  "Himachal Pradesh",
+  "Jharkhand",
+  "Karnataka",
+  "Kerala",
+  "Madhya Pradesh",
+  "Maharashtra",
+  "Manipur",
+  "Meghalaya",
+  "Mizoram",
+  "Nagaland",
+  "Odisha",
+  "Punjab",
+  "Rajasthan",
+  "Sikkim",
+  "Tamil Nadu",
+  "Telangana",
+  "Tripura",
+  "Uttar Pradesh",
+  "Uttarakhand",
+  "West Bengal",
+  "Andaman and Nicobar Islands",
+  "Chandigarh",
+  "Dadra and Nagar Haveli and Daman and Diu",
+  "Delhi",
+  "Jammu and Kashmir",
+  "Ladakh",
+  "Lakshadweep",
+  "Puducherry",
+];
