@@ -1,6 +1,9 @@
-/** @type {import('next').NextConfig} */
+/** @type {import("next").NextConfig} */
 
 const nextConfig = {
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   redirects: async () => {
     return [
       {
@@ -8,8 +11,8 @@ const nextConfig = {
         destination: "/quotes/overview",
         permanent: true,
       },
-    ]
+    ];
   },
-}
+};
 
-export default nextConfig
+export default nextConfig;

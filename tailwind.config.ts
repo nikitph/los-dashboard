@@ -159,15 +159,14 @@ export default {
       },
       animation: {
         hide: "hide 150ms cubic-bezier(0.16, 1, 0.3, 1)",
-        slideDownAndFade: "slideD"drawerSlideRightAndFade 150ms ease-in"0.3, 1)",
-"accordion-down"tA"accordion-down 0.2s ease-out"s cubic-be"accordion-up"0."accordion-up 0.2s ease-out"de: "slideUpAndFade 150ms cubic-bezier(0.16, 1, 0.3, 1)",
+        slideDownAndFade: "slideDownAndFade 150ms cubic-bezier(0.16, 1, 0.3, 1)",
+        slideLeftAndFade: "slideLeftAndFade 150ms cubic-bezier(0.16, 1, 0.3, 1)",
+        slideUpAndFade: "slideUpAndFade 150ms cubic-bezier(0.16, 1, 0.3, 1)",
         slideRightAndFade: "slideRightAndFade 150ms cubic-bezier(0.16, 1, 0.3, 1)",
         accordionOpen: "accordionOpen 150ms cubic-bezier(0.87, 0, 0.13, 1)",
         accordionClose: "accordionClose 150ms cubic-bezier(0.87, 0, 0.13, 1)",
         drawerSlideLeftAndFade: "drawerSlideLeftAndFade 150ms cubic-bezier(0.16, 1, 0.3, 1)",
         drawerSlideRightAndFade: "drawerSlideRightAndFade 150ms ease-in",
-        "accordion-down": "accordion-down 0.2s ease-out",
-        "accordion-up": "accordion-up 0.2s ease-out",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -179,12 +178,8 @@ export default {
       extend: {
         keyframes: {
           "caret-blink": {
-            "0%,70%,100%": {
-              opacity: "1",
-            },
-            "20%,50%": {
-              opacity: "0",
-            },
+            "0%,70%,100%": { opacity: "1" },
+            "20%,50%": { opacity: "0" },
           },
         },
         animation: {
