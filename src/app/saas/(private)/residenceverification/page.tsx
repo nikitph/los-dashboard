@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 const Index = () => {
   const [date, setDate] = useState<Date>();
@@ -186,7 +187,7 @@ const Index = () => {
                 <input type="file" id="image-upload" className="hidden" accept="image/*" onChange={handleImageUpload} />
                 {image && (
                   <div className="h-20 w-20 overflow-hidden rounded-lg">
-                    <img src={image} alt="Residence" className="h-full w-full object-cover" />
+                    <Image src={image} alt="Residence" className="h-full w-full object-cover" />
                   </div>
                 )}
               </div>

@@ -33,7 +33,7 @@ const SanctionNote = () => {
 
         {/* Description */}
         <p className="text-lg text-gray-700">
-          All of the documents their verification listed below are in order as per the bank's loan policy.
+          All of the documents their verification listed below are in order as per the bank loan policy.
         </p>
 
         {/* Verification Table */}
