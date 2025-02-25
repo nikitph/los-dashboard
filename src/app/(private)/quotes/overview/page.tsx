@@ -111,10 +111,10 @@ export default function Overview() {
                               "bg-emerald-600 dark:bg-emerald-400": item.status === "Closed",
                             },
                             {
-                              "bg-gray-500 dark:bg-gray-500": item.status === "Drafted,
+                              "bg-gray-500 dark:bg-gray-500": item.status === "Drafted",
                             },
                             {
-                              "bg-blue-500 dark:bg-blue-500": item.status === "Sent"
+                              "bg-blue-500 dark:bg-blue-500": item.status === "Sent,
                             },
                           )}
                           aria-hidden="true"
