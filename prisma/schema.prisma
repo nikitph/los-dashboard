@@ -56,15 +56,16 @@ enum VerificationStatus {
 }
 
 model UserProfile {
-  id          String   @id @default(dbgenerated("gen_random_uuid()")) @map("auth_id") // Matches auth.users.id
-  authId      String   @unique
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @map("auth_id") // Matches auth.users.id
+  authId      String    @unique
   firstName   String?
   lastName    String?
-  email       String?  @unique
-  phoneNumber String?  @unique
-  isOnboarded Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  email       String?   @unique
+  phoneNumber String?   @unique
+  isOnboarded Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
 
   // Relations
   userRoles     UserRoles[]
@@ -82,7 +83,8 @@ model UserRoles {
   user UserProfile @relation(fields: [userId], references: [authId])
   bank Bank?       @relation(fields: [bankId], references: [id])
 
-  assignedAt DateTime @default(now())
+  assignedAt DateTime  @default(now())
+  deletedAt  DateTime?
 }
 
 model Applicant {
@@ -92,6 +94,7 @@ model Applicant {
   loanApplications         LoanApplication[]
   createdAt                DateTime          @default(now())
   updatedAt                DateTime          @updatedAt
+  deletedAt                DateTime?
   dateOfBirth              DateTime
   addressState             String
   addressCity              String
@@ -117,6 +120,7 @@ model LoanObligation {
   loanDetails LoanObligationDetail[]
   createdAt   DateTime               @default(now())
   updatedAt   DateTime               @updatedAt
+  deletedAt   DateTime?
 }
 
 model LoanObligationDetail {
@@ -130,6 +134,7 @@ model LoanObligationDetail {
   bankName         String
   createdAt        DateTime       @default(now())
   updatedAt        DateTime       @updatedAt
+  deletedAt        DateTime?
 }
 
 model Income {
@@ -140,12 +145,13 @@ model Income {
   incomeDetails IncomeDetail[]
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
+  deletedAt     DateTime?
 }
 
 model IncomeDetail {
-  id                 String   @id @default(dbgenerated("gen_random_uuid()"))
+  id                 String    @id @default(dbgenerated("gen_random_uuid()"))
   incomeId           String
-  income             Income   @relation(fields: [incomeId], references: [id])
+  income             Income    @relation(fields: [incomeId], references: [id])
   year               Int
   taxableIncome      Float?
   taxPaid            Float?
@@ -154,8 +160,9 @@ model IncomeDetail {
   incomeFromBusiness Float?
   depreciation       Float?
   grossCashIncome    Float?
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  deletedAt          DateTime?
 }
 
 model Dependent {
@@ -165,13 +172,7 @@ model Dependent {
   averageMonthlyExpenditure Float
   createdAt                 DateTime  @default(now())
   updatedAt                 DateTime  @updatedAt
-}
-
-model Permission {
-  id       String   @id @default(dbgenerated("gen_random_uuid()"))
-  action   String
-  resource String
-  role     RoleType
+  deletedAt                 DateTime?
 }
 
 model Bank {
@@ -182,6 +183,7 @@ model Bank {
   configurations   BankConfiguration[]
   createdAt        DateTime            @default(now())
   updatedAt        DateTime            @updatedAt
+  deletedAt        DateTime?
   UserRoles        UserRoles[]
 }
 
@@ -192,18 +194,20 @@ model Subscription {
   endDate   DateTime?
   status    String
   amount    Float
+  deletedAt DateTime?
 
   bank Bank @relation(fields: [bankId], references: [id])
 }
 
 model BankConfiguration {
-  id             String @id @default(dbgenerated("gen_random_uuid()"))
+  id             String    @id @default(dbgenerated("gen_random_uuid()"))
   bankId         String
   maxLoanAmount  Float
   approvalLimits Json
   interestRates  Json
   loanDurations  Json
   currency       String
+  deletedAt      DateTime?
 
   bank Bank @relation(fields: [bankId], references: [id])
 }
@@ -219,6 +223,7 @@ model LoanApplication {
   verifications   Verification[]
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
+  deletedAt       DateTime?
 
   applicant Applicant @relation(fields: [applicantId], references: [id])
   bank      Bank      @relation(fields: [bankId], references: [id])
@@ -233,6 +238,7 @@ model Document {
   verificationStatus VerificationStatus @default(PENDING)
   metadata           Json?
   uploadedAt         DateTime           @default(now())
+  deletedAt          DateTime?
 
   loanApplication LoanApplication @relation(fields: [loanApplicationId], references: [id])
 }
@@ -246,6 +252,7 @@ model Verification {
   verifiedAt        DateTime?
   notes             String?
   feedback          String?
+  deletedAt         DateTime?
 
   loanApplication LoanApplication @relation(fields: [loanApplicationId], references: [id])
   verifiedBy      UserProfile?    @relation(fields: [verifiedById], references: [id])
