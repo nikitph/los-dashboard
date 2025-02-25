@@ -52,5 +52,5 @@ export async function signup(formData: any) {
   }
 
   revalidatePath("/", "layout");
-  redirect("/saas/quotes/overview");
+  redirect("/saas/dashboard");
 }
