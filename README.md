@@ -45,3 +45,7 @@ the resources listed below:
 - [Tailwind CSS v4 beta](https://tailwindcss.com/docs/v4-beta) - A utility-first CSS framework
 - [Next.js](https://nextjs.org/docs) - Next.js documentation
 - [Radix UI](https://www.radix-ui.com) - Radix UI Website
+
+## Notes
+
+DB triggers on Auth.users will not be in migrate files
