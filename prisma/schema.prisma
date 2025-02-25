@@ -53,29 +53,40 @@ enum VerificationStatus {
   FAILED
 }
 
-// Models
-
-model User {
-  id              String           @id @default(dbgenerated()) @map("auth_id") // Reference to Supabase Auth User ID
-  email           String?
-  firstName       String
-  phoneNumber     String           @unique
-  lastName        String
-  roleAssignments RoleAssignment[]
-
+model UserProfile {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @map("auth_id") // Matches auth.users.id
+  authId      String   @unique
+  firstName   String
+  lastName    String
+  email       String?  @unique
+  phoneNumber String   @unique
   isOnboarded Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  AuditLog     AuditLog[]
-  Applicant    Applicant[]
-  Verification Verification[]
+  // Relations
+  userRoles     UserRoles[]
+  applicants    Applicant[]
+  verifications Verification[]
+  auditLogs     AuditLog[]
+}
+
+model UserRoles {
+  id     String   @id @default(dbgenerated("gen_random_uuid()"))
+  userId String
+  role   RoleType
+  bankId String?
+
+  user UserProfile @relation(fields: [userId], references: [authId])
+  bank Bank?       @relation(fields: [bankId], references: [id])
+
+  assignedAt DateTime @default(now())
 }
 
 model Applicant {
-  id                       String            @id @default(dbgenerated())
+  id                       String            @id @default(dbgenerated("gen_random_uuid()"))
   userId                   String
-  user                     User              @relation(fields: [userId], references: [id])
+  user                     UserProfile       @relation(fields: [userId], references: [id])
   loanApplications         LoanApplication[]
   createdAt                DateTime          @default(now())
   updatedAt                DateTime          @updatedAt
@@ -95,7 +106,7 @@ model Applicant {
 }
 
 model LoanObligation {
-  id          String                 @id @default(dbgenerated())
+  id          String                 @id @default(dbgenerated("gen_random_uuid()"))
   applicantId String
   applicant   Applicant              @relation(fields: [applicantId], references: [id])
   cibilScore  Float?
@@ -107,7 +118,7 @@ model LoanObligation {
 }
 
 model LoanObligationDetail {
-  id               String         @id @default(dbgenerated())
+  id               String         @id @default(dbgenerated("gen_random_uuid()"))
   loanObligationId String
   loanObligation   LoanObligation @relation(fields: [loanObligationId], references: [id])
   outstandingLoan  Float
@@ -120,7 +131,7 @@ model LoanObligationDetail {
 }
 
 model Income {
-  id            String         @id @default(dbgenerated())
+  id            String         @id @default(dbgenerated("gen_random_uuid()"))
   applicantId   String
   applicant     Applicant      @relation(fields: [applicantId], references: [id])
   type          String
@@ -130,7 +141,7 @@ model Income {
 }
 
 model IncomeDetail {
-  id                 String   @id @default(dbgenerated())
+  id                 String   @id @default(dbgenerated("gen_random_uuid()"))
   incomeId           String
   income             Income   @relation(fields: [incomeId], references: [id])
   year               Int
@@ -146,7 +157,7 @@ model IncomeDetail {
 }
 
 model Dependent {
-  id                        String    @id @default(dbgenerated())
+  id                        String    @id @default(dbgenerated("gen_random_uuid()"))
   applicantId               String
   applicant                 Applicant @relation(fields: [applicantId], references: [id])
   averageMonthlyExpenditure Float
@@ -154,38 +165,26 @@ model Dependent {
   updatedAt                 DateTime  @updatedAt
 }
 
-model RoleAssignment {
-  id     String   @id @default(dbgenerated())
-  userId String
-  role   RoleType
-  bankId String?
-
-  user User  @relation(fields: [userId], references: [id])
-  bank Bank? @relation(fields: [bankId], references: [id])
-
-  assignedAt DateTime @default(now())
-}
-
 model Permission {
-  id       String   @id @default(dbgenerated())
+  id       String   @id @default(dbgenerated("gen_random_uuid()"))
   action   String
   resource String
   role     RoleType
 }
 
 model Bank {
-  id               String              @id @default(dbgenerated())
+  id               String              @id @default(dbgenerated("gen_random_uuid()"))
   name             String
   subscription     Subscription?
-  roleAssignments  RoleAssignment[]
   loanApplications LoanApplication[]
   configurations   BankConfiguration[]
   createdAt        DateTime            @default(now())
   updatedAt        DateTime            @updatedAt
+  UserRoles        UserRoles[]
 }
 
 model Subscription {
-  id        String    @id @default(dbgenerated())
+  id        String    @id @default(dbgenerated("gen_random_uuid()"))
   bankId    String    @unique
   startDate DateTime
   endDate   DateTime?
@@ -196,7 +195,7 @@ model Subscription {
 }
 
 model BankConfiguration {
-  id             String @id @default(dbgenerated())
+  id             String @id @default(dbgenerated("gen_random_uuid()"))
   bankId         String
   maxLoanAmount  Float
   approvalLimits Json
@@ -208,7 +207,7 @@ model BankConfiguration {
 }
 
 model LoanApplication {
-  id              String         @id @default(dbgenerated())
+  id              String         @id @default(dbgenerated("gen_random_uuid()"))
   applicantId     String
   bankId          String
   loanType        LoanType
@@ -224,7 +223,7 @@ model LoanApplication {
 }
 
 model Document {
-  id                 String             @id @default(dbgenerated())
+  id                 String             @id @default(dbgenerated("gen_random_uuid()"))
   loanApplicationId  String
   documentType       String
   fileUrl            String
@@ -237,7 +236,7 @@ model Document {
 }
 
 model Verification {
-  id                String             @id @default(dbgenerated())
+  id                String             @id @default(dbgenerated("gen_random_uuid()"))
   loanApplicationId String
   type              VerificationType
   status            VerificationStatus
@@ -247,18 +246,20 @@ model Verification {
   feedback          String?
 
   loanApplication LoanApplication @relation(fields: [loanApplicationId], references: [id])
-  verifiedBy      User?           @relation(fields: [verifiedById], references: [id])
+  verifiedBy      UserProfile?    @relation(fields: [verifiedById], references: [id])
 }
 
 model AuditLog {
-  id         String   @id @default(dbgenerated())
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
   action     String
+  tableName  String
   userId     String
-  targetId   String?
+  recordId   String?
   timestamp  DateTime @default(now())
-  metadata   Json?
+  oldData    Json?
+  newData    Json?
   ipAddress  String?
   deviceInfo String?
 
-  user User @relation(fields: [userId], references: [id])
+  user UserProfile @relation(fields: [userId], references: [id])
 }
