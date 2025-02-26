@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import {
   DropdownMenu,
@@ -13,37 +13,50 @@ import {
   DropdownMenuSubMenuContent,
   DropdownMenuSubMenuTrigger,
   DropdownMenuTrigger,
-} from "@/components/DropdownMenu"
-import { ArrowUpRight, Monitor, Moon, Sun } from "lucide-react"
-import { useTheme } from "next-themes"
-import * as React from "react"
+} from "@/components/DropdownMenu";
+import { ArrowUpRight, Monitor, Moon, Sun } from "lucide-react";
+import { useTheme } from "next-themes";
+import * as React from "react";
+import { createClient } from "@/utils/supabase/client";
+import { useUser } from "@/contexts/userContext";
+import { useRouter } from "next/navigation";
 
 export type DropdownUserProfileProps = {
-  children: React.ReactNode
-  align?: "center" | "start" | "end"
-}
+  children: React.ReactNode;
+  align?: "center" | "start" | "end";
+};
 
-export function DropdownUserProfile({
-  children,
-  align = "start",
-}: DropdownUserProfileProps) {
-  const [mounted, setMounted] = React.useState(false)
-  const { theme, setTheme } = useTheme()
+export function DropdownUserProfile({ children, align = "start" }: DropdownUserProfileProps) {
+  const [mounted, setMounted] = React.useState(false);
+  const { theme, setTheme } = useTheme();
+  const supabase = createClient();
+  const { user } = useUser();
+  const router = useRouter();
   React.useEffect(() => {
-    setMounted(true)
-  }, [])
+    setMounted(true);
+  }, []);
+
+  const handleSignOut = async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        console.error("Error signing out:", error.message);
+        return;
+      }
+      router.push("/saas/signup");
+    } catch (error) {
+      console.error("Error during sign-out:", error);
+    }
+  };
 
   if (!mounted) {
-    return null
+    return null;
   }
   return (
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
-        <DropdownMenuContent
-          align={align}
-          className="sm:!min-w-[calc(var(--radix-dropdown-menu-trigger-width))]"
-        >
+        <DropdownMenuContent align={align} className="sm:!min-w-[calc(var(--radix-dropdown-menu-trigger-width))]">
           <DropdownMenuLabel>emma.stone@acme.com</DropdownMenuLabel>
           <DropdownMenuGroup>
             <DropdownMenuSubMenu>
@@ -52,30 +65,18 @@ export function DropdownUserProfile({
                 <DropdownMenuRadioGroup
                   value={theme}
                   onValueChange={(value) => {
-                    setTheme(value)
+                    setTheme(value);
                   }}
                 >
-                  <DropdownMenuRadioItem
-                    aria-label="Switch to Light Mode"
-                    value="light"
-                    iconType="check"
-                  >
+                  <DropdownMenuRadioItem aria-label="Switch to Light Mode" value="light" iconType="check">
                     <Sun className="size-4 shrink-0" aria-hidden="true" />
                     Light
                   </DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem
-                    aria-label="Switch to Dark Mode"
-                    value="dark"
-                    iconType="check"
-                  >
+                  <DropdownMenuRadioItem aria-label="Switch to Dark Mode" value="dark" iconType="check">
                     <Moon className="size-4 shrink-0" aria-hidden="true" />
                     Dark
                   </DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem
-                    aria-label="Switch to System Mode"
-                    value="system"
-                    iconType="check"
-                  >
+                  <DropdownMenuRadioItem aria-label="Switch to System Mode" value="system" iconType="check">
                     <Monitor className="size-4 shrink-0" aria-hidden="true" />
                     System
                   </DropdownMenuRadioItem>
@@ -87,36 +88,30 @@ export function DropdownUserProfile({
           <DropdownMenuGroup>
             <DropdownMenuItem>
               Changelog
-              <ArrowUpRight
-                className="mb-1 ml-1 size-3 shrink-0 text-gray-500 dark:text-gray-500"
-                aria-hidden="true"
-              />
+              <ArrowUpRight className="mb-1 ml-1 size-3 shrink-0 text-gray-500 dark:text-gray-500" aria-hidden="true" />
             </DropdownMenuItem>
             <DropdownMenuItem>
               Documentation
-              <ArrowUpRight
-                className="mb-1 ml-1 size-3 shrink-0 text-gray-500"
-                aria-hidden="true"
-              />
+              <ArrowUpRight className="mb-1 ml-1 size-3 shrink-0 text-gray-500" aria-hidden="true" />
             </DropdownMenuItem>
             <DropdownMenuItem>
               Join Slack community
-              <ArrowUpRight
-                className="mb-1 ml-1 size-3 shrink-0 text-gray-500"
-                aria-hidden="true"
-              />
+              <ArrowUpRight className="mb-1 ml-1 size-3 shrink-0 text-gray-500" aria-hidden="true" />
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
-            <DropdownMenuItem>
-              <a href="#" className="w-full">
-                Sign out
-              </a>
+            <DropdownMenuItem
+              onSelect={(event) => {
+                event.preventDefault();
+                handleSignOut();
+              }}
+            >
+              Sign out
             </DropdownMenuItem>
           </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>
     </>
-  )
+  );
 }

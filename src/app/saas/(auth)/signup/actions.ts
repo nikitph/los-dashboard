@@ -36,10 +36,10 @@ export async function signup(formData: {
   }
 
   // If sign up was successful but user needs to confirm email
-  if (authData.user && !authData.user.confirmed_at) {
-    // Redirect to verification page or show verification message
-    redirect("/saas/verify?email=" + encodeURIComponent(formData.email));
-  }
+  // if (authData.user && !authData.user.confirmed_at) {
+  //   // Redirect to verification page or show verification message
+  //   redirect("/saas/verify?email=" + encodeURIComponent(formData.email));
+  // }
 
   // If sign up was successful and no email verification required
   if (authData.user) {
