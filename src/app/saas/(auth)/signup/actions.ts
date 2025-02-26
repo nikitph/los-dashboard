@@ -50,7 +50,7 @@ export async function signup(formData: {
       lastName: formData.lastName,
       email: formData.email,
       phoneNumber: formData.phoneNumber,
-      updatedAt: Date.now().toString(,
+      updatedAt: Date.now().toString(),
     });
 
     if (profileError) {
