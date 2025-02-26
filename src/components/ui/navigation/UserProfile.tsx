@@ -1,12 +1,14 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/Button"
-import { cx, focusRing } from "@/lib/utils"
-import { ChevronsUpDown } from "lucide-react"
+import { Button } from "@/components/Button";
+import { cx, focusRing } from "@/lib/utils";
+import { ChevronsUpDown } from "lucide-react";
 
-import { DropdownUserProfile } from "./DropdownUserProfile"
+import { DropdownUserProfile } from "./DropdownUserProfile";
+import { useUser } from "@/contexts/userContext";
 
 export function UserProfile() {
+  const { user, loading } = useUser();
   return (
     <DropdownUserProfile>
       <Button
@@ -24,7 +26,7 @@ export function UserProfile() {
           >
             ES
           </span>
-          <span>Emma Stone</span>
+          <span>{user?.email}</span>
         </span>
         <ChevronsUpDown
           className="size-4 shrink-0 text-gray-500 group-hover:text-gray-700 group-hover:dark:text-gray-400"
@@ -32,5 +34,5 @@ export function UserProfile() {
         />
       </Button>
     </DropdownUserProfile>
-  )
+  );
 }

@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import "../../globals.css";
 import { siteConfig } from "../../siteConfig";
 import { Toaster } from "@/components/ui/toaster";
+import { UserProvider } from "@/contexts/userContext";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://yoururl.com"),
@@ -44,10 +45,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html lang="en" className="h-full" suppressHydrationWarning>
       <body className={`bg-white-50 h-full antialiased dark:bg-gray-950`}>
         <ThemeProvider defaultTheme="light" disableTransitionOnChange attribute="class">
-          <div className="w-full">
-            <main>{children}</main>
-          </div>
-          <Toaster />
+          <UserProvider>
+            <div className="w-full">
+              <main>{children}</main>
+            </div>
+            <Toaster />
+          </UserProvider>
         </ThemeProvider>
       </body>
     </html>
