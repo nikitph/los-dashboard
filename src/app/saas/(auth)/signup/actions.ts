@@ -1,56 +1,67 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { createClient } from "@/utils/supabase/server";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-import { createClient } from "@/utils/supabase/server";
-import { getErrorMessage } from "@/utils/supabase/supabaseErrorHandler";
+export async function signup(formData: {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  phoneNumber: string;
+}) {
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
 
-export async function login(formData: FormData) {
-  const supabase = await createClient();
-
-  const data = {
-    email: formData.get("email") as string,
-    password: formData.get("password") as string,
-  };
-
-  const { error } = await supabase.auth.signInWithPassword(data);
-
-  if (error) {
-    redirect("/error");
-  }
-
-  revalidatePath("/", "layout");
-  redirect("/");
-}
-
-export async function signup(formData: any) {
-  const supabase = await createClient();
-
-  console.log("formdata", formData);
-
-  const data = {
-    email: formData.email as string,
-    password: formData.password as string,
+  // Create user in Supabase Auth
+  const { data: authData, error: authError } = await supabase.auth.signUp({
+    email: formData.email,
+    password: formData.password,
     options: {
       data: {
-        first_name: formData.firstName as string,
-        last_name: formData.lastName as string,
+        first_name: formData.firstName,
+        last_name: formData.lastName,
+        phone: formData.phoneNumber,
       },
     },
-  };
+  });
 
-  const { data: d, error } = await supabase.auth.signUp(data);
-
-  if (error) {
-    const message = getErrorMessage(error?.code);
+  if (authError) {
     return {
-      error: message,
-      code: error.code,
-      status: error.status,
+      error: authError.message,
+      code: authError.code,
+      status: authError.status,
     };
   }
 
-  revalidatePath("/", "layout");
-  redirect("/saas/dashboard");
+  // If sign up was successful but user needs to confirm email
+  if (authData.user && !authData.user.confirmed_at) {
+    // Redirect to verification page or show verification message
+    redirect("/saas/verify?email=" + encodeURIComponent(formData.email));
+  }
+
+  // If sign up was successful and no email verification required
+  if (authData.user) {
+    // Store additional user data in your database if needed
+    const { error: profileError } = await supabase.from("UserProfile").insert({
+      authId: authData.user.id,
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      email: formData.email,
+      phoneNumber: formData.phoneNumber,
+      updatedAt: Date.now().toString(,
+    });
+
+    if (profileError) {
+      console.error("Error creating profile:", profileError);
+      // You might want to delete the auth user if profile creation fails
+      // but that's a more complex flow
+    }
+
+    // Redirect to dashboard or onboarding
+    redirect("/saas/dashboard");
+  }
+
+  return { error: "An unexpected error occurred", code: "unknown_error", status: 500 };
 }
