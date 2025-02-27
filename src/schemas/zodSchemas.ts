@@ -163,7 +163,7 @@ export const DocumentSchema = z.object({
   verificationStatus: VerificationStatus,
   metadata: z.any().nullable(),
   uploadedAt: z.date().default(new Date()),
-  deletedAt: z.date().nullable(,
+  deletedAt: z.date().nullable(),
 });
 
 export const AuditLogSchema = z.object({
