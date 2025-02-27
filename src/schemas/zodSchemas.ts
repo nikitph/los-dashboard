@@ -151,7 +151,7 @@ export const LoanApplicationSchema = z.object({
   status: LoanStatus,
   createdAt: z.date().default(new Date()),
   updatedAt: z.date().default(new Date()),
-  deletedAt: z.date().nullable(,
+  deletedAt: z.date().nullable(),
 });
 
 export const DocumentSchema = z.object({
@@ -163,7 +163,7 @@ export const DocumentSchema = z.object({
   verificationStatus: VerificationStatus,
   metadata: z.any().nullable(),
   uploadedAt: z.date().default(new Date()),
-  deletedAt: z.date().nullable()
+  deletedAt: z.date().nullable(,
 });
 
 export const AuditLogSchema = z.object({
