@@ -129,7 +129,7 @@ export const BankSchema = z.object({
   name: z.string(),
   createdAt: z.date().default(new Date()),
   updatedAt: z.date().default(new Date()),
-  deletedAt: z.date().nullable(,
+  deletedAt: z.date().nullable(),
 });
 
 export const SubscriptionSchema = z.object({
@@ -139,7 +139,7 @@ export const SubscriptionSchema = z.object({
   endDate: z.date().nullable(),
   status: z.string(),
   amount: z.number(),
-  deletedAt: z.date().nullable()
+  deletedAt: z.date().nullable(,
 });
 
 export const LoanApplicationSchema = z.object({
