@@ -129,7 +129,7 @@ export const BankSchema = z.object({
   name: z.string(),
   createdAt: z.date().default(new Date()),
   updatedAt: z.date().default(new Date()),
-  deletedAt: z.date().nullable(),
+  deletedAt: z.date().optional(),
 });
 
 export const SubscriptionSchema = z.object({
