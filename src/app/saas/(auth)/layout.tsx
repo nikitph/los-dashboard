@@ -5,6 +5,7 @@ import "../../globals.css";
 import { siteConfig } from "../../siteConfig";
 import { Toaster } from "@/components/ui/toaster";
 import { UserProvider } from "@/contexts/userContext";
+import { ErrorBoundary } from "@sentry/nextjs";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://yoururl.com"),
@@ -44,14 +45,16 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="en" className="h-full" suppressHydrationWarning>
       <body className={`bg-white-50 h-full antialiased dark:bg-gray-950`}>
-        <ThemeProvider defaultTheme="light" disableTransitionOnChange attribute="class">
-          <UserProvider>
-            <div className="w-full">
-              <main>{children}</main>
-            </div>
-            <Toaster />
-          </UserProvider>
-        </ThemeProvider>
+        <ErrorBoundary>
+          <ThemeProvider defaultTheme="light" disableTransitionOnChange attribute="class">
+            <UserProvider>
+              <div className="w-full">
+                <main>{children}</main>
+              </div>
+              <Toaster />
+            </UserProvider>
+          </ThemeProvider>
+        </ErrorBoundary>
       </body>
     </html>
   );
