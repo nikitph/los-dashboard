@@ -222,6 +222,7 @@ model LoanApplication {
   documents       Document[]
   verifications   Verification[]
   guarantors      Guarantor[]
+  coApplicants    CoApplicant[]
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
   deletedAt       DateTime?
@@ -231,6 +232,25 @@ model LoanApplication {
 }
 
 model Guarantor {
+  id                String    @id @default(dbgenerated("gen_random_uuid()"))
+  loanApplicationId String
+  firstName         String
+  lastName          String
+  email             String
+  addressState      String
+  addressCity       String
+  addressZipCode    String
+  addressLine1      String
+  addressLine2      String?
+  mobileNumber      String
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  deletedAt         DateTime?
+
+  loanApplication LoanApplication @relation(fields: [loanApplicationId], references: [id])
+}
+
+model CoApplicant {
   id                String    @id @default(dbgenerated("gen_random_uuid()"))
   loanApplicationId String
   firstName         String
