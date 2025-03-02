@@ -81,7 +81,7 @@ export default function ApplicantForm({ initialData, userId, isEditMode = false 
         toast({
           title: "Error",
           description: "User ID not available. Please wait for user data to load or try refreshing the page.",
-          variant: "destructive,
+          variant: "destructive",
         });
         setIsSubmitting(false);
         return;
@@ -105,7 +105,7 @@ export default function ApplicantForm({ initialData, userId, isEditMode = false 
           panNumber: data.panNumber,
           aadharVerificationStatus: data.aadharVerificationStatus,
           panVerificationStatus: data.panVerificationStatus,
-          photoUrl: data.photoUrl || ",
+          photoUrl: data.photoUrl || "",
         };
 
         console.log("Sending update with ID:", initialData.id);
@@ -121,7 +121,7 @@ export default function ApplicantForm({ initialData, userId, isEditMode = false 
       if (response.success) {
         toast({
           title: isEditMode ? "Applicant Updated" : "Applicant Created",
-          description: response.messag,
+          description: response.message,
         });
 
         router.push("/saas/applicants/list");
@@ -130,7 +130,7 @@ export default function ApplicantForm({ initialData, userId, isEditMode = false 
         toast({
           title: "Error",
           description: response.error || "Operation failed",
-          variant: "destructive,
+          variant: "destructive",
         });
       }
     } catch (error) {
@@ -138,7 +138,7 @@ export default function ApplicantForm({ initialData, userId, isEditMode = false 
       toast({
         title: "Error",
         description: "An unexpected error occurred",
-        variant: "destructive,
+        variant: "destructive",
       });
     } finally {
       setIsSubmitting(false);
@@ -152,13 +152,13 @@ export default function ApplicantForm({ initialData, userId, isEditMode = false 
         setValue("aadharVerificationStatus", true);
         toast({
           title: "Verification Successful",
-          description: "Aadhar has been verified successfully,
+          description: "Aadhar has been verified successfully",
         });
       } else {
         setValue("panVerificationStatus", true);
         toast({
           title: "Verification Successful",
-          description: "PAN has been verified successfully,
+          description: "PAN has been verified successfully",
         });
       }
     }, 1500);
