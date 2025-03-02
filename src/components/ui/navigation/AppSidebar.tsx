@@ -13,7 +13,7 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuSub,
-  SidebarSubLink
+  SidebarSubLink,
 } from "@/components/Sidebar";
 import { cx, focusRing } from "@/lib/utils";
 import { RiArrowDownSFill } from "@remixicon/react";
@@ -203,7 +203,7 @@ const allNavigationSections = [
   { title: "Applicant Management", sections: applicantSections },
   { title: "Verifications", sections: verificationSections },
   { title: "Eligibility", sections: eligibilitySections },
-  { title: "Other", sections: otherSections ,
+  { title: "Other", sections: otherSections },
 ];
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
@@ -317,8 +317,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                       className={cx(
                         "flex w-full items-center justify-between gap-x-2.5 rounded-md p-2 text-base text-gray-900 transition hover:bg-gray-200/50 sm:text-sm dark:text-gray-400 hover:dark:bg-gray-900 hover:dark:text-gray-50",
                         isLinkActive(section.href) &&
-                        "bg-gray-200/50 text-blue-600 dark:bg-gray-800 dark:text-blue-400",
-                        focusRing
+                          "bg-gray-200/50 text-blue-600 dark:bg-gray-800 dark:text-blue-400",
+                        focusRing,
                       )}
                     >
                       <div className="flex items-center gap-2.5">
@@ -328,7 +328,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                       <RiArrowDownSFill
                         className={cx(
                           openMenus.includes(section.name) ? "rotate-0" : "-rotate-90",
-                          "size-5 shrink-0 transform text-gray-400 transition-transform duration-150 ease-in-out dark:text-gray-600"
+                          "size-5 shrink-0 transform text-gray-400 transition-transform duration-150 ease-in-out dark:text-gray-600",
                         )}
                         aria-hidden="true"
                       />
