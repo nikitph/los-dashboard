@@ -189,7 +189,7 @@ export default function LoanStream() {
         ))}
       </Accordion>
 
-      {/* Button to add another co-applicant */}
+      {/* Button to add another co-applicants */}
       <div className="px-6">
         <Button variant="outline" onClick={addCoApplicant}>
           Add another coapplicant

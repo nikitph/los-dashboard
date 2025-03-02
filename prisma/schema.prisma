@@ -221,12 +221,32 @@ model LoanApplication {
   status          LoanStatus
   documents       Document[]
   verifications   Verification[]
+  guarantors      Guarantor[]
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
   deletedAt       DateTime?
 
   applicant Applicant @relation(fields: [applicantId], references: [id])
   bank      Bank      @relation(fields: [bankId], references: [id])
+}
+
+model Guarantor {
+  id                String    @id @default(dbgenerated("gen_random_uuid()"))
+  loanApplicationId String
+  firstName         String
+  lastName          String
+  email             String
+  addressState      String
+  addressCity       String
+  addressZipCode    String
+  addressLine1      String
+  addressLine2      String?
+  mobileNumber      String
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  deletedAt         DateTime?
+
+  loanApplication LoanApplication @relation(fields: [loanApplicationId], references: [id])
 }
 
 model Document {
