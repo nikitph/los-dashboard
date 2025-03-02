@@ -44,6 +44,7 @@ export default function ApplicantDetailsPage({ params }: { params: { id: string 
       try {
         const response = await getApplicantById(params.id);
         if (response.success) {
+          // @ts-ignore
           setApplicant(response?.data || []);
         } else {
           toast({

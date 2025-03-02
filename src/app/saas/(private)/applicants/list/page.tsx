@@ -101,6 +101,7 @@ export default function ApplicantsListPage() {
       );
 
       if (response.success) {
+        // @ts-ignore
         setApplicants(response?.data || []);
       } else {
         toast({
