@@ -38,7 +38,7 @@ export default function LoanStreamPage() {
 
   return (
     <div className="bg-default-background w-full px-6 py-12">
-      <div className="mx-left flex max-w-[448px] flex-col gap-12">
+      <div className="mx-auto flex max-w-[600px] flex-col gap-12">
         {/* Heading */}
         <div className="flex flex-col gap-1">
           <span className="text-2xl font-bold">New Loan Application</span>
@@ -63,6 +63,11 @@ export default function LoanStreamPage() {
                 <SelectItem value="Auto">Auto</SelectItem>
               </SelectContent>
             </Select>
+          </div>
+
+          <div className="flex w-full flex-col gap-1">
+            <Label htmlFor="requestedAmount">Requested Amount</Label>
+            <Input id="requestedAmount" placeholder="Enter desired loan amount" onChange={handlePhoneChange} />
           </div>
 
           {/* First + Last Name */}
