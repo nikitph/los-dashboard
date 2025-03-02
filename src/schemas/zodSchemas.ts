@@ -47,21 +47,17 @@ export const UserRolesSchema = z.object({
 
 // Applicant Schema
 export const ApplicantSchema = z.object({
-  id: z.string(),
-  userId: z.string(),
-  dateOfBirth: z.date(),
-  addressState: z.string(),
-  addressCity: z.string(),
-  addressFull: z.string(),
-  addressPinCode: z.string(),
-  aadharNumber: z.string(),
-  panNumber: z.string(),
+  userId: z.string().min(1, "User ID is required"),
+  dateOfBirth: z.coerce.date(),
+  addressState: z.string().min(1, "State is required"),
+  addressCity: z.string().min(1, "City is required"),
+  addressFull: z.string().min(1, "Address is required"),
+  addressPinCode: z.string().min(1, "Pin code is required"),
+  aadharNumber: z.string().regex(/^\d{12}$/, "Aadhar number must be 12 digits"),
+  panNumber: z.string().regex(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "PAN must be valid format (e.g., ABCDE1234F)"),
   aadharVerificationStatus: z.boolean().default(false),
   panVerificationStatus: z.boolean().default(false),
-  photoUrl: z.string(),
-  createdAt: z.date().default(new Date()),
-  updatedAt: z.date().default(new Date()),
-  deletedAt: z.date().nullable(),
+  photoUrl: z.string().optional(),
 });
 
 // Loan Obligation Schema

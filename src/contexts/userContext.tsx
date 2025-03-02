@@ -7,6 +7,7 @@ type User = {
   firstName?: string;
   lastName?: string;
   email?: string;
+  id: string;
 };
 
 type UserContextType = {
@@ -32,6 +33,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
           firstName: authUser.user_metadata?.first_name,
           lastName: authUser.user_metadata?.last_name,
           email: authUser.email,
+          id: authUser.id,
         });
       }
       setLoading(false);
@@ -49,6 +51,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
           firstName: authUser.user_metadata?.first_name,
           lastName: authUser.user_metadata?.last_name,
           email: authUser.email,
+          id: authUser.i,
         });
       } else {
         setUser(null);
