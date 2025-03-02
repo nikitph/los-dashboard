@@ -153,17 +153,33 @@ export const guarantorSchema = z.object({
     .regex(/^\d+$/, "Mobile number must contain only digits"),
 });
 
+export const coApplicantSchema = z.object({
+  firstName: z.string().min(1, "First name is required"),
+  lastName: z.string().min(1, "Last name is required"),
+  email: z.string().email("Invalid email address"),
+  addressState: z.string().min(1, "State is required"),
+  addressCity: z.string().min(1, "City is required"),
+  addressZipCode: z.string().min(1, "ZIP code is required"),
+  addressLine1: z.string().min(1, "Address line 1 is required"),
+  addressLine2: z.string().optional(),
+  mobileNumber: z
+    .string()
+    .min(10, "Mobile number must be at least 10 digits")
+    .regex(/^\d+$/, "Mobile number must contain only digits"),
+});
+
 export const LoanApplicationSchema = z.object({
-  id: z.string(),
+  id: z.string().optional(),
   applicantId: z.string(),
   bankId: z.string(),
   loanType: LoanType,
   amountRequested: z.number(),
-  guarantors: z.array(guarantorSchema).max(2, "Maximum of 2 guarantors allowed"),
+  guarantors: z.array(guarantorSchema).max(2, "Maximum of 2 guarantors allowed").optional(),
+  coApplicants: z.array(coApplicantSchema).max(2, "Maximum of 2 co-applicants allowed").optional(),
   status: LoanStatus,
   createdAt: z.date().default(new Date()),
   updatedAt: z.date().default(new Date()),
-  deletedAt: z.date().nullable(),
+  deletedAt: z.date().optional(),
 });
 
 export const DocumentSchema = z.object({
