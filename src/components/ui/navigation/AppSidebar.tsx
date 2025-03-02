@@ -17,7 +17,7 @@ import {
 } from "@/components/Sidebar";
 import { cx, focusRing } from "@/lib/utils";
 import { RiArrowDownSFill } from "@remixicon/react";
-import { Building, CarFront, CreditCard, DollarSign, FileCheck, FileText, Home, House, Users } from "lucide-react";
+import { Building, CarFront, CreditCard, DollarSign, FileCheck, FileText, Home, Users } from "lucide-react";
 import * as React from "react";
 import { useEffect, useState } from "react";
 import { Logo } from "../../../../public/Logo";
@@ -25,12 +25,6 @@ import { UserProfile } from "./UserProfile";
 import LoanSteps from "@/components/LoanSteps";
 
 const mainNavigation = [
-  {
-    name: "Home",
-    href: "/saas",
-    icon: House,
-    notifications: false,
-  },
   {
     name: "Dashboard",
     href: "/saas/dashboard",

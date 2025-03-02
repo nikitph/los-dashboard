@@ -55,16 +55,27 @@ export function Breadcrumbs() {
     return null;
   }
 
+  if (pathname === "/saas/dashboard") {
+    return (
+      <Link
+        href="/saas/dashboard"
+        className="text-gray-500 transition hover:text-gray-700 dark:text-gray-400 hover:dark:text-gray-300"
+      >
+        Dashboard
+      </Link>
+    );
+  }
+
   return (
     <nav aria-label="Breadcrumb" className="ml-2">
       <ol role="list" className="flex items-center space-x-3 text-sm">
-        {/* Always include Home as the first breadcrumb */}
+        {/* Always include Dashboard as the first breadcrumb */}
         <li className="flex">
           <Link
-            href="/saas"
+            href="/saas/dashboard"
             className="text-gray-500 transition hover:text-gray-700 dark:text-gray-400 hover:dark:text-gray-300"
           >
-            Home
+            Dashboard
           </Link>
         </li>
 
