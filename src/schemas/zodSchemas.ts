@@ -169,17 +169,17 @@ export const coApplicantSchema = z.object({
 });
 
 export const LoanApplicationSchema = z.object({
-  id: z.string(),
+  id: z.string().optional(),
   applicantId: z.string(),
   bankId: z.string(),
   loanType: LoanType,
   amountRequested: z.number(),
-  guarantors: z.array(guarantorSchema).max(2, "Maximum of 2 guarantors allowed"),
-  coApplicants: z.array(coApplicantSchema).max(2, "Maximum of 2 co-applicants allowed"),
+  guarantors: z.array(guarantorSchema).max(2, "Maximum of 2 guarantors allowed").optional(),
+  coApplicants: z.array(coApplicantSchema).max(2, "Maximum of 2 co-applicants allowed").optional(),
   status: LoanStatus,
   createdAt: z.date().default(new Date()),
   updatedAt: z.date().default(new Date()),
-  deletedAt: z.date().nullable(),
+  deletedAt: z.date().optional(),
 });
 
 export const DocumentSchema = z.object({
