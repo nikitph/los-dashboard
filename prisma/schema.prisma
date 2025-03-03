@@ -283,19 +283,93 @@ model Document {
   loanApplication LoanApplication @relation(fields: [loanApplicationId], references: [id])
 }
 
+// Core verification model
 model Verification {
   id                String             @id @default(dbgenerated("gen_random_uuid()"))
   loanApplicationId String
   type              VerificationType
   status            VerificationStatus
+  verificationDate  DateTime           @default(now())
+  verificationTime  String // Storing as String like "12:00 PM"
+  result            Boolean // Yes/No result field
+  remarks           String? // General remarks field
   verifiedById      String?
   verifiedAt        DateTime?
-  notes             String?
-  feedback          String?
+  addressState      String?
+  addressCity       String?
+  addressZipCode    String?
+  addressLine1      String?
+  addressLine2      String?
+  locationFromMain  String? // "Location from Main Road" field
+  photographUrl     String? // URL to the uploaded photograph
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
   deletedAt         DateTime?
 
+  // Relations
   loanApplication LoanApplication @relation(fields: [loanApplicationId], references: [id])
   verifiedBy      UserProfile?    @relation(fields: [verifiedById], references: [id])
+
+  // Type-specific extensions
+  residenceVerification ResidenceVerification?
+  businessVerification  BusinessVerification?
+  propertyVerification  PropertyVerification?
+  vehicleVerification   VehicleVerification?
+}
+
+// Residence-specific fields
+model ResidenceVerification {
+  id             String       @id @default(dbgenerated("gen_random_uuid()"))
+  verificationId String       @unique
+  verification   Verification @relation(fields: [verificationId], references: [id])
+  ownerFirstName String?
+  ownerLastName  String?
+  residentSince  String? // Year like "1989"
+  residenceType  String? // "Owned", "Rented", etc.
+  structureType  String? // "Apartment", "House", etc.
+}
+
+// Business-specific fields
+model BusinessVerification {
+  id                String       @id @default(dbgenerated("gen_random_uuid()"))
+  verificationId    String       @unique
+  verification      Verification @relation(fields: [verificationId], references: [id])
+  businessName      String?
+  businessType      String? // "Proprietorship", etc.
+  contactDetails    String?
+  businessExistence Boolean?
+  natureOfBusiness  String? // "Trading", etc.
+  salesPerDay       String? // Income range like "5,000-10,000"
+}
+
+// Property-specific fields
+model PropertyVerification {
+  id             String       @id @default(dbgenerated("gen_random_uuid()"))
+  verificationId String       @unique
+  verification   Verification @relation(fields: [verificationId], references: [id])
+  ownerFirstName String?
+  ownerLastName  String?
+  structureType  String? // "Apartment", etc.
+}
+
+// Vehicle-specific fields
+model VehicleVerification {
+  id                  String       @id @default(dbgenerated("gen_random_uuid()"))
+  verificationId      String       @unique
+  verification        Verification @relation(fields: [verificationId], references: [id])
+  engineNumber        String?
+  chassisNumber       String?
+  registrationNumber  String?
+  make                String? // Vehicle make
+  model               String? // Vehicle model
+  vehicleType         String? // Type of vehicle
+  // Document references
+  taxInvoiceUrl       String?
+  deliveryChalanUrl   String?
+  stampedReceiptUrl   String?
+  rcUrl               String?
+  inspectionReportUrl String?
+  vehiclePhotoUrl     String?
 }
 
 model AuditLog {
