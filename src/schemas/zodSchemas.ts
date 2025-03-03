@@ -155,6 +155,9 @@ export const guarantorSchema = z.object({
 });
 
 export const coApplicantSchema = z.object({
+  loanApplicationId: z.string({
+    required_error: "Loan application is required",
+  }),
   firstName: z.string().min(1, "First name is required"),
   lastName: z.string().min(1, "Last name is required"),
   email: z.string().email("Invalid email address"),

@@ -179,6 +179,7 @@ export async function getLoanApplicationById(id: string) {
         documents: true,
         verifications: true,
         guarantors: true,
+        coApplicants: true,
       },
     });
 
