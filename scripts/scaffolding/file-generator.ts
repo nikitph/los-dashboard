@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { Model } from "./prisma-parser";
+import { Field, Model } from "./prisma-parser";
 
 // Helper functions
 function ensureDirectoryExists(dirPath: string) {
