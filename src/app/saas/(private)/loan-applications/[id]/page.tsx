@@ -35,6 +35,7 @@ interface LoanApplication {
   documents?: any[];
   verifications?: any[];
   guarantors?: any[];
+  coApplicants?: any[];
 }
 
 export default function LoanApplicationDetailsPage({ params }: { params: { id: string } }) {
@@ -197,11 +198,12 @@ export default function LoanApplicationDetailsPage({ params }: { params: { id: s
 
         {/* Tabs for different sections */}
         <Tabs defaultValue="details" className="w-full">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="details">Details</TabsTrigger>
             <TabsTrigger value="documents">Documents</TabsTrigger>
             <TabsTrigger value="verifications">Verifications</TabsTrigger>
             <TabsTrigger value="guarantors">Guarantors</TabsTrigger>
+            <TabsTrigger value="coapplicants">Co-Applicants</TabsTrigger>
           </TabsList>
 
           {/* Details Tab */}
@@ -410,6 +412,49 @@ export default function LoanApplicationDetailsPage({ params }: { params: { id: s
                           </div>
                         </div>
                         {index < (loanApplication?.guarantors?.length ?? 0) - 1 && <Separator className="my-4" />}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-muted-foreground">No guarantors for this loan application.</p>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Co-Applicants Tab */}
+          <TabsContent value="coapplicants" className="mt-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Co-Applicants</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {loanApplication.coApplicants && loanApplication.coApplicants.length > 0 ? (
+                  <div className="space-y-6">
+                    {loanApplication.coApplicants.map((coApplicant, index) => (
+                      <div key={coApplicant.id || index} className="space-y-4">
+                        <div>
+                          <h3 className="text-lg font-medium">
+                            {coApplicant.firstName} {coApplicant.lastName}
+                          </h3>
+                          <p className="text-sm text-muted-foreground">{coApplicant.email}</p>
+                        </div>
+                        <div className="grid gap-4 md:grid-cols-2">
+                          <div>
+                            <p className="text-sm font-medium text-gray-500">Phone Number</p>
+                            <p>{coApplicant.mobileNumber}</p>
+                          </div>
+                          <div>
+                            <p className="text-sm font-medium text-gray-500">Address</p>
+                            <p>
+                              {coApplicant.addressLine1}
+                              {coApplicant.addressLine2 && `, ${coApplicant.addressLine2}`}
+                              <br />
+                              {coApplicant.addressCity}, {coApplicant.addressState} {coApplicant.addressZipCode}
+                            </p>
+                          </div>
+                        </div>
+                        {index < (loanApplication?.coApplicants?.length ?? 0) - 1 && <Separator className="my-4" />}
                       </div>
                     ))}
                   </div>
