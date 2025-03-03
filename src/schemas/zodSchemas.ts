@@ -129,13 +129,13 @@ export const BankSchema = z.object({
 });
 
 export const SubscriptionSchema = z.object({
-  id: z.string(),
+  id: z.string().optional(),
   bankId: z.string(),
   startDate: z.date(),
   endDate: z.date().nullable(),
   status: z.string(),
   amount: z.number(),
-  deletedAt: z.date().nullable(),
+  deletedAt: z.date().optional(),
 });
 
 export const guarantorSchema = z.object({

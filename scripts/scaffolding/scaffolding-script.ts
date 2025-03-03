@@ -35,7 +35,7 @@ async function prompt(question: string): Promise<string> {
 // Main function
 async function main() {
   try {
-    console.log("\n🚀 Next.js CRUD+L Scaffolding Generator 🚀\n");
+    console.log("\n🚀 Enhanced Next.js CRUD+L Scaffolding Generator 🚀\n");
 
     // Check if schema file exists
     if (!fs.existsSync(SCHEMA_PATH)) {
@@ -67,41 +67,62 @@ async function main() {
     console.log("");
 
     // Get user selection
-    const selection = await prompt("Enter the number of the model to scaffold: ");
-    const modelIndex = parseInt(selection, 10) - 1;
+    const selection = await prompt("Enter the number of the model to scaffold (or 'all' to scaffold all models): ");
 
-    if (isNaN(modelIndex) || modelIndex < 0 || modelIndex >= models.length) {
-      console.error("❌ Invalid selection");
-      process.exit(1);
+    if (selection.toLowerCase() === "all") {
+      // Generate scaffolding for all models
+      console.log(`\n📊 Selected all models. Generating scaffolding for ${models.length} models.`);
+
+      const customPath = await prompt(`\nOutput directory (default: ${OUTPUT_BASE_PATH}): `);
+      const outputPath = customPath.trim() || OUTPUT_BASE_PATH;
+
+      console.log("\n🛠️ Generating scaffolding for all models...");
+
+      // Loop through all models and generate scaffolding
+      for (const model of models) {
+        console.log(`\n📊 Generating scaffolding for model: ${model.name}`);
+        generateFiles(model, outputPath);
+      }
+
+      console.log("\n✅ Scaffolding completed successfully for all models!");
+    } else {
+      // Generate scaffolding for a single model
+      const modelIndex = parseInt(selection, 10) - 1;
+
+      if (isNaN(modelIndex) || modelIndex < 0 || modelIndex >= models.length) {
+        console.error("❌ Invalid selection");
+        process.exit(1);
+      }
+
+      const selectedModel = models[modelIndex];
+
+      // Confirm with user
+      console.log(`\n📊 Selected model: ${selectedModel.name}`);
+      console.log("Fields:");
+      selectedModel.fields.forEach((field) => {
+        console.log(`  - ${field.name} (${field.type}${field.isRequired ? ", required" : ""})`);
+      });
+
+      const confirm = await prompt("\nGenerate scaffolding for this model? (y/n): ");
+
+      if (confirm.toLowerCase() !== "y" && confirm.toLowerCase() !== "yes") {
+        console.log("❌ Operation cancelled");
+        process.exit(0);
+      }
+
+      // Ask for output base path
+      const customPath = await prompt(`\nOutput directory (default: ${OUTPUT_BASE_PATH}): `);
+      const outputPath = customPath.trim() || OUTPUT_BASE_PATH;
+
+      console.log("\n🛠️ Generating scaffolding...");
+
+      // 4. Generate files for the selected model
+      generateFiles(selectedModel, outputPath);
+
+      console.log("\n✅ Scaffolding completed successfully!");
+      console.log(`\nNavigate to ${outputPath}/${toKebabCase(selectedModel.name)} to see your generated files.`);
     }
 
-    const selectedModel = models[modelIndex];
-
-    // Confirm with user
-    console.log(`\n📊 Selected model: ${selectedModel.name}`);
-    console.log("Fields:");
-    selectedModel.fields.forEach((field) => {
-      console.log(`  - ${field.name} (${field.type}${field.isRequired ? ", required" : ""})`);
-    });
-
-    const confirm = await prompt("\nGenerate scaffolding for this model? (y/n): ");
-
-    if (confirm.toLowerCase() !== "y" && confirm.toLowerCase() !== "yes") {
-      console.log("❌ Operation cancelled");
-      process.exit(0);
-    }
-
-    // Ask for output base path
-    const customPath = await prompt(`\nOutput directory (default: ${OUTPUT_BASE_PATH}): `);
-    const outputPath = customPath.trim() || OUTPUT_BASE_PATH;
-
-    console.log("\n🛠️ Generating scaffolding...");
-
-    // 4. Generate files for the selected model
-    generateFiles(selectedModel, outputPath);
-
-    console.log("\n✅ Scaffolding completed successfully!");
-    console.log(`\nNavigate to ${outputPath}/${toKebabCase(selectedModel.name)} to see your generated files.`);
     console.log("Happy coding! 🎉");
   } catch (error) {
     console.error("\n❌ Error generating scaffolding:", error);
