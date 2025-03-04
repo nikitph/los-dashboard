@@ -210,6 +210,106 @@ export type Database = {
           },
         ];
       };
+      BusinessVerification: {
+        Row: {
+          businessExistence: boolean | null;
+          businessName: string | null;
+          businessType: string | null;
+          contactDetails: string | null;
+          id: string;
+          natureOfBusiness: string | null;
+          salesPerDay: string | null;
+          verificationId: string;
+        };
+        Insert: {
+          businessExistence?: boolean | null;
+          businessName?: string | null;
+          businessType?: string | null;
+          contactDetails?: string | null;
+          id?: string;
+          natureOfBusiness?: string | null;
+          salesPerDay?: string | null;
+          verificationId: string;
+        };
+        Update: {
+          businessExistence?: boolean | null;
+          businessName?: string | null;
+          businessType?: string | null;
+          contactDetails?: string | null;
+          id?: string;
+          natureOfBusiness?: string | null;
+          salesPerDay?: string | null;
+          verificationId?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "BusinessVerification_verificationId_fkey";
+            columns: ["verificationId"];
+            isOneToOne: false;
+            referencedRelation: "Verification";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      CoApplicant: {
+        Row: {
+          addressCity: string;
+          addressLine1: string;
+          addressLine2: string | null;
+          addressState: string;
+          addressZipCode: string;
+          createdAt: string;
+          deletedAt: string | null;
+          email: string;
+          firstName: string;
+          id: string;
+          lastName: string;
+          loanApplicationId: string;
+          mobileNumber: string;
+          updatedAt: string;
+        };
+        Insert: {
+          addressCity: string;
+          addressLine1: string;
+          addressLine2?: string | null;
+          addressState: string;
+          addressZipCode: string;
+          createdAt?: string;
+          deletedAt?: string | null;
+          email: string;
+          firstName: string;
+          id?: string;
+          lastName: string;
+          loanApplicationId: string;
+          mobileNumber: string;
+          updatedAt: string;
+        };
+        Update: {
+          addressCity?: string;
+          addressLine1?: string;
+          addressLine2?: string | null;
+          addressState?: string;
+          addressZipCode?: string;
+          createdAt?: string;
+          deletedAt?: string | null;
+          email?: string;
+          firstName?: string;
+          id?: string;
+          lastName?: string;
+          loanApplicationId?: string;
+          mobileNumber?: string;
+          updatedAt?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "CoApplicant_loanApplicationId_fkey";
+            columns: ["loanApplicationId"];
+            isOneToOne: false;
+            referencedRelation: "LoanApplication";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       Dependent: {
         Row: {
           applicantId: string;
@@ -282,6 +382,65 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "Document_loanApplicationId_fkey";
+            columns: ["loanApplicationId"];
+            isOneToOne: false;
+            referencedRelation: "LoanApplication";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      Guarantor: {
+        Row: {
+          addressCity: string;
+          addressLine1: string;
+          addressLine2: string | null;
+          addressState: string;
+          addressZipCode: string;
+          createdAt: string;
+          deletedAt: string | null;
+          email: string;
+          firstName: string;
+          id: string;
+          lastName: string;
+          loanApplicationId: string;
+          mobileNumber: string;
+          updatedAt: string;
+        };
+        Insert: {
+          addressCity: string;
+          addressLine1: string;
+          addressLine2?: string | null;
+          addressState: string;
+          addressZipCode: string;
+          createdAt?: string;
+          deletedAt?: string | null;
+          email: string;
+          firstName: string;
+          id?: string;
+          lastName: string;
+          loanApplicationId: string;
+          mobileNumber: string;
+          updatedAt: string;
+        };
+        Update: {
+          addressCity?: string;
+          addressLine1?: string;
+          addressLine2?: string | null;
+          addressState?: string;
+          addressZipCode?: string;
+          createdAt?: string;
+          deletedAt?: string | null;
+          email?: string;
+          firstName?: string;
+          id?: string;
+          lastName?: string;
+          loanApplicationId?: string;
+          mobileNumber?: string;
+          updatedAt?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "Guarantor_loanApplicationId_fkey";
             columns: ["loanApplicationId"];
             isOneToOne: false;
             referencedRelation: "LoanApplication";
@@ -519,6 +678,76 @@ export type Database = {
           },
         ];
       };
+      PropertyVerification: {
+        Row: {
+          id: string;
+          ownerFirstName: string | null;
+          ownerLastName: string | null;
+          structureType: string | null;
+          verificationId: string;
+        };
+        Insert: {
+          id?: string;
+          ownerFirstName?: string | null;
+          ownerLastName?: string | null;
+          structureType?: string | null;
+          verificationId: string;
+        };
+        Update: {
+          id?: string;
+          ownerFirstName?: string | null;
+          ownerLastName?: string | null;
+          structureType?: string | null;
+          verificationId?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "PropertyVerification_verificationId_fkey";
+            columns: ["verificationId"];
+            isOneToOne: false;
+            referencedRelation: "Verification";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      ResidenceVerification: {
+        Row: {
+          id: string;
+          ownerFirstName: string | null;
+          ownerLastName: string | null;
+          residenceType: string | null;
+          residentSince: string | null;
+          structureType: string | null;
+          verificationId: string;
+        };
+        Insert: {
+          id?: string;
+          ownerFirstName?: string | null;
+          ownerLastName?: string | null;
+          residenceType?: string | null;
+          residentSince?: string | null;
+          structureType?: string | null;
+          verificationId: string;
+        };
+        Update: {
+          id?: string;
+          ownerFirstName?: string | null;
+          ownerLastName?: string | null;
+          residenceType?: string | null;
+          residentSince?: string | null;
+          structureType?: string | null;
+          verificationId?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "ResidenceVerification_verificationId_fkey";
+            columns: ["verificationId"];
+            isOneToOne: false;
+            referencedRelation: "Verification";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       Subscription: {
         Row: {
           amount: number;
@@ -638,37 +867,129 @@ export type Database = {
           },
         ];
       };
+      VehicleVerification: {
+        Row: {
+          chassisNumber: string | null;
+          deliveryChalanUrl: string | null;
+          engineNumber: string | null;
+          id: string;
+          inspectionReportUrl: string | null;
+          make: string | null;
+          model: string | null;
+          rcUrl: string | null;
+          registrationNumber: string | null;
+          stampedReceiptUrl: string | null;
+          taxInvoiceUrl: string | null;
+          vehiclePhotoUrl: string | null;
+          vehicleType: string | null;
+          verificationId: string;
+        };
+        Insert: {
+          chassisNumber?: string | null;
+          deliveryChalanUrl?: string | null;
+          engineNumber?: string | null;
+          id?: string;
+          inspectionReportUrl?: string | null;
+          make?: string | null;
+          model?: string | null;
+          rcUrl?: string | null;
+          registrationNumber?: string | null;
+          stampedReceiptUrl?: string | null;
+          taxInvoiceUrl?: string | null;
+          vehiclePhotoUrl?: string | null;
+          vehicleType?: string | null;
+          verificationId: string;
+        };
+        Update: {
+          chassisNumber?: string | null;
+          deliveryChalanUrl?: string | null;
+          engineNumber?: string | null;
+          id?: string;
+          inspectionReportUrl?: string | null;
+          make?: string | null;
+          model?: string | null;
+          rcUrl?: string | null;
+          registrationNumber?: string | null;
+          stampedReceiptUrl?: string | null;
+          taxInvoiceUrl?: string | null;
+          vehiclePhotoUrl?: string | null;
+          vehicleType?: string | null;
+          verificationId?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "VehicleVerification_verificationId_fkey";
+            columns: ["verificationId"];
+            isOneToOne: false;
+            referencedRelation: "Verification";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       Verification: {
         Row: {
+          addressCity: string | null;
+          addressLine1: string | null;
+          addressLine2: string | null;
+          addressState: string | null;
+          addressZipCode: string | null;
+          createdAt: string;
           deletedAt: string | null;
-          feedback: string | null;
           id: string;
           loanApplicationId: string;
-          notes: string | null;
+          locationFromMain: string | null;
+          photographUrl: string | null;
+          remarks: string | null;
+          result: boolean;
           status: Database["public"]["Enums"]["VerificationStatus"];
           type: Database["public"]["Enums"]["VerificationType"];
+          updatedAt: string;
+          verificationDate: string;
+          verificationTime: string;
           verifiedAt: string | null;
           verifiedById: string | null;
         };
         Insert: {
+          addressCity?: string | null;
+          addressLine1?: string | null;
+          addressLine2?: string | null;
+          addressState?: string | null;
+          addressZipCode?: string | null;
+          createdAt?: string;
           deletedAt?: string | null;
-          feedback?: string | null;
           id?: string;
           loanApplicationId: string;
-          notes?: string | null;
+          locationFromMain?: string | null;
+          photographUrl?: string | null;
+          remarks?: string | null;
+          result: boolean;
           status: Database["public"]["Enums"]["VerificationStatus"];
           type: Database["public"]["Enums"]["VerificationType"];
+          updatedAt: string;
+          verificationDate?: string;
+          verificationTime: string;
           verifiedAt?: string | null;
           verifiedById?: string | null;
         };
         Update: {
+          addressCity?: string | null;
+          addressLine1?: string | null;
+          addressLine2?: string | null;
+          addressState?: string | null;
+          addressZipCode?: string | null;
+          createdAt?: string;
           deletedAt?: string | null;
-          feedback?: string | null;
           id?: string;
           loanApplicationId?: string;
-          notes?: string | null;
+          locationFromMain?: string | null;
+          photographUrl?: string | null;
+          remarks?: string | null;
+          result?: boolean;
           status?: Database["public"]["Enums"]["VerificationStatus"];
           type?: Database["public"]["Enums"]["VerificationType"];
+          updatedAt?: string;
+          verificationDate?: string;
+          verificationTime?: string;
           verifiedAt?: string | null;
           verifiedById?: string | null;
         };
