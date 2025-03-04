@@ -198,6 +198,83 @@ export const DocumentSchema = z.object({
   deletedAt: z.date().nullable(),
 });
 
+// Enum schemas
+export const VerificationTypeEnum = z.enum(["RESIDENCE", "BUSINESS", "PROPERTY", "VEHICLE"]);
+export const VerificationStatusEnum = z.enum(["PENDING", "COMPLETED", "FAILED"]);
+
+// Schema for ResidenceVerification
+export const ResidenceVerificationSchema = z.object({
+  ownerFirstName: z.string().optional(),
+  ownerLastName: z.string().optional(),
+  residentSince: z.string().optional(),
+  residenceType: z.string().optional(),
+  structureType: z.string().optional(),
+});
+
+// Schema for BusinessVerification
+export const BusinessVerificationSchema = z.object({
+  businessName: z.string().optional(),
+  businessType: z.string().optional(),
+  contactDetails: z.string().optional(),
+  businessExistence: z.boolean().optional(),
+  natureOfBusiness: z.string().optional(),
+  salesPerDay: z.string().optional(),
+});
+
+// Schema for PropertyVerification
+export const PropertyVerificationSchema = z.object({
+  ownerFirstName: z.string().optional(),
+  ownerLastName: z.string().optional(),
+  structureType: z.string().optional(),
+});
+
+// Schema for VehicleVerification
+export const VehicleVerificationSchema = z.object({
+  engineNumber: z.string().optional(),
+  chassisNumber: z.string().optional(),
+  registrationNumber: z.string().optional(),
+  make: z.string().optional(),
+  model: z.string().optional(),
+  vehicleType: z.string().optional(),
+  taxInvoiceUrl: z.string().optional(),
+  deliveryChalanUrl: z.string().optional(),
+  stampedReceiptUrl: z.string().optional(),
+  rcUrl: z.string().optional(),
+  inspectionReportUrl: z.string().optional(),
+  vehiclePhotoUrl: z.string().optional(),
+});
+
+// Main Verification schema
+export const VerificationSchema = z.object({
+  loanApplicationId: z.string({
+    required_error: "Loan application is required",
+  }),
+  type: VerificationTypeEnum,
+  status: VerificationStatusEnum,
+  verificationDate: z.coerce.date(),
+  verificationTime: z.string(),
+  result: z.boolean(),
+  remarks: z.string().optional(),
+  verifiedById: z.string().optional(),
+  verifiedAt: z.date().optional(),
+  addressState: z.string().optional(),
+  addressCity: z.string().optional(),
+  addressZipCode: z.string().optional(),
+  addressLine1: z.string().optional(),
+  addressLine2: z.string().optional(),
+  locationFromMain: z.string().optional(),
+  photographUrl: z.string().optional(),
+
+  // Related type-specific verification data
+  residenceVerification: ResidenceVerificationSchema.optional(),
+  businessVerification: BusinessVerificationSchema.optional(),
+  propertyVerification: PropertyVerificationSchema.optional(),
+  vehicleVerification: VehicleVerificationSchema.optional(),
+});
+
+// Export the schema
+export default VerificationSchema;
+
 export const AuditLogSchema = z.object({
   id: z.string(),
   action: z.string(),
