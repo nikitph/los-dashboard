@@ -268,7 +268,11 @@ export async function getVerificationById(id: string) {
     const verification = await prisma.verification.findUnique({
       where: { id, deletedAt: null },
       include: {
-        documents: true,
+        documents: {
+          where: {
+            deletedAt: null,
+          },
+        },
         loanApplication: {
           include: {
             applicant: {
