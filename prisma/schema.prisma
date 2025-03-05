@@ -88,6 +88,8 @@ model UserProfile {
   applicants    Applicant[]
   verifications Verification[]
   auditLogs     AuditLog[]
+
+  documents Document[]
 }
 
 model UserRoles {
@@ -138,8 +140,7 @@ model LoanObligation {
   createdAt   DateTime               @default(now())
   updatedAt   DateTime               @updatedAt
   deletedAt   DateTime?
-
-  Document Document[]
+  documents   Document[]
 }
 
 model LoanObligationDetail {
@@ -155,7 +156,7 @@ model LoanObligationDetail {
   updatedAt        DateTime       @updatedAt
   deletedAt        DateTime?
 
-  Document Document[]
+  documents Document[]
 }
 
 model Income {
@@ -185,7 +186,7 @@ model IncomeDetail {
   createdAt          DateTime   @default(now())
   updatedAt          DateTime   @updatedAt
   deletedAt          DateTime?
-  Document           Document[]
+  documents          Document[]
 }
 
 model Dependent {
@@ -196,7 +197,7 @@ model Dependent {
   createdAt                 DateTime   @default(now())
   updatedAt                 DateTime   @updatedAt
   deletedAt                 DateTime?
-  Document                  Document[]
+  documents                 Document[]
 }
 
 model Bank {
@@ -210,7 +211,7 @@ model Bank {
   deletedAt        DateTime?
   UserRoles        UserRoles[]
 
-  Document Document[]
+  documents Document[]
 }
 
 model Subscription {
@@ -224,7 +225,7 @@ model Subscription {
 
   bank Bank @relation(fields: [bankId], references: [id])
 
-  Document Document[]
+  documents Document[]
 }
 
 model BankConfiguration {
@@ -239,7 +240,7 @@ model BankConfiguration {
 
   bank Bank @relation(fields: [bankId], references: [id])
 
-  Document Document[]
+  documents Document[]
 }
 
 model LoanApplication {
@@ -275,7 +276,7 @@ model Guarantor {
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @updatedAt
   deletedAt      DateTime?
-  Document       Document[]
+  documents      Document[]
 
   loanApplicationId String
   loanApplication   LoanApplication @relation(fields: [loanApplicationId], references: [id])
@@ -357,6 +358,9 @@ model Document {
 
   bankConfigurationId String?
   bankConfiguration   BankConfiguration? @relation(fields: [bankConfigurationId], references: [id])
+
+  userProfileId String?
+  userProfile   UserProfile? @relation(fields: [userProfileId], references: [id])
 }
 
 // Core verification model
@@ -392,7 +396,7 @@ model Verification {
   propertyVerification  PropertyVerification?
   vehicleVerification   VehicleVerification?
 
-  Document Document[]
+  documents Document[]
 }
 
 // Residence-specific fields
