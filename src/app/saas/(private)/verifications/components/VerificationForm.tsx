@@ -21,6 +21,8 @@ import { toast } from "@/hooks/use-toast";
 
 import { createVerification, getLoanApplications, getVerificationOfficers, updateVerification } from "../actions";
 import { VerificationSchema } from "@/schemas/zodSchemas";
+import MultiImageUpload from "@/app/saas/(private)/verifications/components/MultiImageUpload";
+import { useUser } from "@/contexts/userContext";
 
 type VerificationFormValues = z.infer<typeof VerificationSchema>;
 
@@ -173,6 +175,8 @@ export default function VerificationForm({ initialData, isEditMode = false }: Ve
       setIsSubmitting(false);
     }
   };
+
+  console.log("errros", errors);
 
   // Get applicant name from loan application for display
   const getApplicantNameFromLoanApplication = (id: string) => {

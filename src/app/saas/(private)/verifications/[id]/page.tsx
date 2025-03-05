@@ -9,6 +9,8 @@ import { ArrowLeft, Building, Car, Edit, FileText, Home, MapPin, Trash, User } f
 import { deleteVerification, getVerificationById } from "@/app/saas/(private)/verifications/actions";
 import { toast } from "@/hooks/use-toast";
 import { formatDate } from "@/utils/displayUtils";
+import { useDocuments } from "@/hooks/useDocuments";
+import { VerificationPhoto } from "@/app/saas/(private)/verifications/components/VerificationPhoto";
 
 export default function VerificationDetailsPage({ params }: { params: { id: string } }) {
   const router = useRouter();
