@@ -14,7 +14,7 @@ import { toast } from "@/hooks/use-toast";
 
 import { createCoApplicant, getLoanApplications, updateCoApplicant } from "@/app/saas/(private)/co-applicants/actions";
 import { indianStates } from "@/lib/utils";
-import { coApplicantSchema } from "@/schemas/zodSchemas";
+import { CoApplicantSchema as coApplicantSchema } from "@/schemas/zodSchemas";
 
 type CoApplicantFormValues = z.infer<typeof coApplicantSchema>;
 

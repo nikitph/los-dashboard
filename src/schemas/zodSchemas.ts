@@ -20,189 +20,241 @@ export const LoanStatus = z.enum(["PENDING", "APPROVED", "REJECTED", "UNDER_REVI
 
 export const VerificationType = z.enum(["RESIDENCE", "BUSINESS", "VEHICLE", "PROPERTY"]);
 
+export const DocumentType = z.enum([
+  "AADHAAR_CARD",
+  "PAN_CARD",
+  "IDENTITY_PROOF",
+  "ADDRESS_PROOF",
+  "INCOME_PROOF",
+  "BANK_STATEMENT",
+  "PROPERTY_DOCUMENT",
+  "VEHICLE_DOCUMENT",
+  "LOAN_AGREEMENT",
+  "VERIFICATION_PHOTO",
+  "KYC_DOCUMENT",
+  "APPLICATION_FORM",
+  "OTHER",
+]);
+
 export const VerificationStatus = z.enum(["PENDING", "COMPLETED", "FAILED"]);
+
+// Utility function for phone number validation
+const phoneNumberValidation = z
+  .string()
+  .min(10, "Phone number must be at least 10 digits")
+  .max(15, "Phone number cannot exceed 15 digits")
+  .regex(/^\d+$/, "Phone number must contain only digits");
+
+// Utility function for email validation
+const emailValidation = z.string().email("Invalid email address").min(1, "Email is required");
 
 // UserProfile Schema
 export const UserProfileSchema = z.object({
-  id: z.string(),
-  authId: z.string(),
-  firstName: z.string().nullable(),
-  lastName: z.string().nullable(),
-  email: z.string().nullable(),
-  phoneNumber: z.string().nullable(),
+  id: z.string().uuid(),
+  authId: z.string().uuid(),
+  firstName: z.string().min(1, "First name is required").max(100).nullable(),
+  lastName: z.string().min(1, "Last name is required").max(100).nullable(),
+  email: emailValidation.nullable(),
+  phoneNumber: phoneNumberValidation.nullable(),
   isOnboarded: z.boolean().default(false),
-  createdAt: z.date().default(new Date()),
-  updatedAt: z.date().default(new Date()),
+  createdAt: z.date().default(() => new Date()),
+  updatedAt: z.date().default(() => new Date()),
   deletedAt: z.date().nullable(),
 });
 
+// UserRoles Schema
 export const UserRolesSchema = z.object({
-  id: z.string(),
-  userId: z.string(),
+  id: z.string().uuid(),
+  userId: z.string().uuid(),
   role: RoleType,
-  bankId: z.string().nullable(),
-  assignedAt: z.date().default(new Date()),
+  bankId: z.string().uuid().nullable(),
+  assignedAt: z.date().default(() => new Date()),
   deletedAt: z.date().nullable(),
 });
 
 // Applicant Schema
 export const ApplicantSchema = z.object({
-  userId: z.string().min(1, "User ID is required"),
-  dateOfBirth: z.coerce.date(),
+  userId: z.string().uuid(),
+  dateOfBirth: z.coerce.date().refine(
+    (date) => {
+      const eighteenYearsAgo = new Date();
+      eighteenYearsAgo.setFullYear(eighteenYearsAgo.getFullYear() - 18);
+      return date <= eighteenYearsAgo;
+    },
+    { message: "Applicant must be at least 18 years old" },
+  ),
   addressState: z.string().min(1, "State is required"),
   addressCity: z.string().min(1, "City is required"),
   addressFull: z.string().min(1, "Address is required"),
-  addressPinCode: z.string().min(1, "Pin code is required"),
-  aadharNumber: z.string().regex(/^\d{12}$/, "Aadhar number must be 12 digits"),
+  addressPinCode: z.string().regex(/^\d{6}$/, "Pin code must be 6 digits"),
+  aadharNumber: z
+    .string()
+    .regex(/^\d{12}$/, "Aadhar number must be 12 digits")
+    .refine(
+      (aadhar) => {
+        // Basic Aadhar validation (can be enhanced)
+        const digits = aadhar.split("").map(Number);
+        return digits.length === 12;
+      },
+      { message: "Invalid Aadhar number" },
+    ),
   panNumber: z.string().regex(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "PAN must be valid format (e.g., ABCDE1234F)"),
   aadharVerificationStatus: z.boolean().default(false),
   panVerificationStatus: z.boolean().default(false),
-  photoUrl: z.string().optional(),
+  photoUrl: z.string().url().optional(),
 });
 
 // Loan Obligation Schema
 export const LoanObligationSchema = z.object({
-  id: z.string(),
-  applicantId: z.string(),
-  cibilScore: z.number().nullable(),
-  totalLoan: z.number().nullable(),
-  totalEmi: z.number().nullable(),
-  createdAt: z.date().default(new Date()),
-  updatedAt: z.date().default(new Date()),
+  id: z.string().uuid(),
+  applicantId: z.string().uuid(),
+  cibilScore: z.number().min(300, "CIBIL score too low").max(900, "CIBIL score cannot exceed 900").nullable(),
+  totalLoan: z.number().nonnegative().nullable(),
+  totalEmi: z.number().nonnegative().nullable(),
+  createdAt: z.date().default(() => new Date()),
+  updatedAt: z.date().default(() => new Date()),
   deletedAt: z.date().nullable(),
 });
 
 export const LoanObligationDetailSchema = z.object({
-  id: z.string(),
-  loanObligationId: z.string(),
-  outstandingLoan: z.number(),
-  emiAmount: z.number(),
+  id: z.string().uuid(),
+  loanObligationId: z.string().uuid(),
+  outstandingLoan: z.number().nonnegative(),
+  emiAmount: z.number().positive(),
   loanDate: z.date(),
-  loanType: z.string(),
-  bankName: z.string(),
-  createdAt: z.date().default(new Date()),
-  updatedAt: z.date().default(new Date()),
+  loanType: z.string().min(1, "Loan type is required"),
+  bankName: z.string().min(1, "Bank name is required"),
+  createdAt: z.date().default(() => new Date()),
+  updatedAt: z.date().default(() => new Date()),
   deletedAt: z.date().nullable(),
 });
 
 // Income Schema
 export const IncomeSchema = z.object({
-  id: z.string(),
-  applicantId: z.string(),
-  type: z.string(),
-  createdAt: z.date().default(new Date()),
-  updatedAt: z.date().default(new Date()),
+  id: z.string().uuid(),
+  applicantId: z.string().uuid(),
+  type: z.string().min(1, "Income type is required"),
+  createdAt: z.date().default(() => new Date()),
+  updatedAt: z.date().default(() => new Date()),
   deletedAt: z.date().nullable(),
 });
 
 export const IncomeDetailSchema = z.object({
-  id: z.string(),
-  incomeId: z.string(),
-  year: z.number(),
-  taxableIncome: z.number().nullable(),
-  taxPaid: z.number().nullable(),
-  grossIncome: z.number().nullable(),
-  rentalIncome: z.number().nullable(),
-  incomeFromBusiness: z.number().nullable(),
-  depreciation: z.number().nullable(),
-  grossCashIncome: z.number().nullable(),
-  createdAt: z.date().default(new Date()),
-  updatedAt: z.date().default(new Date()),
+  id: z.string().uuid(),
+  incomeId: z.string().uuid(),
+  year: z.number().min(1900, "Year must be after 1900").max(new Date().getFullYear(), "Year cannot be in the future"),
+  taxableIncome: z.number().nonnegative().nullable(),
+  taxPaid: z.number().nonnegative().nullable(),
+  grossIncome: z.number().nonnegative().nullable(),
+  rentalIncome: z.number().nonnegative().nullable(),
+  incomeFromBusiness: z.number().nonnegative().nullable(),
+  depreciation: z.number().nonnegative().nullable(),
+  grossCashIncome: z.number().nonnegative().nullable(),
+  createdAt: z.date().default(() => new Date()),
+  updatedAt: z.date().default(() => new Date()),
   deletedAt: z.date().nullable(),
 });
 
 export const DependentSchema = z.object({
-  id: z.string(),
-  applicantId: z.string(),
-  averageMonthlyExpenditure: z.number(),
-  createdAt: z.date().default(new Date()),
-  updatedAt: z.date().default(new Date()),
+  id: z.string().uuid(),
+  applicantId: z.string().uuid(),
+  averageMonthlyExpenditure: z.number().nonnegative(),
+  createdAt: z.date().default(() => new Date()),
+  updatedAt: z.date().default(() => new Date()),
   deletedAt: z.date().nullable(),
 });
 
 export const BankSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-  createdAt: z.date().default(new Date()),
-  updatedAt: z.date().default(new Date()),
-  deletedAt: z.date().optional(),
-});
-
-export const SubscriptionSchema = z.object({
-  id: z.string().optional(),
-  bankId: z.string(),
-  startDate: z.date(),
-  endDate: z.date().nullable(),
-  status: z.string(),
-  amount: z.number(),
-  deletedAt: z.date().optional(),
-});
-
-export const guarantorSchema = z.object({
-  loanApplicationId: z.string().min(1, "Loan application is required"),
-  firstName: z.string().min(1, "First name is required"),
-  lastName: z.string().min(1, "Last name is required"),
-  email: z.string().email("Invalid email address"),
-  addressState: z.string().min(1, "State is required"),
-  addressCity: z.string().min(1, "City is required"),
-  addressZipCode: z.string().min(1, "ZIP code is required"),
-  addressLine1: z.string().min(1, "Address line 1 is required"),
-  addressLine2: z.string().optional(),
-  mobileNumber: z
-    .string()
-    .min(10, "Mobile number must be at least 10 digits")
-    .regex(/^\d+$/, "Mobile number must contain only digits"),
-});
-
-export const coApplicantSchema = z.object({
-  loanApplicationId: z.string({
-    required_error: "Loan application is required",
-  }),
-  firstName: z.string().min(1, "First name is required"),
-  lastName: z.string().min(1, "Last name is required"),
-  email: z.string().email("Invalid email address"),
-  addressState: z.string().min(1, "State is required"),
-  addressCity: z.string().min(1, "City is required"),
-  addressZipCode: z.string().min(1, "ZIP code is required"),
-  addressLine1: z.string().min(1, "Address line 1 is required"),
-  addressLine2: z.string().optional(),
-  mobileNumber: z
-    .string()
-    .min(10, "Mobile number must be at least 10 digits")
-    .regex(/^\d+$/, "Mobile number must contain only digits"),
-});
-
-export const LoanApplicationSchema = z.object({
-  id: z.string().optional(),
-  applicantId: z.string(),
-  bankId: z.string(),
-  loanType: LoanType,
-  amountRequested: z.number(),
-  guarantors: z.array(guarantorSchema).max(2, "Maximum of 2 guarantors allowed").optional(),
-  coApplicants: z.array(coApplicantSchema).max(2, "Maximum of 2 co-applicants allowed").optional(),
-  status: LoanStatus,
-  createdAt: z.date().default(new Date()),
-  updatedAt: z.date().default(new Date()),
-  deletedAt: z.date().optional(),
-});
-
-export const DocumentSchema = z.object({
-  id: z.string(),
-  loanApplicationId: z.string(),
-  documentType: z.string(),
-  fileUrl: z.string(),
-  storageType: z.string(),
-  verificationStatus: VerificationStatus,
-  metadata: z.any().nullable(),
-  uploadedAt: z.date().default(new Date()),
+  id: z.string().uuid(),
+  name: z.string().min(1, "Bank name is required"),
+  createdAt: z.date().default(() => new Date()),
+  updatedAt: z.date().default(() => new Date()),
   deletedAt: z.date().nullable(),
 });
 
-// Enum schemas
-export const VerificationTypeEnum = z.enum(["RESIDENCE", "BUSINESS", "PROPERTY", "VEHICLE"]);
-export const VerificationStatusEnum = z.enum(["PENDING", "COMPLETED", "FAILED"]);
+export const SubscriptionSchema = z.object({
+  id: z.string().uuid().optional(),
+  bankId: z.string().uuid(),
+  startDate: z.date(),
+  endDate: z.date().nullable(),
+  status: z.string().min(1, "Subscription status is required"),
+  amount: z.number().positive("Subscription amount must be positive"),
+  deletedAt: z.date().nullable(),
+});
 
-// Schema for ResidenceVerification
+export const GuarantorSchema = z.object({
+  loanApplicationId: z.string().uuid(),
+  firstName: z.string().min(1, "First name is required"),
+  lastName: z.string().min(1, "Last name is required"),
+  email: emailValidation,
+  addressState: z.string().min(1, "State is required"),
+  addressCity: z.string().min(1, "City is required"),
+  addressZipCode: z.string().regex(/^\d{6}$/, "ZIP code must be 6 digits"),
+  addressLine1: z.string().min(1, "Address line 1 is required"),
+  addressLine2: z.string().optional(),
+  mobileNumber: phoneNumberValidation,
+});
+
+export const CoApplicantSchema = z.object({
+  loanApplicationId: z.string().uuid(),
+  firstName: z.string().min(1, "First name is required"),
+  lastName: z.string().min(1, "Last name is required"),
+  email: emailValidation,
+  addressState: z.string().min(1, "State is required"),
+  addressCity: z.string().min(1, "City is required"),
+  addressZipCode: z.string().regex(/^\d{6}$/, "ZIP code must be 6 digits"),
+  addressLine1: z.string().min(1, "Address line 1 is required"),
+  addressLine2: z.string().optional(),
+  mobileNumber: phoneNumberValidation,
+});
+
+export const LoanApplicationSchema = z.object({
+  id: z.string().uuid().optional(),
+  applicantId: z.string().uuid(),
+  bankId: z.string().uuid(),
+  loanType: LoanType,
+  amountRequested: z
+    .number()
+    .positive("Loan amount must be positive")
+    .max(10000000, "Loan amount exceeds maximum limit"),
+  guarantors: z.array(GuarantorSchema).max(2, "Maximum of 2 guarantors allowed").optional(),
+  coApplicants: z.array(CoApplicantSchema).max(2, "Maximum of 2 co-applicants allowed").optional(),
+  status: LoanStatus,
+  createdAt: z.date().default(() => new Date()),
+  updatedAt: z.date().default(() => new Date()),
+  deletedAt: z.date().nullable(),
+});
+
+export const DocumentSchema = z.object({
+  id: z.string().uuid(),
+  documentType: DocumentType,
+  fileUrl: z.string().url("Invalid file URL"),
+  fileName: z.string().min(1, "File name is required"),
+  fileSize: z.number().nonnegative("File size must be non-negative"),
+  mimeType: z.string().min(1, "MIME type is required"),
+  storageType: z.string().min(1, "Storage type is required"),
+  status: VerificationStatus,
+  metadata: z.record(z.any()).nullable(),
+  uploadedById: z.string().uuid(),
+  uploadedAt: z.date().default(() => new Date()),
+  deletedAt: z.date().nullable(),
+
+  // Optional relations
+  loanApplicationId: z.string().uuid().optional(),
+  applicantId: z.string().uuid().optional(),
+  coApplicantId: z.string().uuid().optional(),
+  guarantorId: z.string().uuid().optional(),
+  incomeId: z.string().uuid().optional(),
+  incomeDetailId: z.string().uuid().optional(),
+  dependentId: z.string().uuid().optional(),
+  loanObligationId: z.string().uuid().optional(),
+  loanObligationDetailId: z.string().uuid().optional(),
+  bankId: z.string().uuid().optional(),
+  subscriptionId: z.string().uuid().optional(),
+  bankConfigurationId: z.string().uuid().optional(),
+});
+
+// Verification-related Schemas
 export const ResidenceVerificationSchema = z.object({
   ownerFirstName: z.string().optional(),
   ownerLastName: z.string().optional(),
@@ -211,7 +263,6 @@ export const ResidenceVerificationSchema = z.object({
   structureType: z.string().optional(),
 });
 
-// Schema for BusinessVerification
 export const BusinessVerificationSchema = z.object({
   businessName: z.string().optional(),
   businessType: z.string().optional(),
@@ -221,14 +272,12 @@ export const BusinessVerificationSchema = z.object({
   salesPerDay: z.string().optional(),
 });
 
-// Schema for PropertyVerification
 export const PropertyVerificationSchema = z.object({
   ownerFirstName: z.string().optional(),
   ownerLastName: z.string().optional(),
   structureType: z.string().optional(),
 });
 
-// Schema for VehicleVerification
 export const VehicleVerificationSchema = z.object({
   engineNumber: z.string().optional(),
   chassisNumber: z.string().optional(),
@@ -236,26 +285,23 @@ export const VehicleVerificationSchema = z.object({
   make: z.string().optional(),
   model: z.string().optional(),
   vehicleType: z.string().optional(),
-  taxInvoiceUrl: z.string().optional(),
-  deliveryChalanUrl: z.string().optional(),
-  stampedReceiptUrl: z.string().optional(),
-  rcUrl: z.string().optional(),
-  inspectionReportUrl: z.string().optional(),
-  vehiclePhotoUrl: z.string().optional(),
+  taxInvoiceUrl: z.string().url().optional(),
+  deliveryChalanUrl: z.string().url().optional(),
+  stampedReceiptUrl: z.string().url().optional(),
+  rcUrl: z.string().url().optional(),
+  inspectionReportUrl: z.string().url().optional(),
+  vehiclePhotoUrl: z.string().url().optional(),
 });
 
-// Main Verification schema
 export const VerificationSchema = z.object({
-  loanApplicationId: z.string({
-    required_error: "Loan application is required",
-  }),
-  type: VerificationTypeEnum,
-  status: VerificationStatusEnum,
+  loanApplicationId: z.string().uuid(),
+  type: VerificationType,
+  status: VerificationStatus,
   verificationDate: z.coerce.date(),
-  verificationTime: z.string(),
+  verificationTime: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Invalid time format (HH:MM)"),
   result: z.boolean(),
   remarks: z.string().optional(),
-  verifiedById: z.string().optional(),
+  verifiedById: z.string().uuid().optional(),
   verifiedAt: z.date().optional(),
   addressState: z.string().optional(),
   addressCity: z.string().optional(),
@@ -263,7 +309,7 @@ export const VerificationSchema = z.object({
   addressLine1: z.string().optional(),
   addressLine2: z.string().optional(),
   locationFromMain: z.string().optional(),
-  photographUrl: z.string().optional(),
+  photographUrl: z.string().url().optional(),
 
   // Related type-specific verification data
   residenceVerification: ResidenceVerificationSchema.optional(),
@@ -272,18 +318,15 @@ export const VerificationSchema = z.object({
   vehicleVerification: VehicleVerificationSchema.optional(),
 });
 
-// Export the schema
-export default VerificationSchema;
-
 export const AuditLogSchema = z.object({
-  id: z.string(),
-  action: z.string(),
-  tableName: z.string(),
-  userId: z.string(),
-  recordId: z.string().nullable(),
-  timestamp: z.date().default(new Date()),
+  id: z.string().uuid(),
+  action: z.string().min(1, "Action is required"),
+  tableName: z.string().min(1, "Table name is required"),
+  userId: z.string().uuid(),
+  recordId: z.string().uuid().nullable(),
+  timestamp: z.date().default(() => new Date()),
   oldData: z.any().nullable(),
   newData: z.any().nullable(),
-  ipAddress: z.string().nullable(),
-  deviceInfo: z.string().nullable(),
+  ipAddress: z.string().ip().nullable(),
+  deviceInfo: z.string().optional(),
 });
