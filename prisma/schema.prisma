@@ -55,6 +55,22 @@ enum VerificationStatus {
   FAILED
 }
 
+enum DocumentType {
+  AADHAAR_CARD
+  PAN_CARD
+  IDENTITY_PROOF // Passport, Voter ID, etc.
+  ADDRESS_PROOF // Utility bills, etc.
+  INCOME_PROOF // Salary slips, income tax returns
+  BANK_STATEMENT
+  PROPERTY_DOCUMENT // Property deeds, etc.
+  VEHICLE_DOCUMENT // RC book, insurance
+  LOAN_AGREEMENT // Signed loan agreement
+  VERIFICATION_PHOTO // Photos taken during verification
+  KYC_DOCUMENT // KYC documents
+  APPLICATION_FORM // Completed application forms
+  OTHER
+}
+
 model UserProfile {
   id          String    @id @default(dbgenerated("gen_random_uuid()")) @map("auth_id") // Matches auth.users.id
   authId      String    @unique
@@ -108,6 +124,7 @@ model Applicant {
   incomes                  Income[]
   dependents               Dependent[]
   loanObligations          LoanObligation[]
+  documents                Document[]
 }
 
 model LoanObligation {
@@ -121,6 +138,8 @@ model LoanObligation {
   createdAt   DateTime               @default(now())
   updatedAt   DateTime               @updatedAt
   deletedAt   DateTime?
+
+  Document Document[]
 }
 
 model LoanObligationDetail {
@@ -135,6 +154,8 @@ model LoanObligationDetail {
   createdAt        DateTime       @default(now())
   updatedAt        DateTime       @updatedAt
   deletedAt        DateTime?
+
+  Document Document[]
 }
 
 model Income {
@@ -146,12 +167,13 @@ model Income {
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
   deletedAt     DateTime?
+  documents     Document[]
 }
 
 model IncomeDetail {
-  id                 String    @id @default(dbgenerated("gen_random_uuid()"))
+  id                 String     @id @default(dbgenerated("gen_random_uuid()"))
   incomeId           String
-  income             Income    @relation(fields: [incomeId], references: [id])
+  income             Income     @relation(fields: [incomeId], references: [id])
   year               Int
   taxableIncome      Float?
   taxPaid            Float?
@@ -160,19 +182,21 @@ model IncomeDetail {
   incomeFromBusiness Float?
   depreciation       Float?
   grossCashIncome    Float?
-  createdAt          DateTime  @default(now())
-  updatedAt          DateTime  @updatedAt
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
   deletedAt          DateTime?
+  Document           Document[]
 }
 
 model Dependent {
-  id                        String    @id @default(dbgenerated("gen_random_uuid()"))
+  id                        String     @id @default(dbgenerated("gen_random_uuid()"))
   applicantId               String
-  applicant                 Applicant @relation(fields: [applicantId], references: [id])
+  applicant                 Applicant  @relation(fields: [applicantId], references: [id])
   averageMonthlyExpenditure Float
-  createdAt                 DateTime  @default(now())
-  updatedAt                 DateTime  @updatedAt
+  createdAt                 DateTime   @default(now())
+  updatedAt                 DateTime   @updatedAt
   deletedAt                 DateTime?
+  Document                  Document[]
 }
 
 model Bank {
@@ -185,6 +209,8 @@ model Bank {
   updatedAt        DateTime            @updatedAt
   deletedAt        DateTime?
   UserRoles        UserRoles[]
+
+  Document Document[]
 }
 
 model Subscription {
@@ -197,6 +223,8 @@ model Subscription {
   deletedAt DateTime?
 
   bank Bank @relation(fields: [bankId], references: [id])
+
+  Document Document[]
 }
 
 model BankConfiguration {
@@ -210,6 +238,8 @@ model BankConfiguration {
   deletedAt      DateTime?
 
   bank Bank @relation(fields: [bankId], references: [id])
+
+  Document Document[]
 }
 
 model LoanApplication {
@@ -232,55 +262,101 @@ model LoanApplication {
 }
 
 model Guarantor {
-  id                String    @id @default(dbgenerated("gen_random_uuid()"))
-  loanApplicationId String
-  firstName         String
-  lastName          String
-  email             String
-  addressState      String
-  addressCity       String
-  addressZipCode    String
-  addressLine1      String
-  addressLine2      String?
-  mobileNumber      String
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
-  deletedAt         DateTime?
+  id             String     @id @default(dbgenerated("gen_random_uuid()"))
+  firstName      String
+  lastName       String
+  email          String
+  addressState   String
+  addressCity    String
+  addressZipCode String
+  addressLine1   String
+  addressLine2   String?
+  mobileNumber   String
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+  deletedAt      DateTime?
+  Document       Document[]
 
-  loanApplication LoanApplication @relation(fields: [loanApplicationId], references: [id])
+  loanApplicationId String
+  loanApplication   LoanApplication @relation(fields: [loanApplicationId], references: [id])
 }
 
 model CoApplicant {
-  id                String    @id @default(dbgenerated("gen_random_uuid()"))
-  loanApplicationId String
-  firstName         String
-  lastName          String
-  email             String
-  addressState      String
-  addressCity       String
-  addressZipCode    String
-  addressLine1      String
-  addressLine2      String?
-  mobileNumber      String
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
-  deletedAt         DateTime?
+  id             String     @id @default(dbgenerated("gen_random_uuid()"))
+  firstName      String
+  lastName       String
+  email          String
+  addressState   String
+  addressCity    String
+  addressZipCode String
+  addressLine1   String
+  addressLine2   String?
+  mobileNumber   String
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+  deletedAt      DateTime?
+  documents      Document[]
 
-  loanApplication LoanApplication @relation(fields: [loanApplicationId], references: [id])
+  //Relationships
+
+  loanApplicationId String
+  loanApplication   LoanApplication @relation(fields: [loanApplicationId], references: [id])
 }
 
 model Document {
-  id                 String             @id @default(dbgenerated("gen_random_uuid()"))
-  loanApplicationId  String
-  documentType       String
-  fileUrl            String
-  storageType        String
-  verificationStatus VerificationStatus @default(PENDING)
-  metadata           Json?
-  uploadedAt         DateTime           @default(now())
-  deletedAt          DateTime?
+  id           String             @id @default(dbgenerated("gen_random_uuid()"))
+  fileName     String // Original file name
+  fileSize     Int // Size in bytes
+  mimeType     String // File MIME type (application/pdf, image/jpeg, etc.)
+  fileUrl      String // URL to access the file
+  storageType  String // "hot" or "cold" storage
+  documentType DocumentType // Using enum for better type safety
+  status       VerificationStatus @default(PENDING)
+  metadata     Json? // Flexible metadata for search/filtering
+  uploadedById String // User who uploaded the document
+  uploadedAt   DateTime           @default(now())
+  deletedAt    DateTime?
 
-  loanApplication LoanApplication @relation(fields: [loanApplicationId], references: [id])
+  // Relationships
+
+  loanApplicationId String?
+  loanApplication   LoanApplication? @relation(fields: [loanApplicationId], references: [id])
+
+  applicantId String?
+  applicant   Applicant? @relation(fields: [applicantId], references: [id])
+
+  verificationId String?
+  verification   Verification? @relation(fields: [verificationId], references: [id])
+
+  coApplicantId String?
+  coApplicant   CoApplicant? @relation(fields: [coApplicantId], references: [id])
+
+  guarantorId String?
+  guarantor   Guarantor? @relation(fields: [guarantorId], references: [id])
+
+  incomeId String?
+  income   Income? @relation(fields: [incomeId], references: [id])
+
+  incomeDetailId String?
+  incomeDetail   IncomeDetail? @relation(fields: [incomeDetailId], references: [id])
+
+  dependentId String?
+  dependent   Dependent? @relation(fields: [dependentId], references: [id])
+
+  loanObligationId String?
+  loanObligation   LoanObligation? @relation(fields: [loanObligationId], references: [id])
+
+  loanObligationDetailId String?
+  loanObligationDetail   LoanObligationDetail? @relation(fields: [loanObligationDetailId], references: [id])
+
+  bankId String?
+  bank   Bank?   @relation(fields: [bankId], references: [id])
+
+  subscriptionId String?
+  subscription   Subscription? @relation(fields: [subscriptionId], references: [id])
+
+  bankConfigurationId String?
+  bankConfiguration   BankConfiguration? @relation(fields: [bankConfigurationId], references: [id])
 }
 
 // Core verification model
@@ -315,6 +391,8 @@ model Verification {
   businessVerification  BusinessVerification?
   propertyVerification  PropertyVerification?
   vehicleVerification   VehicleVerification?
+
+  Document Document[]
 }
 
 // Residence-specific fields

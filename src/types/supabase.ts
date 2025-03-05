@@ -347,44 +347,176 @@ export type Database = {
       };
       Document: {
         Row: {
+          applicantId: string | null;
+          bankConfigurationId: string | null;
+          bankId: string | null;
+          coApplicantId: string | null;
           deletedAt: string | null;
-          documentType: string;
+          dependentId: string | null;
+          documentType: Database["public"]["Enums"]["DocumentType"];
+          fileName: string;
+          fileSize: number;
           fileUrl: string;
+          guarantorId: string | null;
           id: string;
-          loanApplicationId: string;
+          incomeDetailId: string | null;
+          incomeId: string | null;
+          loanApplicationId: string | null;
+          loanObligationDetailId: string | null;
+          loanObligationId: string | null;
           metadata: Json | null;
+          mimeType: string;
+          status: Database["public"]["Enums"]["VerificationStatus"];
           storageType: string;
+          subscriptionId: string | null;
           uploadedAt: string;
-          verificationStatus: Database["public"]["Enums"]["VerificationStatus"];
+          uploadedById: string;
+          verificationId: string | null;
         };
         Insert: {
+          applicantId?: string | null;
+          bankConfigurationId?: string | null;
+          bankId?: string | null;
+          coApplicantId?: string | null;
           deletedAt?: string | null;
-          documentType: string;
+          dependentId?: string | null;
+          documentType: Database["public"]["Enums"]["DocumentType"];
+          fileName: string;
+          fileSize: number;
           fileUrl: string;
+          guarantorId?: string | null;
           id?: string;
-          loanApplicationId: string;
+          incomeDetailId?: string | null;
+          incomeId?: string | null;
+          loanApplicationId?: string | null;
+          loanObligationDetailId?: string | null;
+          loanObligationId?: string | null;
           metadata?: Json | null;
+          mimeType: string;
+          status?: Database["public"]["Enums"]["VerificationStatus"];
           storageType: string;
+          subscriptionId?: string | null;
           uploadedAt?: string;
-          verificationStatus?: Database["public"]["Enums"]["VerificationStatus"];
+          uploadedById: string;
+          verificationId?: string | null;
         };
         Update: {
+          applicantId?: string | null;
+          bankConfigurationId?: string | null;
+          bankId?: string | null;
+          coApplicantId?: string | null;
           deletedAt?: string | null;
-          documentType?: string;
+          dependentId?: string | null;
+          documentType?: Database["public"]["Enums"]["DocumentType"];
+          fileName?: string;
+          fileSize?: number;
           fileUrl?: string;
+          guarantorId?: string | null;
           id?: string;
-          loanApplicationId?: string;
+          incomeDetailId?: string | null;
+          incomeId?: string | null;
+          loanApplicationId?: string | null;
+          loanObligationDetailId?: string | null;
+          loanObligationId?: string | null;
           metadata?: Json | null;
+          mimeType?: string;
+          status?: Database["public"]["Enums"]["VerificationStatus"];
           storageType?: string;
+          subscriptionId?: string | null;
           uploadedAt?: string;
-          verificationStatus?: Database["public"]["Enums"]["VerificationStatus"];
+          uploadedById?: string;
+          verificationId?: string | null;
         };
         Relationships: [
+          {
+            foreignKeyName: "Document_applicantId_fkey";
+            columns: ["applicantId"];
+            isOneToOne: false;
+            referencedRelation: "Applicant";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "Document_bankConfigurationId_fkey";
+            columns: ["bankConfigurationId"];
+            isOneToOne: false;
+            referencedRelation: "BankConfiguration";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "Document_bankId_fkey";
+            columns: ["bankId"];
+            isOneToOne: false;
+            referencedRelation: "Bank";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "Document_coApplicantId_fkey";
+            columns: ["coApplicantId"];
+            isOneToOne: false;
+            referencedRelation: "CoApplicant";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "Document_dependentId_fkey";
+            columns: ["dependentId"];
+            isOneToOne: false;
+            referencedRelation: "Dependent";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "Document_guarantorId_fkey";
+            columns: ["guarantorId"];
+            isOneToOne: false;
+            referencedRelation: "Guarantor";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "Document_incomeDetailId_fkey";
+            columns: ["incomeDetailId"];
+            isOneToOne: false;
+            referencedRelation: "IncomeDetail";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "Document_incomeId_fkey";
+            columns: ["incomeId"];
+            isOneToOne: false;
+            referencedRelation: "Income";
+            referencedColumns: ["id"];
+          },
           {
             foreignKeyName: "Document_loanApplicationId_fkey";
             columns: ["loanApplicationId"];
             isOneToOne: false;
             referencedRelation: "LoanApplication";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "Document_loanObligationDetailId_fkey";
+            columns: ["loanObligationDetailId"];
+            isOneToOne: false;
+            referencedRelation: "LoanObligationDetail";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "Document_loanObligationId_fkey";
+            columns: ["loanObligationId"];
+            isOneToOne: false;
+            referencedRelation: "LoanObligation";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "Document_subscriptionId_fkey";
+            columns: ["subscriptionId"];
+            isOneToOne: false;
+            referencedRelation: "Subscription";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "Document_verificationId_fkey";
+            columns: ["verificationId"];
+            isOneToOne: false;
+            referencedRelation: "Verification";
             referencedColumns: ["id"];
           },
         ];
@@ -1018,6 +1150,20 @@ export type Database = {
       [_ in never]: never;
     };
     Enums: {
+      DocumentType:
+        | "AADHAAR_CARD"
+        | "PAN_CARD"
+        | "IDENTITY_PROOF"
+        | "ADDRESS_PROOF"
+        | "INCOME_PROOF"
+        | "BANK_STATEMENT"
+        | "PROPERTY_DOCUMENT"
+        | "VEHICLE_DOCUMENT"
+        | "LOAN_AGREEMENT"
+        | "VERIFICATION_PHOTO"
+        | "KYC_DOCUMENT"
+        | "APPLICATION_FORM"
+        | "OTHER";
       LoanStatus: "PENDING" | "APPROVED" | "REJECTED" | "UNDER_REVIEW";
       LoanType: "PERSONAL" | "VEHICLE" | "HOUSE_CONSTRUCTION" | "PLOT_PURCHASE" | "MORTGAGE";
       RoleType:

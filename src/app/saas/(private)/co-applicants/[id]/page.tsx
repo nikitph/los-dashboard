@@ -8,6 +8,8 @@ import { ArrowLeft, Edit, Mail, MapPin, Phone, Trash, User } from "lucide-react"
 import { deleteCoApplicant, getCoApplicantById } from "@/app/saas/(private)/co-applicants/actions";
 import { toast } from "@/hooks/use-toast";
 import { formatDate } from "@/utils/displayUtils";
+import CoApplicantDocuments from "@/app/saas/(private)/documents/CoApplicantDocument";
+import SimpleBackblazeUploader from "@/app/saas/(private)/documents/SimpleUploader";
 
 interface CoApplicant {
   id: string;
@@ -270,6 +272,13 @@ export default function CoApplicantDetailsPage({ params }: { params: { id: strin
             </div>
           </CardContent>
         </Card>
+
+        <CoApplicantDocuments coApplicantId={params.id} />
+        <SimpleBackblazeUploader
+          onUploadComplete={() => {
+            console.log("Upload complete");
+          }}
+        />
 
         {/* Date Information */}
         <Card>

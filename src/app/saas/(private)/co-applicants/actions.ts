@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
-import { coApplicantSchema } from "@/schemas/zodSchemas";
+import { CoApplicantSchema as coApplicantSchema } from "@/schemas/zodSchemas";
 
 // Type for co-applicant input data
 export type CoApplicantFormData = z.infer<typeof coApplicantSchema>;
