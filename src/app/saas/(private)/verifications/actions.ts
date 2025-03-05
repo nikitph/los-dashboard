@@ -138,6 +138,7 @@ export async function getVerifications(
     const verifications = await prisma.verification.findMany({
       where: filters,
       include: {
+        documents: true,
         loanApplication: {
           select: {
             id: true,
@@ -267,6 +268,7 @@ export async function getVerificationById(id: string) {
     const verification = await prisma.verification.findUnique({
       where: { id, deletedAt: null },
       include: {
+        documents: true,
         loanApplication: {
           include: {
             applicant: {

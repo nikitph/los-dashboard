@@ -298,7 +298,7 @@ export const VerificationSchema = z.object({
   type: VerificationType,
   status: VerificationStatus,
   verificationDate: z.coerce.date(),
-  verificationTime: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Invalid time format (HH:MM)"),
+  verificationTime: z.string().optional(),
   result: z.boolean(),
   remarks: z.string().optional(),
   verifiedById: z.string().uuid().optional(),
@@ -309,13 +309,13 @@ export const VerificationSchema = z.object({
   addressLine1: z.string().optional(),
   addressLine2: z.string().optional(),
   locationFromMain: z.string().optional(),
-  photographUrl: z.string().url().optional(),
+  photographUrl: z.string().optional(),
 
   // Related type-specific verification data
   residenceVerification: ResidenceVerificationSchema.optional(),
-  businessVerification: BusinessVerificationSchema.optional(),
-  propertyVerification: PropertyVerificationSchema.optional(),
-  vehicleVerification: VehicleVerificationSchema.optional(),
+  businessVerification: BusinessVerificationSchema.optional().nullable(),
+  propertyVerification: PropertyVerificationSchema.optional().nullable(),
+  vehicleVerification: VehicleVerificationSchema.optional().nullable(),
 });
 
 export const AuditLogSchema = z.object({

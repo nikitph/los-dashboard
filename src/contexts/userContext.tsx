@@ -51,7 +51,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
           firstName: authUser.user_metadata?.first_name,
           lastName: authUser.user_metadata?.last_name,
           email: authUser.email,
-          id: authUser.i,
+          id: authUser.id,
         });
       } else {
         setUser(null);
