@@ -103,6 +103,9 @@ model UserRoles {
 
   assignedAt DateTime  @default(now())
   deletedAt  DateTime?
+
+  @@unique([userId, role, bankId], name: "unique_role_per_bank")
+  @@index([userId])
 }
 
 model Applicant {
