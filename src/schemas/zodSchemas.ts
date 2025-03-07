@@ -225,6 +225,19 @@ export const LoanApplicationSchema = z.object({
   deletedAt: z.date().nullable(),
 });
 
+// Initial loan application form schema
+export const InitialLoanApplicationSchema = z.object({
+  loanType: z.enum(["PERSONAL", "VEHICLE", "HOUSE_CONSTRUCTION", "PLOT_PURCHASE", "MORTGAGE"]),
+  requestedAmount: z.string().refine((val) => !isNaN(parseFloat(val)) && parseFloat(val) > 0, {
+    message: "Amount must be a valid positive number",
+  }),
+  bankId: z.string().uuid().optional().nullable(),
+  firstName: z.string().min(1, "First name is required"),
+  lastName: z.string().min(1, "Last name is required"),
+  phoneNumber: z.string().regex(/^\d{10}$/, "Phone number must be 10 digits"),
+  email: z.string().email("Invalid email address"),
+});
+
 export const DocumentSchema = z.object({
   id: z.string().uuid(),
   documentType: DocumentType,
