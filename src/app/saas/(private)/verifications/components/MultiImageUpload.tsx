@@ -12,11 +12,11 @@ interface MultiImageUploadProps {
   setValue: any;
   watch: any;
   errors: any;
-  verificationId: string | null;
+  verificationId: string | null | undefined;
   fieldName: string;
   label: string;
   initialUrls?: string[];
-  currentUserId: string;
+  currentUserId: string | undefined;
 }
 
 export default function MultiImageUpload({
@@ -104,7 +104,7 @@ export default function MultiImageUpload({
           const result = await uploadDocument(file, {
             verificationId,
             documentType: "VERIFICATION_PHOTO",
-            uploadedById: currentUserId,
+            uploadedById: currentUserId || "",
           });
 
           if (result.success && result.documentId) {

@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
-import { guarantorSchema } from "@/schemas/zodSchemas";
+import { GuarantorSchema as guarantorSchema } from "@/schemas/zodSchemas";
 
 // Type for guarantor input data
 export type GuarantorFormData = z.infer<typeof guarantorSchema>;

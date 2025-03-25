@@ -1,6 +1,7 @@
 import { useDocuments } from "@/hooks/useDocuments";
 import { useEffect, useState } from "react";
 
+// @ts-ignore
 export const VerificationPhoto = ({ document, index }) => {
   const { downloadDocument } = useDocuments();
   const [imageUrl, setImageUrl] = useState("");
