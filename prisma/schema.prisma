@@ -103,12 +103,17 @@ model UserRoles {
 
   assignedAt DateTime  @default(now())
   deletedAt  DateTime?
+
+  @@unique([userId, role, bankId], name: "unique_role_per_bank")
+  @@index([userId])
 }
 
 model Applicant {
   id                       String            @id @default(dbgenerated("gen_random_uuid()"))
   userId                   String
   user                     UserProfile       @relation(fields: [userId], references: [id])
+  bankId                   String
+  bank                     Bank              @relation(fields: [bankId], references: [id])
   loanApplications         LoanApplication[]
   createdAt                DateTime          @default(now())
   updatedAt                DateTime          @updatedAt
@@ -212,6 +217,8 @@ model Bank {
   UserRoles        UserRoles[]
 
   documents Document[]
+
+  applicants Applicant[]
 }
 
 model Subscription {

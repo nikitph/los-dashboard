@@ -21,6 +21,8 @@ import { toast } from "@/hooks/use-toast";
 
 import { createVerification, getLoanApplications, getVerificationOfficers, updateVerification } from "../actions";
 import { VerificationSchema } from "@/schemas/zodSchemas";
+import MultiImageUpload from "@/app/saas/(private)/verifications/components/MultiImageUpload";
+import { useUser } from "@/contexts/userContext";
 
 type VerificationFormValues = z.infer<typeof VerificationSchema>;
 
@@ -35,6 +37,9 @@ export default function VerificationForm({ initialData, isEditMode = false }: Ve
   const [loanApplications, setLoanApplications] = useState<any[]>([]);
   const [verificationOfficers, setVerificationOfficers] = useState<any[]>([]);
   const [selectedType, setSelectedType] = useState<string>(initialData?.type || "RESIDENCE");
+  const { user, loading } = useUser();
+
+  console.log("user", user);
 
   const {
     register,
@@ -170,6 +175,8 @@ export default function VerificationForm({ initialData, isEditMode = false }: Ve
       setIsSubmitting(false);
     }
   };
+
+  console.log("errros", errors);
 
   // Get applicant name from loan application for display
   const getApplicantNameFromLoanApplication = (id: string) => {
@@ -636,12 +643,16 @@ export default function VerificationForm({ initialData, isEditMode = false }: Ve
           )}
 
           {/* Photo Upload */}
-          <div className="space-y-2">
-            <Label htmlFor="photographUrl">Photograph URL</Label>
-            <Input id="photographUrl" {...register("photographUrl")} placeholder="Enter photograph URL" />
-            {errors.photographUrl && <p className="mt-1 text-sm text-red-600">{errors.photographUrl.message}</p>}
-          </div>
-
+          <MultiImageUpload
+            register={register}
+            setValue={setValue}
+            watch={watch}
+            errors={errors}
+            verificationId={initialData?.id}
+            fieldName="photographUrl"
+            label="Verification Photographs"
+            currentUserId={user?.id}
+          />
           {/* Result & Remarks */}
           <div className="space-y-4">
             <div className="flex items-center gap-2">

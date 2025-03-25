@@ -25,7 +25,7 @@ import { Bank } from "@prisma/client";
 import { deleteBankAction } from "@/app/saas/(private)/banks/actions";
 
 interface BankTableProps {
-  data: Bank[];
+  data: Bank[] | undefined | null;
 }
 
 export function BankTable({ data }: BankTableProps) {

@@ -75,7 +75,6 @@ export default function CoApplicantDocuments({ coApplicantId }: CoApplicantDocum
 
     const result = await uploadDocument(selectedFile, {
       coApplicantId: coApplicantId,
-      loanApplicationId: coApplicant.loanApplicationId,
       documentType: documentType,
       uploadedById: uploadedById,
     });

@@ -14,7 +14,7 @@ import { toast } from "@/hooks/use-toast";
 import { indianStates } from "@/lib/utils";
 
 import { createGuarantor, getLoanApplications, updateGuarantor } from "@/app/saas/(private)/guarantors/actions";
-import { guarantorSchema } from "@/schemas/zodSchemas";
+import { GuarantorSchema as guarantorSchema } from "@/schemas/zodSchemas";
 
 type GuarantorFormValues = z.infer<typeof guarantorSchema>;
 

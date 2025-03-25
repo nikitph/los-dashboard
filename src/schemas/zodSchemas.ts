@@ -225,6 +225,19 @@ export const LoanApplicationSchema = z.object({
   deletedAt: z.date().nullable(),
 });
 
+// Initial loan application form schema
+export const InitialLoanApplicationSchema = z.object({
+  loanType: z.enum(["PERSONAL", "VEHICLE", "HOUSE_CONSTRUCTION", "PLOT_PURCHASE", "MORTGAGE"]),
+  requestedAmount: z.string().refine((val) => !isNaN(parseFloat(val)) && parseFloat(val) > 0, {
+    message: "Amount must be a valid positive number",
+  }),
+  bankId: z.string().uuid().optional().nullable(),
+  firstName: z.string().min(1, "First name is required"),
+  lastName: z.string().min(1, "Last name is required"),
+  phoneNumber: z.string().regex(/^\d{10}$/, "Phone number must be 10 digits"),
+  email: z.string().email("Invalid email address"),
+});
+
 export const DocumentSchema = z.object({
   id: z.string().uuid(),
   documentType: DocumentType,
@@ -298,7 +311,7 @@ export const VerificationSchema = z.object({
   type: VerificationType,
   status: VerificationStatus,
   verificationDate: z.coerce.date(),
-  verificationTime: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Invalid time format (HH:MM)"),
+  verificationTime: z.string().optional(),
   result: z.boolean(),
   remarks: z.string().optional(),
   verifiedById: z.string().uuid().optional(),
@@ -309,13 +322,13 @@ export const VerificationSchema = z.object({
   addressLine1: z.string().optional(),
   addressLine2: z.string().optional(),
   locationFromMain: z.string().optional(),
-  photographUrl: z.string().url().optional(),
+  photographUrl: z.string().optional(),
 
   // Related type-specific verification data
   residenceVerification: ResidenceVerificationSchema.optional(),
-  businessVerification: BusinessVerificationSchema.optional(),
-  propertyVerification: PropertyVerificationSchema.optional(),
-  vehicleVerification: VehicleVerificationSchema.optional(),
+  businessVerification: BusinessVerificationSchema.optional().nullable(),
+  propertyVerification: PropertyVerificationSchema.optional().nullable(),
+  vehicleVerification: VehicleVerificationSchema.optional().nullable(),
 });
 
 export const AuditLogSchema = z.object({

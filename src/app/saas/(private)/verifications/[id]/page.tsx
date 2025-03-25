@@ -9,11 +9,14 @@ import { ArrowLeft, Building, Car, Edit, FileText, Home, MapPin, Trash, User } f
 import { deleteVerification, getVerificationById } from "@/app/saas/(private)/verifications/actions";
 import { toast } from "@/hooks/use-toast";
 import { formatDate } from "@/utils/displayUtils";
+import { useDocuments } from "@/hooks/useDocuments";
+import { VerificationPhoto } from "@/app/saas/(private)/verifications/components/VerificationPhoto";
 
 export default function VerificationDetailsPage({ params }: { params: { id: string } }) {
   const router = useRouter();
   const [verification, setVerification] = useState<any | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const { downloadDocument } = useDocuments();
 
   useEffect(() => {
     const fetchVerification = async () => {
@@ -459,18 +462,19 @@ export default function VerificationDetailsPage({ params }: { params: { id: stri
         </Card>
 
         {/* Photo section if available */}
-        {verification.photographUrl && (
+        {/* Verification Photos Section */}
+        {verification.documents && verification.documents.length > 0 && (
           <Card>
             <CardHeader>
-              <CardTitle>Verification Photo</CardTitle>
+              <CardTitle>Verification Photos</CardTitle>
             </CardHeader>
-            <CardContent className="flex justify-center">
-              <div className="overflow-hidden rounded-lg">
-                <img
-                  src={verification.photographUrl}
-                  alt="Verification photograph"
-                  className="max-h-[400px] object-contain"
-                />
+            <CardContent>
+              <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
+                {verification.documents
+                  .filter((doc) => doc.documentType === "VERIFICATION_PHOTO")
+                  .map((doc, index) => (
+                    <VerificationPhoto key={doc.id} document={doc} index={index} />
+                  ))}
               </div>
             </CardContent>
           </Card>
