@@ -7,9 +7,11 @@ import { HorizontalSteps } from "@/components/HorizontalSteps";
 import { BankSignupForm } from "@/app/saas/(auth)/banksignup/BankSignupForm";
 import { signup } from "@/app/saas/(auth)/banksignup/actions";
 import { BankInformationForm } from "@/app/saas/(auth)/banksignup/BankInformationForm";
+import { Bank } from "@prisma/client";
 
 export default function BankSignupPage() {
   const [currentStep, setCurrentStep] = useState(0);
+  const [bank, setBank] = useState<Bank | null>(null);
   const steps = [
     { title: "Admin", description: "Admin" },
     { title: "Bank info", description: "Info" },
@@ -26,9 +28,9 @@ export default function BankSignupPage() {
           Credit IQ
         </a>
         {currentStep > 0 && <HorizontalSteps steps={steps} currentStep={currentStep} onStepChange={setCurrentStep} />}
-        {currentStep === 0 && <BankCreationForm setCurrentStep={setCurrentStep} />}
+        {currentStep === 0 && <BankCreationForm setCurrentStep={setCurrentStep} setBank={setBank} />}
         {currentStep === 1 && <BankSignupForm setCurrentStep={setCurrentStep} signup={signup} />}
-        {currentStep === 2 && <BankInformationForm setCurrentStep={setCurrentStep} />}
+        {currentStep === 2 && bank && <BankInformationForm bankId={bank.id} />}
       </div>
     </div>
   );

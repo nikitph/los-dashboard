@@ -21,6 +21,21 @@ type ActionResponse = {
   errors?: Record<string, string>;
 };
 
+// Bank Update Schema
+const BankUpdateSchema = z.object({
+  contactNumber: z.string().optional(),
+  addressLine: z.string().optional(),
+  city: z.string().optional(),
+  state: z.string().optional(),
+  zipCode: z.string().optional(),
+  legalEntityName: z.string().optional(),
+  gstNumber: z.string().optional(),
+  panNumber: z.string().optional(),
+  regulatoryLicenses: z.any().optional(), // Will handle JSON conversion
+});
+
+type BankUpdateData = z.infer<typeof BankUpdateSchema>;
+
 /**
  * Create a new bank with basic information
  * @param formData Bank creation data with required fields
@@ -197,15 +212,18 @@ export async function getBankById(id: string): Promise<ActionResponse> {
 }
 
 /**
- * Update an existing bank
+ * Update a bank's profile
  * @param id The bank ID
- * @param formData The updated bank data
+ * @param data The updated bank data
  */
-export async function updateBank(id: string, formData: Partial<BankFormData>): Promise<ActionResponse> {
+export async function updateBank(id: string, data: BankUpdateData): Promise<ActionResponse> {
   try {
+    // Validate form data
+    const validatedData = BankUpdateSchema.parse(data);
+
     // Check if bank exists
     const existingBank = await prisma.bank.findUnique({
-      where: { id, deletedAt: null },
+      where: { id },
     });
 
     if (!existingBank) {
@@ -213,46 +231,6 @@ export async function updateBank(id: string, formData: Partial<BankFormData>): P
         success: false,
         message: "Bank not found",
       };
-    }
-
-    // Create a validation schema for the update
-    // Only validate fields that are provided in the update
-    const updateSchema = z.object({
-      name: BankSchema.shape.name.optional(),
-      officialEmail: BankSchema.shape.officialEmail.optional(),
-      contactNumber: BankSchema.shape.contactNumber.optional(),
-      addressLine: BankSchema.shape.addressLine.optional(),
-      city: BankSchema.shape.city.optional(),
-      state: BankSchema.shape.state.optional(),
-      zipCode: BankSchema.shape.zipCode.optional(),
-      legalEntityName: BankSchema.shape.legalEntityName.optional(),
-      gstNumber: BankSchema.shape.gstNumber.optional(),
-      panNumber: BankSchema.shape.panNumber.optional(),
-      onboardingStatus: BankSchema.shape.onboardingStatus.optional(),
-    });
-
-    // Validate form data
-    const validatedData = updateSchema.parse(formData);
-
-    // If updating email, check if it's already in use by another bank
-    if (validatedData.officialEmail && validatedData.officialEmail !== existingBank.officialEmail) {
-      const emailExists = await prisma.bank.findFirst({
-        where: {
-          officialEmail: validatedData.officialEmail,
-          id: { not: id },
-          deletedAt: null,
-        },
-      });
-
-      if (emailExists) {
-        return {
-          success: false,
-          message: "A bank with this email already exists",
-          errors: {
-            officialEmail: "A bank with this email already exists",
-          },
-        };
-      }
     }
 
     // Update bank in database
@@ -264,9 +242,10 @@ export async function updateBank(id: string, formData: Partial<BankFormData>): P
       },
     });
 
-    // Revalidate relevant paths
+    // Revalidate paths
     revalidatePath("/saas/banks/list");
     revalidatePath(`/saas/banks/${id}`);
+    revalidatePath(`/saas/banks/${id}/edit`);
 
     return {
       success: true,
@@ -276,26 +255,16 @@ export async function updateBank(id: string, formData: Partial<BankFormData>): P
   } catch (error) {
     console.error("Error updating bank:", error);
     if (error instanceof z.ZodError) {
-      // Format ZodError for client-side display
-      const errors: Record<string, string> = {};
-      error.errors.forEach((err) => {
-        const path = err.path.join(".");
-        errors[path] = err.message;
-      });
-
       return {
         success: false,
         message: "Validation failed",
-        errors,
+        errors: error.errors,
       };
     }
-
     return {
       success: false,
       message: "Failed to update bank",
-      errors: {
-        general: error instanceof Error ? error.message : "Unknown error",
-      },
+      errors: error instanceof Error ? error.message : "Unknown error",
     };
   }
 }

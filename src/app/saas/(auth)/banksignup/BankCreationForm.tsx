@@ -22,9 +22,10 @@ type BankFormValues = {
 
 interface BankCreationFormProps extends React.HTMLAttributes<HTMLDivElement> {
   setCurrentStep: (step: number) => void;
+  setBank: (bank: any) => void;
 }
 
-export function BankCreationForm({ className, setCurrentStep, ...props }: BankCreationFormProps) {
+export function BankCreationForm({ className, setCurrentStep, setBank, ...props }: BankCreationFormProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -54,6 +55,7 @@ export function BankCreationForm({ className, setCurrentStep, ...props }: BankCr
 
       if (response.success) {
         setSuccess(true);
+        setBank(response.data);
         reset();
         toast({
           title: "Success",
