@@ -20,7 +20,11 @@ type BankFormValues = {
   officialEmail: string;
 };
 
-export function BankCreationForm({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+interface BankCreationFormProps extends React.HTMLAttributes<HTMLDivElement> {
+  setCurrentStep: (step: number) => void;
+}
+
+export function BankCreationForm({ className, setCurrentStep, ...props }: BankCreationFormProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -55,6 +59,8 @@ export function BankCreationForm({ className, ...props }: React.HTMLAttributes<H
           title: "Success",
           description: "Bank created successfully",
         });
+
+        setCurrentStep(1);
       } else {
         toast({
           title: "Error",
@@ -78,8 +84,8 @@ export function BankCreationForm({ className, ...props }: React.HTMLAttributes<H
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader className="text-center">
-          <CardTitle className="text-xl">Add New Bank</CardTitle>
-          <CardDescription>Please enter the bank details</CardDescription>
+          <CardTitle className="text-xl">Welcome</CardTitle>
+          <CardDescription>To get started please enter the bank details</CardDescription>
         </CardHeader>
         <CardContent>
           {success ? (

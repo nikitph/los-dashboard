@@ -3,6 +3,7 @@
 import * as React from "react";
 import { Check, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Card } from "@/components/ui/card";
 
 export interface StepProps {
   title: string;
@@ -51,29 +52,31 @@ interface StepperProps {
 
 export function HorizontalSteps({ steps, currentStep, onStepChange }: StepperProps) {
   return (
-    <div className="mx-auto w-full max-w-3xl">
-      <div className="mb-3 mt-3 flex flex-col items-start justify-between gap-2 md:flex-row md:items-center">
-        {steps.map((step, index) => (
-          <React.Fragment key={step.title}>
-            <Step
-              title={step.title}
-              description={step.description}
-              isCompleted={index < currentStep}
-              index={index}
-              isActive={index === currentStep}
-            />
-            {index < steps.length - 1 && <ChevronRight className="hidden text-muted-foreground md:block" />}
-          </React.Fragment>
-        ))}
+    <Card>
+      <div className="mx-left w-full max-w-3xl bg-white pl-3 pr-3">
+        <div className="mb-3 mt-3 flex flex-col items-start justify-between gap-2 md:flex-row md:items-center">
+          {steps.map((step, index) => (
+            <React.Fragment key={step.title}>
+              <Step
+                title={step.title}
+                description={step.description}
+                isCompleted={index < currentStep}
+                index={index}
+                isActive={index === currentStep}
+              />
+              {index < steps.length - 1 && <ChevronRight className="hidden text-muted-foreground md:block" />}
+            </React.Fragment>
+          ))}
+        </div>
+        {/*<div className="flex justify-between">*/}
+        {/*  <Button variant="outline" onClick={() => onStepChange(currentStep - 1)} disabled={currentStep === 0}>*/}
+        {/*    Previous*/}
+        {/*  </Button>*/}
+        {/*  <Button onClick={() => onStepChange(currentStep + 1)} disabled={currentStep === steps.length - 1}>*/}
+        {/*    {currentStep === steps.length - 1 ? "Finish" : "Next"}*/}
+        {/*  </Button>*/}
+        {/*</div>*/}
       </div>
-      {/*<div className="flex justify-between">*/}
-      {/*  <Button variant="outline" onClick={() => onStepChange(currentStep - 1)} disabled={currentStep === 0}>*/}
-      {/*    Previous*/}
-      {/*  </Button>*/}
-      {/*  <Button onClick={() => onStepChange(currentStep + 1)} disabled={currentStep === steps.length - 1}>*/}
-      {/*    {currentStep === steps.length - 1 ? "Finish" : "Next"}*/}
-      {/*  </Button>*/}
-      {/*</div>*/}
-    </div>
+    </Card>
   );
 }

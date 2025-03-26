@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
-export function BankSignupForm({ className, signup, ...props }: any) {
+export function BankSignupForm({ className, signup, setCurrentStep, ...props }: any) {
   const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -89,6 +89,7 @@ export function BankSignupForm({ className, signup, ...props }: any) {
           confirmPassword: "",
           phoneNumber: "",
         });
+        setCurrentStep(2);
       }
     }
     setLoading(false);
@@ -98,7 +99,7 @@ export function BankSignupForm({ className, signup, ...props }: any) {
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader className="text-center">
-          <CardTitle className="text-xl">Welcome</CardTitle>
+          <CardTitle className="text-xl">Admin Creation</CardTitle>
           <CardDescription>Please enter the following details to create your bank admin account.</CardDescription>
         </CardHeader>
         <CardContent>

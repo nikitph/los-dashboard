@@ -4,6 +4,8 @@ import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { BankSchema } from "@/schemas/zodSchemas";
+import { cookies } from "next/headers";
+import { createClient } from "@/utils/supabase/server";
 
 // Define the type for bank input data
 export type BankFormData = z.infer<typeof BankSchema>;
@@ -393,4 +395,55 @@ export async function updateBankOnboardingStatus(
       },
     };
   }
+}
+
+export async function signup(
+  formData: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    password: string;
+    phoneNumber: string;
+  },
+  setCurrentStep: (arg0: number) => void,
+) {
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
+
+  // Create user in Supabase Auth
+  const { data: authData, error: authError } = await supabase.auth.signUp({
+    email: formData.email,
+    password: formData.password,
+    options: {
+      data: {
+        first_name: formData.firstName,
+        last_name: formData.lastName,
+        phone: formData.phoneNumber,
+      },
+    },
+  });
+
+  if (authError) {
+    return {
+      error: authError.message,
+      code: authError.code,
+      status: authError.status,
+    };
+  }
+
+  // If sign up was successful but user needs to confirm email
+  // if (authData.user && !authData.user.confirmed_at) {
+  //   // Redirect to verification page or show verification message
+  //   redirect("/saas/verify?email=" + encodeURIComponent(formData.email));
+  // }
+
+  // If sign up was successful and no email verification required
+  if (authData.user) {
+    return {
+      success: true,
+      message: "Bank onboarding status updated successfully",
+    };
+  }
+
+  return { error: "An unexpected error occurred", code: "unknown_error", status: 500 };
 }
