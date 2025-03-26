@@ -2,7 +2,7 @@
 
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
-import { prisma } from "@/lib/prisma";
+import { getUserRoles } from "@/contexts/actions/user-actions";
 
 type User = {
   firstName?: string;
@@ -16,32 +16,38 @@ type User = {
 type UserContextType = {
   user: User | null;
   loading: boolean;
+  setCurrentRole: (role: { role: string; bankId: string | null }) => void;
 };
 
-const UserContext = createContext<UserContextType>({ user: null, loading: true });
+const UserContext = createContext<UserContextType>({
+  user: null,
+  loading: true,
+  setCurrentRole: () => {},
+});
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const supabase = createClient();
 
+  const setCurrentRole = (role: { role: string; bankId: string | null }) => {
+    if (user) {
+      setUser({
+        ...user,
+        currentRole: role,
+      });
+    }
+  };
+
   useEffect(() => {
-    const getUser = async () => {
-      const { data: data } = await supabase.auth.getUser();
+    const fetchUserData = async (authUser: any) => {
+      const { success, data: roles } = await getUserRoles(authUser.id);
+      console.log("roles", roles, authUser.id);
 
-      console.log("data", data);
-      const authUser = data?.user;
+      if (success && roles && roles.length > 0) {
+        let currentRole = roles[0];
 
-      if (authUser) {
-        const roles = await prisma.userRoles.findMany({
-          where: {
-            userId: authUser.id,
-          },
-          select: {
-            role: true,
-            bankId: true,
-          },
-        });
+        console.log("Current Role:", currentRole, roles);
 
         setUser({
           firstName: authUser.user_metadata?.first_name,
@@ -49,41 +55,34 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
           email: authUser.email,
           id: authUser.id,
           roles: roles,
-          currentRole: roles[0],
+          currentRole: currentRole,
         });
       }
       setLoading(false);
     };
 
+    const getUser = async () => {
+      const { data } = await supabase.auth.getUser();
+      const authUser = data?.user;
+
+      if (authUser) {
+        await fetchUserData(authUser);
+      } else {
+        setLoading(false);
+      }
+    };
+
     getUser();
 
-    // Set up auth state listener
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (session?.user) {
-        const authUser = session.user;
-        const roles = await prisma.userRoles.findMany({
-          where: {
-            userId: authUser.id,
-          },
-          select: {
-            role: true,
-            bankId: true,
-          },
-        });
-        setUser({
-          firstName: authUser.user_metadata?.first_name,
-          lastName: authUser.user_metadata?.last_name,
-          email: authUser.email,
-          id: authUser.id,
-          roles: roles,
-          currentRole: roles[0],
-        });
+        await fetchUserData(session.user);
       } else {
         setUser(null);
+        setLoading(false);
       }
-      setLoading(false);
     });
 
     return () => {
@@ -91,7 +90,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     };
   }, []);
 
-  return <UserContext.Provider value={{ user, loading }}>{children}</UserContext.Provider>;
+  return <UserContext.Provider value={{ user, loading, setCurrentRole }}>{children}</UserContext.Provider>;
 };
 
 export const useUser = () => useContext(UserContext);
