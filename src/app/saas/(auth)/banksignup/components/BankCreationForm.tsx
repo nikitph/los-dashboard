@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { toast } from "@/hooks/use-toast";
-import { createBank } from "./actions";
+import { createBank } from "../actions";
 import { cn } from "@/lib/utils";
 import { BankSchema } from "@/schemas/zodSchemas";
 

@@ -2,11 +2,11 @@
 
 import { CreditCard } from "lucide-react";
 import { useState } from "react";
-import { BankCreationForm } from "@/app/saas/(auth)/banksignup/BankCreationForm";
+import { BankCreationForm } from "@/app/saas/(auth)/banksignup/components/BankCreationForm";
 import { HorizontalSteps } from "@/components/HorizontalSteps";
-import { BankSignupForm } from "@/app/saas/(auth)/banksignup/BankSignupForm";
+import { BankSignupForm } from "@/app/saas/(auth)/banksignup/components/BankSignupForm";
 import { signup } from "@/app/saas/(auth)/banksignup/actions";
-import { BankInformationForm } from "@/app/saas/(auth)/banksignup/BankInformationForm";
+import { BankInformationForm } from "@/app/saas/(auth)/banksignup/components/BankInformationForm";
 import { Bank } from "@prisma/client";
 
 export default function BankSignupPage() {
