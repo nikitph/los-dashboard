@@ -1,144 +1,123 @@
-import { cn } from "@/lib/utils";
+"use client";
+
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useState } from "react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { toast } from "@/hooks/use-toast";
+import { createBank } from "./actions";
+import { cn } from "@/lib/utils";
+import { BankSchema } from "@/schemas/zodSchemas";
 
-export function BankCreationForm({ className, signup, ...props }: any) {
-  const [loading, setLoading] = useState(false);
+type BankFormValues = {
+  name: string;
+  officialEmail: string;
+};
 
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    phoneNumber: "",
+export function BankCreationForm({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+  const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [success, setSuccess] = useState(false);
+
+  const formSchema = z.object({
+    name: BankSchema.shape.name,
+    officialEmail: BankSchema.shape.officialEmail,
   });
 
-  const [errors, setErrors] = useState({
-    password: "",
-    phoneNumber: "",
-    email: "",
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<BankFormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      officialEmail: "",
+    },
   });
 
-  const validateEmail = (email: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
+  const onSubmit = async (data: BankFormValues) => {
+    setIsSubmitting(true);
+    try {
+      const response = await createBank(data);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-
-    // Clear errors when user starts typing
-    if (errors[name as keyof typeof errors]) {
-      setErrors((prev) => ({ ...prev, [name]: "" }));
-    }
-
-    // Real-time email validation
-    if (name === "email" && value.length > 0) {
-      if (!validateEmail(value)) {
-        setErrors((prev) => ({ ...prev, email: "Please enter a valid email address" }));
+      if (response.success) {
+        setSuccess(true);
+        reset();
+        toast({
+          title: "Success",
+          description: "Bank created successfully",
+        });
       } else {
-        setErrors((prev) => ({ ...prev, email: "" }));
-      }
-    }
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    let newErrors = { password: "", phoneNumber: "", email: "" };
-    let isValid = true;
-
-    // Validate password match
-    if (formData.password !== formData.confirmPassword) {
-      newErrors.password = "Passwords do not match";
-      isValid = false;
-    }
-
-    // Validate phone number
-    const phoneRegex = /^\d{10}$/;
-    if (!phoneRegex.test(formData.phoneNumber)) {
-      newErrors.phoneNumber = "Phone number must be exactly 10 digits";
-      isValid = false;
-    }
-
-    // Validate email
-    if (!validateEmail(formData.email)) {
-      newErrors.email = "Please enter a valid email address";
-      isValid = false;
-    }
-
-    setErrors(newErrors);
-
-    if (isValid) {
-      const { error, code, status } = await signup(formData);
-      if (error) {
-        newErrors.email = error;
-      } else {
-        console.log("Signup successful!");
-        setFormData({
-          firstName: "",
-          lastName: "",
-          email: "",
-          password: "",
-          confirmPassword: "",
-          phoneNumber: "",
+        toast({
+          title: "Error",
+          description: response.message || "Failed to create bank",
+          variant: "destructive",
         });
       }
+    } catch (error) {
+      console.error("Error creating bank:", error);
+      toast({
+        title: "Error",
+        description: "An unexpected error occurred",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
     }
-    setLoading(false);
   };
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader className="text-center">
-          <CardTitle className="text-xl">Welcome</CardTitle>
-          <CardDescription>Please enter your bank details</CardDescription>
+          <CardTitle className="text-xl">Add New Bank</CardTitle>
+          <CardDescription>Please enter the bank details</CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit}>
+          {success ? (
+            <Alert className="mb-6 border-green-200 bg-green-50 text-green-800">
+              <AlertDescription>Bank created successfully! The bank is now in the onboarding process.</AlertDescription>
+            </Alert>
+          ) : null}
+
+          <form onSubmit={handleSubmit(onSubmit)}>
             <div className="grid gap-6">
               <div className="grid gap-6">
-                {/* Name fields in same line */}
-
                 <div className="grid gap-2">
-                  <Label htmlFor="bankName">Bank Name</Label>
-                  <Input
-                    id="firstName"
-                    name="firstName"
-                    placeholder="Enter Bank Name"
-                    value={formData.firstName}
-                    onChange={handleInputChange}
-                    required
-                  />
+                  <Label htmlFor="name">Bank Name</Label>
+                  <Input id="name" placeholder="Enter Bank Name" {...register("name")} />
+                  {errors.name && (
+                    <Alert variant="destructive">
+                      <AlertDescription>{errors.name.message}</AlertDescription>
+                    </Alert>
+                  )}
                 </div>
 
                 <div className="grid gap-2">
                   <Label htmlFor="officialEmail">Official Email</Label>
                   <Input
                     id="officialEmail"
-                    name="officialEmail"
                     type="email"
                     placeholder="Please enter the official bank email for correspondence"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    required
+                    {...register("officialEmail")}
                   />
-                  {errors.email && (
+                  {errors.officialEmail && (
                     <Alert variant="destructive">
-                      <AlertDescription>{errors.email}</AlertDescription>
+                      <AlertDescription>{errors.officialEmail.message}</AlertDescription>
                     </Alert>
                   )}
                 </div>
 
-                <Button type="submit" className="w-full" disabled={loading}>
-                  {loading ? "Please Wait" : "Sign Up"}
+                <Button type="submit" className="w-full" disabled={isSubmitting}>
+                  {isSubmitting ? "Creating Bank..." : "Create Bank"}
                 </Button>
               </div>
             </div>

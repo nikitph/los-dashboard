@@ -1,7 +1,6 @@
 "use client";
 
 import { CreditCard } from "lucide-react";
-import { signup } from "@/app/saas/(auth)/signup/actions";
 import { useState } from "react";
 import { BankCreationForm } from "@/app/saas/(auth)/banksignup/BankCreationForm";
 
@@ -23,7 +22,7 @@ export default function BankSignupPage() {
           Credit IQ
         </a>
         {/*<HorizontalSteps steps={steps} currentStep={currentStep} onStepChange={setCurrentStep} />*/}
-        <BankCreationForm signup={signup} currentStep={currentStep} />
+        <BankCreationForm />
       </div>
     </div>
   );

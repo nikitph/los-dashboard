@@ -51,10 +51,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               <div className="w-full">
                 <main>{children}</main>
               </div>
-              <Toaster />
             </UserProvider>
           </ThemeProvider>
         </ErrorBoundary>
+        <Toaster />
       </body>
     </html>
   );

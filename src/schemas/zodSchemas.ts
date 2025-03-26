@@ -166,7 +166,7 @@ export const DependentSchema = z.object({
 
 export const BankSchema = z.object({
   id: z.string().uuid().optional(),
-  name: z.string().min(1, "Bank name is required"),
+  name: z.string().min(3, "Bank name is required"),
   officialEmail: z.string().email("Official email must be a valid email address"),
   contactNumber: z.string().optional(),
   addressLine: z.string().optional(),
