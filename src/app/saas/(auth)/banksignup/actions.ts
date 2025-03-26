@@ -57,7 +57,6 @@ export async function createBank(formData: BankCreateInput): Promise<ActionRespo
       data: {
         name: validatedData.name,
         officialEmail: validatedData.officialEmail,
-        onboardingStatus: "BANK_CREATED",
         createdAt: new Date(),
         updatedAt: new Date(),
       },
@@ -74,7 +73,6 @@ export async function createBank(formData: BankCreateInput): Promise<ActionRespo
   } catch (error) {
     console.error("Error creating bank:", error);
     if (error instanceof z.ZodError) {
-      // Format ZodError for client-side display
       const errors: Record<string, string> = {};
       error.errors.forEach((err) => {
         const path = err.path.join(".");
