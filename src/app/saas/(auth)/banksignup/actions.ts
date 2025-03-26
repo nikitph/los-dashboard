@@ -6,6 +6,7 @@ import { prisma } from "@/lib/prisma";
 import { BankSchema } from "@/schemas/zodSchemas";
 import { cookies } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
+import { signupSchema, SignupSchemaType } from "@/app/saas/(auth)/banksignup/schema";
 
 // Define the type for bank input data
 export type BankFormData = z.infer<typeof BankSchema>;
@@ -366,53 +367,75 @@ export async function updateBankOnboardingStatus(
   }
 }
 
-export async function signup(
-  formData: {
-    firstName: string;
-    lastName: string;
-    email: string;
-    password: string;
-    phoneNumber: string;
-  },
-  setCurrentStep: (arg0: number) => void,
-) {
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
+export async function signup(formData: SignupSchemaType): Promise<ActionResponse> {
+  try {
+    const data = signupSchema.parse(formData);
 
-  // Create user in Supabase Auth
-  const { data: authData, error: authError } = await supabase.auth.signUp({
-    email: formData.email,
-    password: formData.password,
-    options: {
-      data: {
-        first_name: formData.firstName,
-        last_name: formData.lastName,
-        phone: formData.phoneNumber,
+    const cookieStore = cookies();
+    const supabase = createClient(cookieStore);
+
+    // Create user in Supabase Auth
+    const { data: authData, error: authError } = await supabase.auth.signUp({
+      email: data.email,
+      password: data.password,
+      options: {
+        data: {
+          first_name: data.firstName,
+          last_name: data.lastName,
+          phone: data.phoneNumber,
+        },
       },
-    },
-  });
+    });
 
-  if (authError) {
+    if (authError) {
+      return {
+        success: false,
+        message: "Auth error",
+        errors: { email: authError.message },
+      };
+    }
+
+    // If sign up was successful but user needs to confirm email
+    // if (authData.user && !authData.user.confirmed_at) {
+    //   // Redirect to verification page or show verification message
+    //   redirect("/saas/verify?email=" + encodeURIComponent(formData.email));
+    // }
+
+    // If sign up was successful and no email verification required
+    if (authData?.user) {
+      return {
+        success: true,
+        message: "Signup successful as a part of bank onboarding",
+        data: authData.user,
+      };
+    }
+
+    // If sign up was successful but no user was returned from auth
     return {
-      error: authError.message,
-      code: authError.code,
-      status: authError.status,
+      success: false,
+      message: "Unknown error occurred",
+      errors: { general: "No user was returned from auth" },
+    };
+  } catch (error) {
+    // If Zod validation fails
+    if (error instanceof z.ZodError) {
+      const zodErrors: Record<string, string> = {};
+      error.errors.forEach((issue) => {
+        const path = issue.path.join(".");
+        zodErrors[path] = issue.message;
+      });
+      return {
+        success: false,
+        message: "Validation error",
+        errors: zodErrors,
+      };
+    }
+    return {
+      success: false,
+      message: "Server error",
+      errors: {
+        general: error instanceof Error ? error.message : "Unknown error",
+      },
     };
   }
-
-  // If sign up was successful but user needs to confirm email
-  // if (authData.user && !authData.user.confirmed_at) {
-  //   // Redirect to verification page or show verification message
-  //   redirect("/saas/verify?email=" + encodeURIComponent(formData.email));
-  // }
-
-  // If sign up was successful and no email verification required
-  if (authData.user) {
-    return {
-      success: true,
-      message: "Bank onboarding status updated successfully",
-    };
-  }
-
-  return { error: "An unexpected error occurred", code: "unknown_error", status: 500 };
 }
