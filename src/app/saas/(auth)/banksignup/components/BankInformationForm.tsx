@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { toast } from "@/hooks/use-toast";
-import { getBankById, updateBank } from "../actions";
+import { getBankById, updateBank, updateBankOnboardingStatus } from "../actions";
 import { cn } from "@/lib/utils";
 
 // Define the bank update schema without name and officialEmail
@@ -138,6 +138,7 @@ export function BankInformationForm({ className, bankId, setCurrentStep, ...prop
           title: "Success",
           description: "Bank details updated successfully",
         });
+        await updateBankOnboardingStatus(bankId, "BANK_DETAILS_ADDED");
         setCurrentStep(3);
 
         // Optionally redirect after successful update

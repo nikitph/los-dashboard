@@ -9,8 +9,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "@/hooks/use-toast";
 import { signupSchema, SignupSchemaType } from "@/app/saas/(auth)/banksignup/schema";
+import { updateBankOnboardingStatus } from "@/app/saas/(auth)/banksignup/actions";
 
-export function BankSignupForm({ className, signup, setCurrentStep, ...props }: any) {
+export function BankSignupForm({ className, signup, bankId, setCurrentStep, ...props }: any) {
   const {
     register,
     handleSubmit,
@@ -20,7 +21,7 @@ export function BankSignupForm({ className, signup, setCurrentStep, ...props }: 
   });
 
   const onSubmit = async (clientData: SignupSchemaType) => {
-    const response = await signup(clientData);
+    const response = await signup(clientData, bankId);
     if (!response.success) {
       if (response.errors) {
         Object.entries(response.errors).forEach(([field, msg]) => {
@@ -40,6 +41,7 @@ export function BankSignupForm({ className, signup, setCurrentStep, ...props }: 
       }
       return;
     }
+    await updateBankOnboardingStatus(bankId, "ADMIN_CREATED");
     setCurrentStep(2);
   };
 

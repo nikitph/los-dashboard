@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { SubscriptionCreateInput, SubscriptionCreateSchema } from "@/app/saas/(auth)/banksignup/schema";
-import { createSubscription } from "@/app/saas/(auth)/banksignup/actions";
+import { createSubscription, updateBankOnboardingStatus } from "@/app/saas/(auth)/banksignup/actions";
 import { useToast } from "@/hooks/use-toast";
 
 interface SubscriptionFormProps {
@@ -97,6 +97,7 @@ export default function SubscriptionForm({ className, bankId }: SubscriptionForm
         }
         return;
       }
+      await updateBankOnboardingStatus(bankId, "SUBSCRIPTION_CREATED");
       router.refresh();
     } catch (error) {
       toast({

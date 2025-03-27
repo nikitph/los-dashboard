@@ -372,7 +372,7 @@ export async function updateBankOnboardingStatus(
   }
 }
 
-export async function signup(formData: SignupSchemaType): Promise<ActionResponse> {
+export async function signup(formData: SignupSchemaType, bankId: string): Promise<ActionResponse> {
   try {
     const data = signupSchema.parse(formData);
 
@@ -408,6 +408,13 @@ export async function signup(formData: SignupSchemaType): Promise<ActionResponse
 
     // If sign up was successful and no email verification required
     if (authData?.user) {
+      await prisma.userRoles.create({
+        data: {
+          userId: authData.user.id,
+          bankId: bankId,
+          role: "BANK_ADMIN",
+        },
+      });
       return {
         success: true,
         message: "Signup successful as a part of bank onboarding",
