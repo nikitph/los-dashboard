@@ -6,7 +6,12 @@ import { prisma } from "@/lib/prisma";
 import { BankSchema } from "@/schemas/zodSchemas";
 import { cookies } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
-import { signupSchema, SignupSchemaType } from "@/app/saas/(auth)/banksignup/schema";
+import {
+  signupSchema,
+  SignupSchemaType,
+  SubscriptionCreateInput,
+  SubscriptionCreateSchema,
+} from "@/app/saas/(auth)/banksignup/schema";
 
 // Define the type for bank input data
 export type BankFormData = z.infer<typeof BankSchema>;
@@ -436,6 +441,190 @@ export async function signup(formData: SignupSchemaType): Promise<ActionResponse
       errors: {
         general: error instanceof Error ? error.message : "Unknown error",
       },
+    };
+  }
+}
+
+/**
+ * Server action to create a new subscription
+ * @param data Subscription data validated against Zod schema
+ * @returns ActionResponse containing success/error status and subscription data if successful
+ */
+export async function createSubscription(data: SubscriptionCreateInput): Promise<ActionResponse> {
+  try {
+    // Validate input data using Zod schema
+    const validatedData = SubscriptionCreateSchema.safeParse(data);
+
+    if (!validatedData.success) {
+      // Format Zod errors into a Record<string, string>
+      const formattedErrors: Record<string, string> = {};
+      validatedData.error.errors.forEach((error) => {
+        const path = error.path.join(".");
+        formattedErrors[path] = error.message;
+      });
+
+      return {
+        success: false,
+        message: "Validation failed",
+        errors: formattedErrors,
+      };
+    }
+
+    // Check if bank exists
+    const bank = await prisma.bank.findUnique({
+      where: { id: data.bankId },
+    });
+
+    if (!bank) {
+      return {
+        success: false,
+        message: "Bank not found",
+        errors: { bankId: "Bank not found" },
+      };
+    }
+
+    // Check for existing active subscriptions for this bank
+    const existingSubscription = await prisma.subscription.findFirst({
+      where: {
+        bankId: data.bankId,
+        status: "Active",
+      },
+    });
+
+    if (existingSubscription) {
+      return {
+        success: false,
+        message: "An active subscription already exists for this bank",
+        errors: { bankId: "Active subscription already exists" },
+      };
+    }
+
+    // Create the subscription
+    const subscription = await prisma.subscription.create({
+      data: {
+        bankId: data.bankId,
+        planType: data.planType,
+        billingCycle: data.billingCycle,
+        startDate: data.startDate,
+        endDate: data.endDate,
+        status: data.status,
+        amount: data.amount,
+        paymentMethod: data.paymentMethod,
+      },
+    });
+
+    // // Create a subscription payment record
+    // await db.payment.create({
+    //   data: {
+    //     subscriptionId: subscription.id,
+    //     amount: data.amount,
+    //     status: "Paid",
+    //     paymentDate: new Date(),
+    //     paymentMethod: JSON.stringify(data.paymentMethod),
+    //   },
+    // });
+
+    // Update bank subscription status
+    await prisma.bank.update({
+      where: { id: data.bankId },
+      data: {
+        onboardingStatus: "SUBSCRIPTION_CREATED",
+      },
+    });
+
+    // Revalidate relevant paths
+    revalidatePath("/dashboard/subscriptions");
+    revalidatePath(`/dashboard/banks/${data.bankId}`);
+
+    return {
+      success: true,
+      message: "Subscription created successfully",
+      data: { subscription },
+    };
+  } catch (error) {
+    console.error("Error creating subscription:", error);
+
+    return {
+      success: false,
+      message: error instanceof Error ? error.message : "Unknown error occurred",
+    };
+  }
+}
+
+/**
+ * Calculate the next billing date based on billing cycle
+ */
+function calculateNextBillingDate(startDate: Date, billingCycle: string): Date {
+  const nextDate = new Date(startDate);
+
+  if (billingCycle === "MONTHLY") {
+    nextDate.setMonth(nextDate.getMonth() + 1);
+  } else if (billingCycle === "ANNUAL") {
+    nextDate.setFullYear(nextDate.getFullYear() + 1);
+  }
+
+  return nextDate;
+}
+
+/**
+ * Server action to cancel a subscription
+ */
+export async function cancelSubscription(subscriptionId: string): Promise<ActionResponse> {
+  try {
+    // Validate subscription ID
+    if (!subscriptionId) {
+      return {
+        success: false,
+        message: "Subscription ID is required",
+        errors: { subscriptionId: "This field is required" },
+      };
+    }
+
+    // Check if subscription exists
+    const subscription = await prisma.subscription.findUnique({
+      where: { id: subscriptionId },
+    });
+
+    if (!subscription) {
+      return {
+        success: false,
+        message: "Subscription not found",
+        errors: { subscriptionId: "Subscription not found" },
+      };
+    }
+
+    // Update subscription status
+    const updatedSubscription = await prisma.subscription.update({
+      where: { id: subscriptionId },
+      data: {
+        status: "Cancelled",
+        endDate: new Date(), // Set end date to today
+      },
+    });
+
+    // Update bank subscription status
+    await prisma.bank.update({
+      where: { id: subscription.bankId },
+      data: {
+        onboardingStatus: "ADMIN_CREATED",
+      },
+    });
+
+    // Revalidate relevant paths
+    revalidatePath("/dashboard/subscriptions");
+    revalidatePath(`/dashboard/banks/${subscription.bankId}`);
+
+    return {
+      success: true,
+      message: "Subscription cancelled successfully",
+      data: { subscription: updatedSubscription },
+    };
+  } catch (error) {
+    console.error("Error cancelling subscription:", error);
+
+    return {
+      success: false,
+      message: error instanceof Error ? error.message : "Unknown error occurred",
     };
   }
 }
