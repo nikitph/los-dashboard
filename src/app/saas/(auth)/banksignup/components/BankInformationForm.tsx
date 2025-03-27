@@ -31,9 +31,10 @@ type BankUpdateFormValues = z.infer<typeof BankUpdateSchema>;
 
 interface BankInformationFormProps extends React.HTMLAttributes<HTMLDivElement> {
   bankId: string;
+  setCurrentStep: (step: number) => void;
 }
 
-export function BankInformationForm({ className, bankId, ...props }: BankInformationFormProps) {
+export function BankInformationForm({ className, bankId, setCurrentStep, ...props }: BankInformationFormProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -137,6 +138,7 @@ export function BankInformationForm({ className, bankId, ...props }: BankInforma
           title: "Success",
           description: "Bank details updated successfully",
         });
+        setCurrentStep(3);
 
         // Optionally redirect after successful update
         // router.push("/saas/banks/list");

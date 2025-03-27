@@ -8,6 +8,7 @@ import { BankSignupForm } from "@/app/saas/(auth)/banksignup/components/BankSign
 import { signup } from "@/app/saas/(auth)/banksignup/actions";
 import { BankInformationForm } from "@/app/saas/(auth)/banksignup/components/BankInformationForm";
 import { Bank } from "@prisma/client";
+import BankSubscriptionForm from "@/app/saas/(auth)/banksignup/components/BankSubscriptionForm";
 
 export default function BankSignupPage() {
   const [currentStep, setCurrentStep] = useState(0);
@@ -30,7 +31,8 @@ export default function BankSignupPage() {
         {currentStep > 0 && <HorizontalSteps steps={steps} currentStep={currentStep} onStepChange={setCurrentStep} />}
         {currentStep === 0 && <BankCreationForm setCurrentStep={setCurrentStep} setBank={setBank} />}
         {currentStep === 1 && <BankSignupForm setCurrentStep={setCurrentStep} signup={signup} />}
-        {currentStep === 2 && bank && <BankInformationForm bankId={bank.id} />}
+        {currentStep === 2 && bank && <BankInformationForm bankId={bank.id} setCurrentStep={setCurrentStep} />}
+        {currentStep === 3 && bank && <BankSubscriptionForm bankId={bank.id} />}
       </div>
     </div>
   );
