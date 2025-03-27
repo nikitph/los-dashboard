@@ -99,6 +99,7 @@ export default function SubscriptionForm({ className, bankId }: SubscriptionForm
       }
       await updateBankOnboardingStatus(bankId, "SUBSCRIPTION_CREATED");
       router.refresh();
+      router.push("/saas/dashboard");
     } catch (error) {
       toast({
         title: "Error",
