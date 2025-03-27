@@ -27,6 +27,15 @@ enum RoleType {
   USER
 }
 
+enum BankOnboardingStatus {
+  BANK_CREATED
+  BANK_ONBOARDED
+  ADMIN_CREATED
+  SUBSCRIPTION_CREATED
+  USERS_CREATED
+  CONFIGURATIONS_CREATED
+}
+
 enum LoanType {
   PERSONAL
   VEHICLE
@@ -206,19 +215,31 @@ model Dependent {
 }
 
 model Bank {
-  id               String              @id @default(dbgenerated("gen_random_uuid()"))
-  name             String
-  subscription     Subscription?
+  id                 String               @id @default(dbgenerated("gen_random_uuid()"))
+  name               String
+  officialEmail      String               @unique
+  contactNumber      String?
+  addressLine        String?
+  city               String?
+  state              String?
+  zipCode            String?
+  legalEntityName    String?
+  gstNumber          String?
+  panNumber          String?
+  regulatoryLicenses Json?
+  onboardingStatus   BankOnboardingStatus @default(BANK_CREATED)
+
+  subscription Subscription?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  UserRoles        UserRoles[]
+  documents        Document[]
   loanApplications LoanApplication[]
   configurations   BankConfiguration[]
-  createdAt        DateTime            @default(now())
-  updatedAt        DateTime            @updatedAt
-  deletedAt        DateTime?
-  UserRoles        UserRoles[]
-
-  documents Document[]
-
-  applicants Applicant[]
+  applicants       Applicant[]
 }
 
 model Subscription {

@@ -8,51 +8,47 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "@/hooks/use-toast";
+import { signupSchema, SignupSchemaType } from "@/app/saas/(auth)/banksignup/schema";
 
-const signupSchema = z
-  .object({
-    firstName: z.string().min(1, "First name is required"),
-    lastName: z.string().min(1, "Last name is required"),
-    email: z.string().email("Please enter a valid email address"),
-    phoneNumber: z.string().regex(/^\d{10}$/, "Phone number must be exactly 10 digits"),
-    password: z.string().min(6, "Password must be at least 6 characters"),
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"],
-  });
-
-export function SignupForm({ className, signup, ...props }: any) {
+export function BankSignupForm({ className, signup, setCurrentStep, ...props }: any) {
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-    reset,
   } = useForm<z.infer<typeof signupSchema>>({
     resolver: zodResolver(signupSchema),
   });
 
-  // On submit handler
-  const onSubmit = async (formData: z.infer<typeof signupSchema>) => {
-    const { error } = await signup(formData);
-    if (error) {
-      toast({
-        title: "Error",
-        description: error || "Failed to create account",
-        variant: "destructive",
-      });
-    } else {
-      reset();
+  const onSubmit = async (clientData: SignupSchemaType) => {
+    const response = await signup(clientData);
+    if (!response.success) {
+      if (response.errors) {
+        Object.entries(response.errors).forEach(([field, msg]) => {
+          toast({
+            title: `Error in ${field}`,
+            description: typeof msg === "string" ? msg : JSON.stringify(msg),
+            variant: "destructive",
+          });
+        });
+      } else {
+        // A general error if 'errors' is absent
+        toast({
+          title: "Error",
+          description: response.message || "Failed to create bank",
+          variant: "destructive",
+        });
+      }
+      return;
     }
+    setCurrentStep(2);
   };
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader className="text-center">
-          <CardTitle className="text-xl">Welcome</CardTitle>
-          <CardDescription>Please enter the following details to create your account.</CardDescription>
+          <CardTitle className="text-xl">Admin Creation</CardTitle>
+          <CardDescription>Please enter the following details to create your bank admin account.</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -90,13 +86,7 @@ export function SignupForm({ className, signup, ...props }: any) {
 
               <div className="grid gap-2">
                 <Label htmlFor="phoneNumber">Phone Number</Label>
-                <Input
-                  id="phoneNumber"
-                  type="tel"
-                  maxLength={10}
-                  placeholder="1234567890"
-                  {...register("phoneNumber")}
-                />
+                <Input id="phoneNumber" type="tel" placeholder="1234567890" {...register("phoneNumber")} />
                 {errors.phoneNumber && (
                   <Alert variant="destructive">
                     <AlertDescription>{errors.phoneNumber.message}</AlertDescription>
@@ -125,7 +115,7 @@ export function SignupForm({ className, signup, ...props }: any) {
               </div>
 
               <Button type="submit" className="w-full" disabled={isSubmitting}>
-                {isSubmitting ? "Please Wait" : "Sign Up"}
+                {isSubmitting ? "Please Wait" : "Create Admin"}
               </Button>
             </div>
           </form>

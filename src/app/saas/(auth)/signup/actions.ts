@@ -43,22 +43,6 @@ export async function signup(formData: {
 
   // If sign up was successful and no email verification required
   if (authData.user) {
-    // Store additional user data in your database if needed
-    const { error: profileError } = await supabase.from("UserProfile").insert({
-      authId: authData.user.id,
-      firstName: formData.firstName,
-      lastName: formData.lastName,
-      email: formData.email,
-      phoneNumber: formData.phoneNumber,
-      updatedAt: Date.now().toString(),
-    });
-
-    if (profileError) {
-      console.error("Error creating profile:", profileError);
-      // You might want to delete the auth user if profile creation fails
-      // but that's a more complex flow
-    }
-
     // Redirect to dashboard or onboarding
     redirect("/saas/dashboard");
   }

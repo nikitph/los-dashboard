@@ -165,8 +165,29 @@ export const DependentSchema = z.object({
 });
 
 export const BankSchema = z.object({
-  id: z.string().uuid(),
-  name: z.string().min(1, "Bank name is required"),
+  id: z.string().uuid().optional(),
+  name: z.string().min(3, "Bank name must be at least 3 characters"),
+  officialEmail: z.string().email("Official email must be a valid email address"),
+  contactNumber: z.string().optional(),
+  addressLine: z.string().optional(),
+  city: z.string().optional(),
+  state: z.string().optional(),
+  zipCode: z.string().optional(),
+  legalEntityName: z.string().optional(),
+  gstNumber: z.string().optional(),
+  panNumber: z.string().optional(),
+  regulatoryLicenses: z.record(z.any()).optional(),
+  onboardingStatus: z
+    .enum([
+      "BANK_CREATED",
+      "BANK_ONBOARDED",
+      "ADMIN_CREATED",
+      "SUBSCRIPTION_CREATED",
+      "USERS_CREATED",
+      "CONFIGURATIONS_CREATED",
+    ])
+    .default("BANK_CREATED")
+    .optional(),
   createdAt: z.date().default(() => new Date()),
   updatedAt: z.date().default(() => new Date()),
   deletedAt: z.date().nullable(),
