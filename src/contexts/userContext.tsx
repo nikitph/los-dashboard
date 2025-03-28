@@ -45,7 +45,9 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       console.log("roles", roles, authUser.id);
 
       if (success && roles && roles.length > 0) {
-        let currentRole = roles[0];
+        // Filter out roles with null bankId and exclude "APPLICANT" role. What remains should be the employee role
+        // TODO this needs to be worked out when we have Applicant logins
+        let currentRole = roles.filter((r) => r.bankId !== null && r.role !== "APPLICANT")[0];
 
         console.log("Current Role:", currentRole, roles);
 
