@@ -9,8 +9,6 @@ export async function middleware(request: NextRequest) {
     data: { session },
   } = await supabase.auth.getSession();
 
-  console.log("session", session);
-
   // Auth routes (login, signup, etc.) - redirect to dashboard if authenticated
   if (
     request.nextUrl.pathname.startsWith("/saas/login") ||
