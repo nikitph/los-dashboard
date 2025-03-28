@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { toast } from "@/hooks/use-toast";
-import { getBankById, updateBank } from "../actions";
+import { getBankById, updateBank, updateBankOnboardingStatus } from "../actions";
 import { cn } from "@/lib/utils";
 
 // Define the bank update schema without name and officialEmail
@@ -31,9 +31,10 @@ type BankUpdateFormValues = z.infer<typeof BankUpdateSchema>;
 
 interface BankInformationFormProps extends React.HTMLAttributes<HTMLDivElement> {
   bankId: string;
+  setCurrentStep: (step: number) => void;
 }
 
-export function BankInformationForm({ className, bankId, ...props }: BankInformationFormProps) {
+export function BankInformationForm({ className, bankId, setCurrentStep, ...props }: BankInformationFormProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -137,6 +138,8 @@ export function BankInformationForm({ className, bankId, ...props }: BankInforma
           title: "Success",
           description: "Bank details updated successfully",
         });
+        await updateBankOnboardingStatus(bankId, "BANK_DETAILS_ADDED");
+        setCurrentStep(3);
 
         // Optionally redirect after successful update
         // router.push("/saas/banks/list");

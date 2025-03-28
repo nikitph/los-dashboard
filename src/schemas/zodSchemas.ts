@@ -180,6 +180,7 @@ export const BankSchema = z.object({
   onboardingStatus: z
     .enum([
       "BANK_CREATED",
+      "BANK_DETAILS_ADDED",
       "BANK_ONBOARDED",
       "ADMIN_CREATED",
       "SUBSCRIPTION_CREATED",

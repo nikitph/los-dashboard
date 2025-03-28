@@ -30,6 +30,7 @@ enum RoleType {
 enum BankOnboardingStatus {
   BANK_CREATED
   BANK_ONBOARDED
+  BANK_DETAILS_ADDED
   ADMIN_CREATED
   SUBSCRIPTION_CREATED
   USERS_CREATED
@@ -78,6 +79,17 @@ enum DocumentType {
   KYC_DOCUMENT // KYC documents
   APPLICATION_FORM // Completed application forms
   OTHER
+}
+
+enum PlanType {
+  BASIC
+  STANDARD
+  PREMIUM
+}
+
+enum BillingCycle {
+  MONTHLY
+  ANNUAL
 }
 
 model UserProfile {
@@ -243,13 +255,16 @@ model Bank {
 }
 
 model Subscription {
-  id        String    @id @default(dbgenerated("gen_random_uuid()"))
-  bankId    String    @unique
-  startDate DateTime
-  endDate   DateTime?
-  status    String
-  amount    Float
-  deletedAt DateTime?
+  id            String       @id @default(dbgenerated("gen_random_uuid()"))
+  bankId        String       @unique
+  planType      PlanType
+  billingCycle  BillingCycle
+  startDate     DateTime
+  endDate       DateTime?
+  status        String
+  amount        Float
+  paymentMethod Json?
+  deletedAt     DateTime?
 
   bank Bank @relation(fields: [bankId], references: [id])
 
