@@ -36,12 +36,7 @@ export async function middleware(request: NextRequest) {
 }
 
 // Specify which routes the middleware should run on
+// TODO correct this for banksignup
 export const config = {
-  matcher: [
-    "/saas/login/:path*",
-    "/saas/signup/:path*",
-    "/saas/dashboard/:path*",
-    "/saas/(private)/:path*",
-    "/saas/banksignup/:path*",
-  ],
+  matcher: ["/saas/login/:path*", "/saas/signup/:path*", "/saas/dashboard/:path*", "/saas/(private)/:path*"],
 };
