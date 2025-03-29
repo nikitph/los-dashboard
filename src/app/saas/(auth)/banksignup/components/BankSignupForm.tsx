@@ -25,12 +25,10 @@ export function BankSignupForm({ className, signup, bankId, setCurrentStep, ...p
     const response = await signup(clientData, bankId);
 
     if (!response.success) {
-      if (!response.success) {
-        handleFormErrors(response, setError);
-      }
-      await updateBankOnboardingStatus(bankId, "ADMIN_CREATED");
-      setCurrentStep(2);
+      handleFormErrors(response, setError);
     }
+    await updateBankOnboardingStatus(bankId, "ADMIN_CREATED");
+    setCurrentStep(2);
   };
 
   return (
