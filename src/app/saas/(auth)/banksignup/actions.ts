@@ -3,9 +3,9 @@
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
-import { BankSchema } from "@/schemas/zodSchemas";
 import { cookies } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
+
 import {
   BankCreateInput,
   BankUpdateData,
@@ -16,6 +16,8 @@ import {
   SubscriptionCreateInput,
   SubscriptionCreateSchema
 } from "@/app/saas/(auth)/banksignup/schema";
+
+import { BankSchema } from "@/schemas/zodSchemas";
 import { ActionResponse } from "@/types/globalTypes";
 import { handleActionError } from "@/lib/actionErrorHelpers";
 
@@ -25,10 +27,8 @@ import { handleActionError } from "@/lib/actionErrorHelpers";
  */
 export async function createBank(formData: BankCreateInput): Promise<ActionResponse> {
   try {
-    // Validate form data
     const validatedData = createBankSchema.parse(formData);
 
-    // Check if a bank with the same email already exists
     const existingBank = await prisma.bank.findFirst({
       where: {
         officialEmail: validatedData.officialEmail,
@@ -46,7 +46,6 @@ export async function createBank(formData: BankCreateInput): Promise<ActionRespo
       };
     }
 
-    // Create bank in database with default onboarding status
     const bank = await prisma.bank.create({
       data: {
         name: validatedData.name,
@@ -56,7 +55,6 @@ export async function createBank(formData: BankCreateInput): Promise<ActionRespo
       },
     });
 
-    // Revalidate the banks list path
     revalidatePath("/saas/banks/list");
 
     return {
@@ -66,27 +64,7 @@ export async function createBank(formData: BankCreateInput): Promise<ActionRespo
     };
   } catch (error) {
     console.error("Error creating bank:", error);
-    if (error instanceof z.ZodError) {
-      const errors: Record<string, string> = {};
-      error.errors.forEach((err) => {
-        const path = err.path.join(".");
-        errors[path] = err.message;
-      });
-
-      return {
-        success: false,
-        message: "Validation failed",
-        errors,
-      };
-    }
-
-    return {
-      success: false,
-      message: "Failed to create bank",
-      errors: {
-        general: error instanceof Error ? error.message : "Unknown error",
-      },
-    };
+    return handleActionError(error);
   }
 }
 
@@ -103,7 +81,7 @@ export async function getBanks(
 ): Promise<ActionResponse> {
   try {
     const filters: any = {
-      deletedAt: null, // Only get non-deleted banks
+      deletedAt: null,
     };
 
     if (onboardingStatusFilter !== "all") {
@@ -117,11 +95,10 @@ export async function getBanks(
             [sortConfig.key]: sortConfig.direction,
           }
         : {
-            createdAt: "desc", // Default to newest first
+            createdAt: "desc",
           },
     });
 
-    // Apply search filter if provided
     let filteredBanks = banks;
     if (searchTerm) {
       const search = searchTerm.toLowerCase();
@@ -143,13 +120,7 @@ export async function getBanks(
     };
   } catch (error) {
     console.error("Error getting banks:", error);
-    return {
-      success: false,
-      message: "Failed to retrieve banks",
-      errors: {
-        root: error instanceof Error ? error.message : "Unknown error",
-      },
-    };
+    return handleActionError(error);
   }
 }
 
@@ -167,6 +138,9 @@ export async function getBankById(id: string): Promise<ActionResponse> {
       return {
         success: false,
         message: "Bank not found",
+        errors: {
+          root: "Bank not found",
+        },
       };
     }
 
@@ -176,14 +150,7 @@ export async function getBankById(id: string): Promise<ActionResponse> {
       data: bank,
     };
   } catch (error) {
-    console.error("Error getting bank:", error);
-    return {
-      success: false,
-      message: "Failed to retrieve bank",
-      errors: {
-        root: error instanceof Error ? error.message : "Unknown error",
-      },
-    };
+    return handleActionError(error);
   }
 }
 
@@ -237,7 +204,6 @@ export async function updateBank(id: string, data: BankUpdateData): Promise<Acti
  */
 export async function deleteBank(id: string): Promise<ActionResponse> {
   try {
-    // Check if bank exists
     const existingBank = await prisma.bank.findUnique({
       where: { id, deletedAt: null },
     });
@@ -246,10 +212,10 @@ export async function deleteBank(id: string): Promise<ActionResponse> {
       return {
         success: false,
         message: "Bank not found",
+        errors: { root: "Bank not found" },
       };
     }
 
-    // Soft delete by setting deletedAt
     await prisma.bank.update({
       where: { id },
       data: {
@@ -257,7 +223,6 @@ export async function deleteBank(id: string): Promise<ActionResponse> {
       },
     });
 
-    // Revalidate paths
     revalidatePath("/saas/banks/list");
 
     return {
@@ -266,13 +231,7 @@ export async function deleteBank(id: string): Promise<ActionResponse> {
     };
   } catch (error) {
     console.error("Error deleting bank:", error);
-    return {
-      success: false,
-      message: "Failed to delete bank",
-      errors: {
-        general: error instanceof Error ? error.message : "Unknown error",
-      },
-    };
+    return handleActionError(error);
   }
 }
 
@@ -286,7 +245,6 @@ export async function updateBankOnboardingStatus(
   status: z.infer<typeof BankSchema>["onboardingStatus"],
 ): Promise<ActionResponse> {
   try {
-    // Check if bank exists
     const existingBank = await prisma.bank.findUnique({
       where: { id, deletedAt: null },
     });
@@ -295,10 +253,10 @@ export async function updateBankOnboardingStatus(
       return {
         success: false,
         message: "Bank not found",
+        errors: { root: "Bank not found" },
       };
     }
 
-    // Update onboarding status
     const updatedBank = await prisma.bank.update({
       where: { id },
       data: {
@@ -307,7 +265,6 @@ export async function updateBankOnboardingStatus(
       },
     });
 
-    // Revalidate paths
     revalidatePath("/saas/banks/list");
     revalidatePath(`/saas/banks/${id}`);
 
@@ -317,14 +274,8 @@ export async function updateBankOnboardingStatus(
       data: updatedBank,
     };
   } catch (error) {
-    console.error("Error updating bank onboarding status:", error);
-    return {
-      success: false,
-      message: "Failed to update bank onboarding status",
-      errors: {
-        general: error instanceof Error ? error.message : "Unknown error",
-      },
-    };
+    console.error("Error updating onboarding status:", error);
+    return handleActionError(error);
   }
 }
 
@@ -371,6 +322,7 @@ export async function signup(formData: SignupSchemaType, bankId: string): Promis
           role: "BANK_ADMIN",
         },
       });
+
       return {
         success: true,
         message: "Signup successful as a part of bank onboarding",
@@ -382,29 +334,10 @@ export async function signup(formData: SignupSchemaType, bankId: string): Promis
     return {
       success: false,
       message: "Unknown error occurred",
-      errors: { general: "No user was returned from auth" },
+      errors: { root: "No user was returned from auth" },
     };
   } catch (error) {
-    // If Zod validation fails
-    if (error instanceof z.ZodError) {
-      const zodErrors: Record<string, string> = {};
-      error.errors.forEach((issue) => {
-        const path = issue.path.join(".");
-        zodErrors[path] = issue.message;
-      });
-      return {
-        success: false,
-        message: "Validation error",
-        errors: zodErrors,
-      };
-    }
-    return {
-      success: false,
-      message: "Server error",
-      errors: {
-        general: error instanceof Error ? error.message : "Unknown error",
-      },
-    };
+    return handleActionError(error);
   }
 }
 
@@ -415,25 +348,9 @@ export async function signup(formData: SignupSchemaType, bankId: string): Promis
  */
 export async function createSubscription(data: SubscriptionCreateInput): Promise<ActionResponse> {
   try {
-    // Validate input data using Zod schema
-    const validatedData = SubscriptionCreateSchema.safeParse(data);
+    const validated = SubscriptionCreateSchema.safeParse(data);
+    if (!validated.success) return handleActionError(validated.error);
 
-    if (!validatedData.success) {
-      // Format Zod errors into a Record<string, string>
-      const formattedErrors: Record<string, string> = {};
-      validatedData.error.errors.forEach((error) => {
-        const path = error.path.join(".");
-        formattedErrors[path] = error.message;
-      });
-
-      return {
-        success: false,
-        message: "Validation failed",
-        errors: formattedErrors,
-      };
-    }
-
-    // Check if bank exists
     const bank = await prisma.bank.findUnique({
       where: { id: data.bankId },
     });
@@ -457,7 +374,7 @@ export async function createSubscription(data: SubscriptionCreateInput): Promise
     if (existingSubscription) {
       return {
         success: false,
-        message: "An active subscription already exists for this bank",
+        message: "An active subscription already exists",
         errors: { bankId: "Active subscription already exists" },
       };
     }
@@ -476,18 +393,6 @@ export async function createSubscription(data: SubscriptionCreateInput): Promise
       },
     });
 
-    // // Create a subscription payment record
-    // await db.payment.create({
-    //   data: {
-    //     subscriptionId: subscription.id,
-    //     amount: data.amount,
-    //     status: "Paid",
-    //     paymentDate: new Date(),
-    //     paymentMethod: JSON.stringify(data.paymentMethod),
-    //   },
-    // });
-
-    // Update bank subscription status
     await prisma.bank.update({
       where: { id: data.bankId },
       data: {
@@ -495,7 +400,6 @@ export async function createSubscription(data: SubscriptionCreateInput): Promise
       },
     });
 
-    // Revalidate relevant paths
     revalidatePath("/dashboard/subscriptions");
     revalidatePath(`/dashboard/banks/${data.bankId}`);
 
@@ -506,27 +410,8 @@ export async function createSubscription(data: SubscriptionCreateInput): Promise
     };
   } catch (error) {
     console.error("Error creating subscription:", error);
-
-    return {
-      success: false,
-      message: error instanceof Error ? error.message : "Unknown error occurred",
-    };
+    return handleActionError(error);
   }
-}
-
-/**
- * Calculate the next billing date based on billing cycle
- */
-function calculateNextBillingDate(startDate: Date, billingCycle: string): Date {
-  const nextDate = new Date(startDate);
-
-  if (billingCycle === "MONTHLY") {
-    nextDate.setMonth(nextDate.getMonth() + 1);
-  } else if (billingCycle === "ANNUAL") {
-    nextDate.setFullYear(nextDate.getFullYear() + 1);
-  }
-
-  return nextDate;
 }
 
 /**
@@ -534,7 +419,6 @@ function calculateNextBillingDate(startDate: Date, billingCycle: string): Date {
  */
 export async function cancelSubscription(subscriptionId: string): Promise<ActionResponse> {
   try {
-    // Validate subscription ID
     if (!subscriptionId) {
       return {
         success: false,
@@ -543,11 +427,9 @@ export async function cancelSubscription(subscriptionId: string): Promise<Action
       };
     }
 
-    // Check if subscription exists
     const subscription = await prisma.subscription.findUnique({
       where: { id: subscriptionId },
     });
-
     if (!subscription) {
       return {
         success: false,
@@ -556,16 +438,14 @@ export async function cancelSubscription(subscriptionId: string): Promise<Action
       };
     }
 
-    // Update subscription status
     const updatedSubscription = await prisma.subscription.update({
       where: { id: subscriptionId },
       data: {
         status: "Cancelled",
-        endDate: new Date(), // Set end date to today
+        endDate: new Date(),
       },
     });
 
-    // Update bank subscription status
     await prisma.bank.update({
       where: { id: subscription.bankId },
       data: {
@@ -573,7 +453,6 @@ export async function cancelSubscription(subscriptionId: string): Promise<Action
       },
     });
 
-    // Revalidate relevant paths
     revalidatePath("/dashboard/subscriptions");
     revalidatePath(`/dashboard/banks/${subscription.bankId}`);
 
@@ -584,10 +463,6 @@ export async function cancelSubscription(subscriptionId: string): Promise<Action
     };
   } catch (error) {
     console.error("Error cancelling subscription:", error);
-
-    return {
-      success: false,
-      message: error instanceof Error ? error.message : "Unknown error occurred",
-    };
+    return handleActionError(error);
   }
 }
