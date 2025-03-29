@@ -1,22 +1,18 @@
 "use client";
 
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { toast } from "@/hooks/use-toast";
 import { createBank } from "../actions";
 import { cn } from "@/lib/utils";
 import { BankCreationFormProps, BankFormValues, createBankSchema } from "@/app/saas/(auth)/banksignup/schema";
 import { handleFormErrors } from "@/lib/formErrorHelper";
+import { toastError, toastSuccess } from "@/lib/toastUtils";
 
 export function BankCreationForm({ className, setCurrentStep, setBank, ...props }: BankCreationFormProps) {
-  const [success, setSuccess] = useState(false);
-
   const form = useForm<BankFormValues>({
     resolver: zodResolver(createBankSchema),
     defaultValues: {
@@ -38,25 +34,20 @@ export function BankCreationForm({ className, setCurrentStep, setBank, ...props 
       const response = await createBank(data);
 
       if (!response.success) {
-        handleFormErrors(response, setError); // ✅ clean usage
+        handleFormErrors(response, setError);
         return;
       }
-
-      setSuccess(true);
       setBank(response.data);
-      reset();
-      toast({
+      toastSuccess({
         title: "Success",
         description: "Bank created successfully",
       });
       setCurrentStep(1);
     } catch (error) {
-      toast({
+      toastError({
         title: "Error",
         description: "An unexpected error occurred",
-        variant: "destructive",
       });
-    } finally {
     }
   };
 
@@ -68,12 +59,6 @@ export function BankCreationForm({ className, setCurrentStep, setBank, ...props 
           <CardDescription>To get started please enter the bank details</CardDescription>
         </CardHeader>
         <CardContent>
-          {success && (
-            <Alert className="mb-6 border-green-200 bg-green-50 text-green-800">
-              <AlertDescription>Bank created successfully! The bank is now in the onboarding process.</AlertDescription>
-            </Alert>
-          )}
-
           <Form {...form}>
             <form onSubmit={handleSubmit(onSubmit)} className="grid gap-6">
               <FormField
