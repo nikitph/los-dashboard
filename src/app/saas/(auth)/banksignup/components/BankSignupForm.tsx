@@ -7,14 +7,15 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { toast } from "@/hooks/use-toast";
 import { signupSchema, SignupSchemaType } from "@/app/saas/(auth)/banksignup/schema";
 import { updateBankOnboardingStatus } from "@/app/saas/(auth)/banksignup/actions";
+import { handleFormErrors } from "@/lib/formErrorHelper";
 
 export function BankSignupForm({ className, signup, bankId, setCurrentStep, ...props }: any) {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors, isSubmitting },
   } = useForm<z.infer<typeof signupSchema>>({
     resolver: zodResolver(signupSchema),
@@ -22,27 +23,14 @@ export function BankSignupForm({ className, signup, bankId, setCurrentStep, ...p
 
   const onSubmit = async (clientData: SignupSchemaType) => {
     const response = await signup(clientData, bankId);
+
     if (!response.success) {
-      if (response.errors) {
-        Object.entries(response.errors).forEach(([field, msg]) => {
-          toast({
-            title: `Error in ${field}`,
-            description: typeof msg === "string" ? msg : JSON.stringify(msg),
-            variant: "destructive",
-          });
-        });
-      } else {
-        // A general error if 'errors' is absent
-        toast({
-          title: "Error",
-          description: response.message || "Failed to create bank",
-          variant: "destructive",
-        });
+      if (!response.success) {
+        handleFormErrors(response, setError);
       }
-      return;
+      await updateBankOnboardingStatus(bankId, "ADMIN_CREATED");
+      setCurrentStep(2);
     }
-    await updateBankOnboardingStatus(bankId, "ADMIN_CREATED");
-    setCurrentStep(2);
   };
 
   return (
@@ -55,6 +43,12 @@ export function BankSignupForm({ className, signup, bankId, setCurrentStep, ...p
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="grid gap-6">
+              {errors.root && (
+                <Alert variant="destructive">
+                  <AlertDescription>{errors.root.message}</AlertDescription>
+                </Alert>
+              )}
+
               <div className="grid grid-cols-2 gap-4">
                 <div className="grid gap-2">
                   <Label htmlFor="firstName">First Name</Label>
@@ -65,6 +59,7 @@ export function BankSignupForm({ className, signup, bankId, setCurrentStep, ...p
                     </Alert>
                   )}
                 </div>
+
                 <div className="grid gap-2">
                   <Label htmlFor="lastName">Last Name</Label>
                   <Input id="lastName" {...register("lastName")} />
@@ -88,7 +83,7 @@ export function BankSignupForm({ className, signup, bankId, setCurrentStep, ...p
 
               <div className="grid gap-2">
                 <Label htmlFor="phoneNumber">Phone Number</Label>
-                <Input id="phoneNumber" type="tel" placeholder="1234567890" {...register("phoneNumber")} />
+                <Input id="phoneNumber" type="tel" {...register("phoneNumber")} />
                 {errors.phoneNumber && (
                   <Alert variant="destructive">
                     <AlertDescription>{errors.phoneNumber.message}</AlertDescription>
