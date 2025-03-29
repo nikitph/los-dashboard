@@ -7,40 +7,17 @@ import { BankSchema } from "@/schemas/zodSchemas";
 import { cookies } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
 import {
+  BankCreateInput,
+  BankUpdateData,
+  BankUpdateSchema,
+  createBankSchema,
   signupSchema,
   SignupSchemaType,
   SubscriptionCreateInput,
-  SubscriptionCreateSchema,
+  SubscriptionCreateSchema
 } from "@/app/saas/(auth)/banksignup/schema";
-
-// Define the type for bank input data
-export type BankFormData = z.infer<typeof BankSchema>;
-
-// Create simplified type for the minimum required fields
-export type BankCreateInput = Pick<BankFormData, "name" | "officialEmail">;
-
-// Response type for actions
-type ActionResponse = {
-  success: boolean;
-  message?: string;
-  data?: any;
-  errors?: Record<string, string>;
-};
-
-// Bank Update Schema
-const BankUpdateSchema = z.object({
-  contactNumber: z.string().optional(),
-  addressLine: z.string().optional(),
-  city: z.string().optional(),
-  state: z.string().optional(),
-  zipCode: z.string().optional(),
-  legalEntityName: z.string().optional(),
-  gstNumber: z.string().optional(),
-  panNumber: z.string().optional(),
-  regulatoryLicenses: z.any().optional(), // Will handle JSON conversion
-});
-
-type BankUpdateData = z.infer<typeof BankUpdateSchema>;
+import { ActionResponse } from "@/types/globalTypes";
+import { handleActionError } from "@/lib/actionErrorHelpers";
 
 /**
  * Create a new bank with basic information
@@ -48,12 +25,6 @@ type BankUpdateData = z.infer<typeof BankUpdateSchema>;
  */
 export async function createBank(formData: BankCreateInput): Promise<ActionResponse> {
   try {
-    // Create validation schema for the minimum required fields
-    const createBankSchema = z.object({
-      name: BankSchema.shape.name,
-      officialEmail: BankSchema.shape.officialEmail,
-    });
-
     // Validate form data
     const validatedData = createBankSchema.parse(formData);
 
@@ -131,17 +102,14 @@ export async function getBanks(
   },
 ): Promise<ActionResponse> {
   try {
-    // Build filter conditions
     const filters: any = {
       deletedAt: null, // Only get non-deleted banks
     };
 
-    // Add onboarding status filter if specified
     if (onboardingStatusFilter !== "all") {
       filters.onboardingStatus = onboardingStatusFilter;
     }
 
-    // Get banks with filters
     const banks = await prisma.bank.findMany({
       where: filters,
       orderBy: sortConfig?.key
@@ -170,6 +138,7 @@ export async function getBanks(
 
     return {
       success: true,
+      message: "Bank list fetched successfully",
       data: filteredBanks,
     };
   } catch (error) {
@@ -178,7 +147,7 @@ export async function getBanks(
       success: false,
       message: "Failed to retrieve banks",
       errors: {
-        general: error instanceof Error ? error.message : "Unknown error",
+        root: error instanceof Error ? error.message : "Unknown error",
       },
     };
   }
@@ -203,6 +172,7 @@ export async function getBankById(id: string): Promise<ActionResponse> {
 
     return {
       success: true,
+      message: "Bank returned successfully",
       data: bank,
     };
   } catch (error) {
@@ -211,7 +181,7 @@ export async function getBankById(id: string): Promise<ActionResponse> {
       success: false,
       message: "Failed to retrieve bank",
       errors: {
-        general: error instanceof Error ? error.message : "Unknown error",
+        root: error instanceof Error ? error.message : "Unknown error",
       },
     };
   }
@@ -224,22 +194,20 @@ export async function getBankById(id: string): Promise<ActionResponse> {
  */
 export async function updateBank(id: string, data: BankUpdateData): Promise<ActionResponse> {
   try {
-    // Validate form data
     const validatedData = BankUpdateSchema.parse(data);
 
-    // Check if bank exists
-    const existingBank = await prisma.bank.findUnique({
-      where: { id },
-    });
+    const existingBank = await prisma.bank.findUnique({ where: { id } });
 
     if (!existingBank) {
       return {
         success: false,
         message: "Bank not found",
+        errors: {
+          root: "Bank not found",
+        },
       };
     }
 
-    // Update bank in database
     const updatedBank = await prisma.bank.update({
       where: { id },
       data: {
@@ -248,7 +216,6 @@ export async function updateBank(id: string, data: BankUpdateData): Promise<Acti
       },
     });
 
-    // Revalidate paths
     revalidatePath("/saas/banks/list");
     revalidatePath(`/saas/banks/${id}`);
     revalidatePath(`/saas/banks/${id}/edit`);
@@ -260,18 +227,7 @@ export async function updateBank(id: string, data: BankUpdateData): Promise<Acti
     };
   } catch (error) {
     console.error("Error updating bank:", error);
-    if (error instanceof z.ZodError) {
-      return {
-        success: false,
-        message: "Validation failed",
-        errors: error.errors,
-      };
-    }
-    return {
-      success: false,
-      message: "Failed to update bank",
-      errors: error instanceof Error ? error.message : "Unknown error",
-    };
+    return handleActionError(error);
   }
 }
 

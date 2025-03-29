@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { BankSchema } from "@/schemas/zodSchemas";
 
 export const signupSchema = z
   .object({
@@ -54,3 +55,26 @@ export type SubscriptionActionResponse = {
   subscription?: any;
   error?: string;
 };
+
+export const createBankSchema = z.object({
+  name: BankSchema.shape.name,
+  officialEmail: BankSchema.shape.officialEmail,
+});
+
+export const BankUpdateSchema = z.object({
+  contactNumber: z.string().optional(),
+  addressLine: z.string().optional(),
+  city: z.string().optional(),
+  state: z.string().optional(),
+  zipCode: z.string().optional(),
+  legalEntityName: z.string().optional(),
+  gstNumber: z.string().optional(),
+  panNumber: z.string().optional(),
+  regulatoryLicenses: z.any().optional(), // Will handle JSON conversion
+});
+
+export type BankUpdateData = z.infer<typeof BankUpdateSchema>;
+
+export type BankFormData = z.infer<typeof BankSchema>;
+
+export type BankCreateInput = Pick<BankFormData, "name" | "officialEmail">;
