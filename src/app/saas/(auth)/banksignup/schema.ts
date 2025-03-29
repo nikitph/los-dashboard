@@ -78,3 +78,13 @@ export type BankUpdateData = z.infer<typeof BankUpdateSchema>;
 export type BankFormData = z.infer<typeof BankSchema>;
 
 export type BankCreateInput = Pick<BankFormData, "name" | "officialEmail">;
+
+export type BankFormValues = {
+  name: string;
+  officialEmail: string;
+};
+
+export interface BankCreationFormProps extends React.HTMLAttributes<HTMLDivElement> {
+  setCurrentStep: (step: number) => void;
+  setBank: (bank: any) => void;
+}
