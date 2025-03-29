@@ -1,32 +1,43 @@
+"use client";
+
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { signupSchema, SignupSchemaType } from "@/app/saas/(auth)/banksignup/schema";
 import { updateBankOnboardingStatus } from "@/app/saas/(auth)/banksignup/actions";
 import { handleFormErrors } from "@/lib/formErrorHelper";
 
 export function BankSignupForm({ className, signup, bankId, setCurrentStep, ...props }: any) {
+  const form = useForm({
+    resolver: zodResolver(signupSchema),
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      email: "",
+      phoneNumber: "",
+      password: "",
+      confirmPassword: "",
+    },
+  });
+
   const {
-    register,
+    control,
     handleSubmit,
     setError,
-    formState: { errors, isSubmitting },
-  } = useForm<z.infer<typeof signupSchema>>({
-    resolver: zodResolver(signupSchema),
-  });
+    formState: { isSubmitting },
+  } = form;
 
   const onSubmit = async (clientData: SignupSchemaType) => {
     const response = await signup(clientData, bankId);
-
     if (!response.success) {
       handleFormErrors(response, setError);
+      return;
     }
+
     await updateBankOnboardingStatus(bankId, "ADMIN_CREATED");
     setCurrentStep(2);
   };
@@ -39,81 +50,98 @@ export function BankSignupForm({ className, signup, bankId, setCurrentStep, ...p
           <CardDescription>Please enter the following details to create your bank admin account.</CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="grid gap-6">
-              {errors.root && (
-                <Alert variant="destructive">
-                  <AlertDescription>{errors.root.message}</AlertDescription>
-                </Alert>
-              )}
-
+          <Form {...form}>
+            <form onSubmit={handleSubmit(onSubmit)} className="grid gap-6">
               <div className="grid grid-cols-2 gap-4">
-                <div className="grid gap-2">
-                  <Label htmlFor="firstName">First Name</Label>
-                  <Input id="firstName" {...register("firstName")} />
-                  {errors.firstName && (
-                    <Alert variant="destructive">
-                      <AlertDescription>{errors.firstName.message}</AlertDescription>
-                    </Alert>
+                <FormField
+                  control={control}
+                  name="firstName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>First Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="First Name" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
                   )}
-                </div>
-
-                <div className="grid gap-2">
-                  <Label htmlFor="lastName">Last Name</Label>
-                  <Input id="lastName" {...register("lastName")} />
-                  {errors.lastName && (
-                    <Alert variant="destructive">
-                      <AlertDescription>{errors.lastName.message}</AlertDescription>
-                    </Alert>
+                />
+                <FormField
+                  control={control}
+                  name="lastName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Last Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Last Name" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
                   )}
-                </div>
+                />
               </div>
 
-              <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
-                <Input id="email" type="email" {...register("email")} />
-                {errors.email && (
-                  <Alert variant="destructive">
-                    <AlertDescription>{errors.email.message}</AlertDescription>
-                  </Alert>
+              <FormField
+                control={control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input type="email" placeholder="Email" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
                 )}
-              </div>
+              />
 
-              <div className="grid gap-2">
-                <Label htmlFor="phoneNumber">Phone Number</Label>
-                <Input id="phoneNumber" type="tel" {...register("phoneNumber")} />
-                {errors.phoneNumber && (
-                  <Alert variant="destructive">
-                    <AlertDescription>{errors.phoneNumber.message}</AlertDescription>
-                  </Alert>
+              <FormField
+                control={control}
+                name="phoneNumber"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Phone Number</FormLabel>
+                    <FormControl>
+                      <Input type="tel" placeholder="Phone Number" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
                 )}
-              </div>
+              />
 
-              <div className="grid gap-2">
-                <Label htmlFor="password">Password</Label>
-                <Input id="password" type="password" {...register("password")} />
-                {errors.password && (
-                  <Alert variant="destructive">
-                    <AlertDescription>{errors.password.message}</AlertDescription>
-                  </Alert>
+              <FormField
+                control={control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input type="password" placeholder="Password" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
                 )}
-              </div>
+              />
 
-              <div className="grid gap-2">
-                <Label htmlFor="confirmPassword">Confirm Password</Label>
-                <Input id="confirmPassword" type="password" {...register("confirmPassword")} />
-                {errors.confirmPassword && (
-                  <Alert variant="destructive">
-                    <AlertDescription>{errors.confirmPassword.message}</AlertDescription>
-                  </Alert>
+              <FormField
+                control={control}
+                name="confirmPassword"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Confirm Password</FormLabel>
+                    <FormControl>
+                      <Input type="password" placeholder="Confirm Password" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
                 )}
-              </div>
+              />
 
               <Button type="submit" className="w-full" disabled={isSubmitting}>
-                {isSubmitting ? "Please Wait" : "Create Admin"}
+                {isSubmitting ? "Please Wait..." : "Create Admin"}
               </Button>
-            </div>
-          </form>
+            </form>
+          </Form>
         </CardContent>
       </Card>
     </div>
