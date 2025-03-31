@@ -7,7 +7,7 @@ import {
   getDocumentsByEntity,
   getDocumentUploadUrl,
   getLoanApplicationDocuments,
-} from "@/app/saas/(private)/documents/actions";
+} from "@/app/[locale]/saas/(private)/documents/actions";
 import { validateFile } from "@/utils/backblaze/backblazeUtils";
 
 export type DocumentMetadata = {

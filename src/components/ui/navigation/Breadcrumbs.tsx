@@ -58,7 +58,7 @@ export function Breadcrumbs() {
   if (pathname === "/saas/dashboard") {
     return (
       <Link
-        href="/saas/dashboard"
+        href="/[locale]/saas/dashboard"
         className="text-gray-500 transition hover:text-gray-700 dark:text-gray-400 hover:dark:text-gray-300"
       >
         Dashboard
@@ -72,7 +72,7 @@ export function Breadcrumbs() {
         {/* Always include Dashboard as the first breadcrumb */}
         <li className="flex">
           <Link
-            href="/saas/dashboard"
+            href="/[locale]/saas/dashboard"
             className="text-gray-500 transition hover:text-gray-700 dark:text-gray-400 hover:dark:text-gray-300"
           >
             Dashboard
