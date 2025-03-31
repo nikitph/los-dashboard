@@ -1,20 +1,26 @@
 import { z } from "zod";
 import { BankSchema } from "@/schemas/zodSchemas";
 
-export const signupSchema = z
-  .object({
-    firstName: z.string().min(1, "First name is required"),
-    lastName: z.string().min(1, "Last name is required"),
-    email: z.string().email("Please enter a valid email address"),
-    phoneNumber: z.string().regex(/^[0-9]{10}$/, "Phone number must be exactly 10 digits"),
-    password: z.string().min(6, "Password must be at least 6 characters"),
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"],
-  });
+// Function to create a translated schema
+export const createSignupSchema = (t: (key: string) => string) => {
+  return z
+    .object({
+      firstName: z.string().min(1, t("firstName.required")),
+      lastName: z.string().min(1, t("lastName.required")),
+      email: z.string().email(t("email.invalid")),
+      phoneNumber: z.string().regex(/^[0-9]{10}$/, t("phone.digits")),
+      password: z.string().min(6, t("password.minLength")),
+      confirmPassword: z.string(),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: t("password.match"),
+      path: ["confirmPassword"],
+    });
+};
 
+const identity = <T>(x: T): T => x;
+
+const signupSchema = createSignupSchema(identity);
 export type SignupSchemaType = z.infer<typeof signupSchema>;
 
 // Enums for reference

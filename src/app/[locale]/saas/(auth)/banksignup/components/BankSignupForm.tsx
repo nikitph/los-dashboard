@@ -7,11 +7,16 @@ import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { signupSchema, SignupSchemaType } from "@/app/[locale]/saas/(auth)/banksignup/schema";
+import { createSignupSchema, SignupSchemaType } from "@/app/[locale]/saas/(auth)/banksignup/schema";
 import { updateBankOnboardingStatus } from "@/app/[locale]/saas/(auth)/banksignup/actions";
 import { handleFormErrors } from "@/lib/formErrorHelper";
+import { useTranslations } from "next-intl";
 
 export function BankSignupForm({ className, signup, bankId, setCurrentStep, ...props }: any) {
+  const t = useTranslations(BankSignupForm.name);
+  const v = useTranslations("validation");
+  const signupSchema = createSignupSchema(v);
+
   const form = useForm({
     resolver: zodResolver(signupSchema),
     defaultValues: {
@@ -46,8 +51,8 @@ export function BankSignupForm({ className, signup, bankId, setCurrentStep, ...p
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader className="text-center">
-          <CardTitle className="text-xl">Admin Creation</CardTitle>
-          <CardDescription>Please enter the following details to create your bank admin account.</CardDescription>
+          <CardTitle className="text-xl">{t("title")}</CardTitle>
+          <CardDescription>{t("description")}</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -58,9 +63,9 @@ export function BankSignupForm({ className, signup, bankId, setCurrentStep, ...p
                   name="firstName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>First Name</FormLabel>
+                      <FormLabel>{t("firstName.label")}</FormLabel>
                       <FormControl>
-                        <Input placeholder="First Name" {...field} />
+                        <Input placeholder={t("firstName.placeholder")} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -71,9 +76,9 @@ export function BankSignupForm({ className, signup, bankId, setCurrentStep, ...p
                   name="lastName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Last Name</FormLabel>
+                      <FormLabel>{t("lastName.label")}</FormLabel>
                       <FormControl>
-                        <Input placeholder="Last Name" {...field} />
+                        <Input placeholder={t("lastName.placeholder")} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -86,9 +91,9 @@ export function BankSignupForm({ className, signup, bankId, setCurrentStep, ...p
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel>{t("email.label")}</FormLabel>
                     <FormControl>
-                      <Input type="email" placeholder="Email" {...field} />
+                      <Input type="email" placeholder={t("email.placeholder")} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -100,9 +105,9 @@ export function BankSignupForm({ className, signup, bankId, setCurrentStep, ...p
                 name="phoneNumber"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Phone Number</FormLabel>
+                    <FormLabel>{t("phone.label")}</FormLabel>
                     <FormControl>
-                      <Input type="tel" placeholder="Phone Number" {...field} />
+                      <Input type="tel" placeholder={t("phone.placeholder")} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -114,9 +119,9 @@ export function BankSignupForm({ className, signup, bankId, setCurrentStep, ...p
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Password</FormLabel>
+                    <FormLabel>{t("password.label")}</FormLabel>
                     <FormControl>
-                      <Input type="password" placeholder="Password" {...field} />
+                      <Input type="password" placeholder={t("password.placeholder")} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -128,9 +133,9 @@ export function BankSignupForm({ className, signup, bankId, setCurrentStep, ...p
                 name="confirmPassword"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Confirm Password</FormLabel>
+                    <FormLabel>{t("confirmPassword.label")}</FormLabel>
                     <FormControl>
-                      <Input type="password" placeholder="Confirm Password" {...field} />
+                      <Input type="password" placeholder={t("confirmPassword.placeholder")} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -138,7 +143,7 @@ export function BankSignupForm({ className, signup, bankId, setCurrentStep, ...p
               />
 
               <Button type="submit" className="w-full" disabled={isSubmitting}>
-                {isSubmitting ? "Please Wait..." : "Create Admin"}
+                {isSubmitting ? t("submit.loading") : t("submit.label")}
               </Button>
             </form>
           </Form>

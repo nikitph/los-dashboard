@@ -14,5 +14,55 @@
       "errorTitle": "Error",
       "errorDescription": "An unexpected error occurred"
     }
+  },
+  "BankSignupForm": {
+    "title": "Admin Creation",
+    "description": "Please enter the following details to create your bank admin account.",
+    "firstName": {
+      "label": "First Name",
+      "placeholder": "First Name"
+    },
+    "lastName": {
+      "label": "Last Name",
+      "placeholder": "Last Name"
+    },
+    "email": {
+      "label": "Email",
+      "placeholder": "Email"
+    },
+    "phone": {
+      "label": "Phone Number",
+      "placeholder": "Phone Number"
+    },
+    "password": {
+      "label": "Password",
+      "placeholder": "Password"
+    },
+    "confirmPassword": {
+      "label": "Confirm Password",
+      "placeholder": "Confirm Password"
+    },
+    "submit": {
+      "label": "Create Admin",
+      "loading": "Please Wait..."
+    }
+  },
+  "validation": {
+    "firstName": {
+      "required": "First name is required"
+    },
+    "lastName": {
+      "required": "Last name is required"
+    },
+    "email": {
+      "invalid": "Please enter a valid email address"
+    },
+    "phone": {
+      "digits": "Phone number must be exactly 10 digits"
+    },
+    "password": {
+      "minLength": "Password must be at least 6 characters",
+      "match": "Passwords do not match"
+    }
   }
 }
