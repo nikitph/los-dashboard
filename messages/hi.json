@@ -1,6 +1,18 @@
 {
-  "HomePage": {
-    "title": "नमस्ते दुनिया!",
-    "about": "अधिक जानकारी के लिए यहाँ जाएँ"
+  "BankCreationForm": {
+    "welcomeTitle": "स्वागत है",
+    "welcomeDescription": "शुरू करने के लिए कृपया बैंक विवरण दर्ज करें।",
+    "bankNameLabel": "बैंक का नाम",
+    "bankNamePlaceholder": "बैंक का नाम दर्ज करें",
+    "emailLabel": "आधिकारिक ईमेल",
+    "emailPlaceholder": "बैंक की आधिकारिक ईमेल दर्ज करें",
+    "createButton": "बैंक बनाएं",
+    "creatingButton": "बैंक बना रहे हैं...",
+    "toast": {
+      "successTitle": "सफलता",
+      "successDescription": "बैंक सफलतापूर्वक बनाया गया",
+      "errorTitle": "त्रुटि",
+      "errorDescription": "एक अप्रत्याशित त्रुटि हुई"
+    }
   }
 }

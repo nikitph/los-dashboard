@@ -14,6 +14,8 @@ import { toastError, toastSuccess } from "@/lib/toastUtils";
 import { useTranslations } from "next-intl";
 
 export function BankCreationForm({ className, setCurrentStep, setBank, ...props }: BankCreationFormProps) {
+  const t = useTranslations(BankCreationForm.name);
+
   const form = useForm<BankFormValues>({
     resolver: zodResolver(createBankSchema),
     defaultValues: {
@@ -21,8 +23,6 @@ export function BankCreationForm({ className, setCurrentStep, setBank, ...props 
       officialEmail: "",
     },
   });
-
-  const t = useTranslations("HomePage");
 
   const {
     control,
@@ -42,14 +42,14 @@ export function BankCreationForm({ className, setCurrentStep, setBank, ...props 
       }
       setBank(response.data);
       toastSuccess({
-        title: "Success",
-        description: "Bank created successfully",
+        title: t("toast.successTitle"),
+        description: t("toast.successDescription"),
       });
       setCurrentStep(1);
     } catch (error) {
       toastError({
-        title: "Error",
-        description: "An unexpected error occurred",
+        title: t("toast.errorTitle"),
+        description: t("toast.errorDescription"),
       });
     }
   };
@@ -58,8 +58,8 @@ export function BankCreationForm({ className, setCurrentStep, setBank, ...props 
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader className="text-center">
-          <CardTitle className="text-xl">Welcome</CardTitle>
-          <CardDescription>To get started please enter the bank details. {t("title")}</CardDescription>
+          <CardTitle className="text-xl">{t("welcomeTitle")}</CardTitle>
+          <CardDescription>{t("welcomeDescription")}</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -69,9 +69,9 @@ export function BankCreationForm({ className, setCurrentStep, setBank, ...props 
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Bank Name</FormLabel>
+                    <FormLabel>{t("bankNameLabel")}</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter Bank Name" {...field} />
+                      <Input placeholder={t("bankNamePlaceholder")} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -83,9 +83,9 @@ export function BankCreationForm({ className, setCurrentStep, setBank, ...props 
                 name="officialEmail"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Official Email</FormLabel>
+                    <FormLabel>{t("emailLabel")}</FormLabel>
                     <FormControl>
-                      <Input type="email" placeholder="Enter the official bank email" {...field} />
+                      <Input type="email" placeholder={t("emailPlaceholder")} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -93,7 +93,7 @@ export function BankCreationForm({ className, setCurrentStep, setBank, ...props 
               />
 
               <Button type="submit" className="w-full" disabled={isSubmitting}>
-                {isSubmitting ? "Creating Bank..." : "Create Bank"}
+                {isSubmitting ? t("creatingButton") : t("createButton")}
               </Button>
             </form>
           </Form>

@@ -1,6 +1,18 @@
 {
-  "HomePage": {
-    "title": "Hello world!",
-    "about": "Go to the about page"
+  "BankCreationForm": {
+    "welcomeTitle": "Welcome",
+    "welcomeDescription": "To get started please enter the bank details.",
+    "bankNameLabel": "Bank Name",
+    "bankNamePlaceholder": "Enter Bank Name",
+    "emailLabel": "Official Email",
+    "emailPlaceholder": "Enter the official bank email",
+    "createButton": "Create Bank",
+    "creatingButton": "Creating Bank...",
+    "toast": {
+      "successTitle": "Success",
+      "successDescription": "Bank created successfully",
+      "errorTitle": "Error",
+      "errorDescription": "An unexpected error occurred"
+    }
   }
 }
