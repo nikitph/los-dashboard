@@ -15,9 +15,11 @@ import { useTranslations } from "next-intl";
 
 export function BankCreationForm({ className, setCurrentStep, setBank, ...props }: BankCreationFormProps) {
   const t = useTranslations(BankCreationForm.name);
+  const v = useTranslations("validation");
+  const bankCreationSchema = createBankSchema(v);
 
   const form = useForm<BankFormValues>({
-    resolver: zodResolver(createBankSchema),
+    resolver: zodResolver(bankCreationSchema),
     defaultValues: {
       name: "",
       officialEmail: "",

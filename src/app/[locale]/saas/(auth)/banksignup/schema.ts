@@ -62,10 +62,15 @@ export type SubscriptionActionResponse = {
   error?: string;
 };
 
-export const createBankSchema = z.object({
-  name: BankSchema.shape.name,
-  officialEmail: BankSchema.shape.officialEmail,
-});
+export const createBankSchema = (t: (key: string) => string) => {
+  return z.object({
+    name: z.string().min(3, t("bank.name.minLength")),
+    officialEmail: z.string().email(t("bank.officialEmail.invalid")),
+  });
+};
+
+const bankCreateSchema = createBankSchema(identity);
+export type BankCreateSchemaType = z.infer<typeof bankCreateSchema>;
 
 export const BankUpdateSchema = z.object({
   contactNumber: z.string().optional(),

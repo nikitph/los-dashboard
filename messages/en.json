@@ -63,6 +63,14 @@
     "password": {
       "minLength": "Password must be at least 6 characters",
       "match": "Passwords do not match"
+    },
+    "bank": {
+      "name": {
+        "minLength": "Bank name must be at least 3 characters"
+      },
+      "officialEmail": {
+        "invalid": "Official email must be a valid email address"
+      }
     }
   }
 }
