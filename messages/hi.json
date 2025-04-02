@@ -1,0 +1,82 @@
+{
+  "BankCreationForm": {
+    "welcomeTitle": "स्वागत है",
+    "welcomeDescription": "शुरू करने के लिए कृपया बैंक विवरण दर्ज करें।",
+    "bankNameLabel": "बैंक का नाम",
+    "bankNamePlaceholder": "बैंक का नाम दर्ज करें",
+    "emailLabel": "आधिकारिक ईमेल",
+    "emailPlaceholder": "बैंक की आधिकारिक ईमेल दर्ज करें",
+    "createButton": "बैंक बनाएं",
+    "creatingButton": "बैंक बना रहे हैं...",
+    "toast": {
+      "successTitle": "सफलता",
+      "successDescription": "बैंक सफलतापूर्वक बनाया गया",
+      "errorTitle": "त्रुटि",
+      "errorDescription": "एक अप्रत्याशित त्रुटि हुई"
+    },
+    "errors": {
+      "bankExists": "इस ईमेल वाला बैंक पहले से मौजूद है"
+    },
+    "success": {
+      "created": "बैंक सफलतापूर्वक बनाया गया"
+    }
+  },
+  "BankSignupForm": {
+    "title": "व्यवस्थापक निर्माण",
+    "description": "कृपया अपने बैंक व्यवस्थापक खाते को बनाने के लिए निम्न विवरण दर्ज करें।",
+    "firstName": {
+      "label": "पहला नाम",
+      "placeholder": "पहला नाम"
+    },
+    "lastName": {
+      "label": "अंतिम नाम",
+      "placeholder": "अंतिम नाम"
+    },
+    "email": {
+      "label": "ईमेल",
+      "placeholder": "ईमेल"
+    },
+    "phone": {
+      "label": "फ़ोन नंबर",
+      "placeholder": "फ़ोन नंबर"
+    },
+    "password": {
+      "label": "पासवर्ड",
+      "placeholder": "पासवर्ड"
+    },
+    "confirmPassword": {
+      "label": "पासवर्ड की पुष्टि करें",
+      "placeholder": "पासवर्ड की पुष्टि करें"
+    },
+    "submit": {
+      "label": "व्यवस्थापक बनाएं",
+      "loading": "कृपया प्रतीक्षा करें..."
+    }
+  },
+  "validation": {
+    "firstName": {
+      "required": "पहला नाम आवश्यक है"
+    },
+    "lastName": {
+      "required": "अंतिम नाम आवश्यक है"
+    },
+    "email": {
+      "invalid": "कृपया एक वैध ईमेल पता दर्ज करें"
+    },
+    "phone": {
+      "digits": "फ़ोन नंबर ठीक 10 अंकों का होना चाहिए"
+    },
+    "password": {
+      "minLength": "पासवर्ड कम से कम 6 अक्षरों का होना चाहिए",
+      "match": "पासवर्ड मेल नहीं खा रहे हैं"
+    },
+    "bank": {
+      "name": {
+        "minLength": "बैंक का नाम कम से कम 3 अक्षरों का होना चाहिए"
+      },
+      "officialEmail": {
+        "invalid": "आधिकारिक ईमेल एक मान्य ईमेल पता होना चाहिए"
+      }
+    }
+  }
+}

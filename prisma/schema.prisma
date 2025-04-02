@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,8 +7,6 @@ datasource db {
   url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
-
-// Prisma Schema for Loan Operating System (LOS)
 
 // Enums
 enum RoleType {
