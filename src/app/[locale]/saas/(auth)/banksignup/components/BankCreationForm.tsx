@@ -11,9 +11,10 @@ import { cn } from "@/lib/utils";
 import { BankCreationFormProps, BankFormValues, createBankSchema } from "@/app/[locale]/saas/(auth)/banksignup/schema";
 import { handleFormErrors } from "@/lib/formErrorHelper";
 import { toastError, toastSuccess } from "@/lib/toastUtils";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 export function BankCreationForm({ className, setCurrentStep, setBank, ...props }: BankCreationFormProps) {
+  const locale = useLocale();
   const t = useTranslations(BankCreationForm.name);
   const v = useTranslations("validation");
   const bankCreationSchema = createBankSchema(v);
@@ -36,7 +37,7 @@ export function BankCreationForm({ className, setCurrentStep, setBank, ...props 
 
   const onSubmit = async (data: BankFormValues) => {
     try {
-      const response = await createBank(data);
+      const response = await createBank(data, locale);
 
       if (!response.success) {
         handleFormErrors(response, setError);

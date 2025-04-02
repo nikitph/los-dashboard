@@ -13,6 +13,12 @@
       "successDescription": "बैंक सफलतापूर्वक बनाया गया",
       "errorTitle": "त्रुटि",
       "errorDescription": "एक अप्रत्याशित त्रुटि हुई"
+    },
+    "errors": {
+      "bankExists": "इस ईमेल वाला बैंक पहले से मौजूद है"
+    },
+    "success": {
+      "created": "बैंक सफलतापूर्वक बनाया गया"
     }
   },
   "BankSignupForm": {

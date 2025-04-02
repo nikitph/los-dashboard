@@ -20,14 +20,21 @@ import {
 import { BankSchema } from "@/schemas/zodSchemas";
 import { ActionResponse } from "@/types/globalTypes";
 import { handleActionError } from "@/lib/actionErrorHelpers";
+import { getMessages } from "next-intl/server";
+import { createTranslator } from "next-intl";
 
 /**
  * Create a new bank with basic information
  * @param formData Bank creation data with required fields
+ * @param locale Current locale
  */
-export async function createBank(formData: BankCreateInput): Promise<ActionResponse> {
+export async function createBank(formData: BankCreateInput, locale: string): Promise<ActionResponse> {
   try {
-    const validatedData = createBankSchema.parse(formData);
+    const messages = await getMessages({ locale }); // pulls from current context
+    const t = createTranslator({ locale, messages, namespace: "BankCreationForm" });
+    const v = createTranslator({ locale, messages, namespace: "validation" });
+    const bankCreateSchema = createBankSchema(v);
+    const validatedData = bankCreateSchema.parse(formData);
 
     const existingBank = await prisma.bank.findFirst({
       where: {
@@ -39,9 +46,9 @@ export async function createBank(formData: BankCreateInput): Promise<ActionRespo
     if (existingBank) {
       return {
         success: false,
-        message: "A bank with this email already exists",
+        message: t("errors.bankExists"),
         errors: {
-          officialEmail: "A bank with this email already exists",
+          email: t("errors.bankExists"),
         },
       };
     }
@@ -59,7 +66,7 @@ export async function createBank(formData: BankCreateInput): Promise<ActionRespo
 
     return {
       success: true,
-      message: "Bank created successfully",
+      message: t("success.created"),
       data: bank,
     };
   } catch (error) {

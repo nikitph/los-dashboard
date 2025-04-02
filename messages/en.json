@@ -13,6 +13,12 @@
       "successDescription": "Bank created successfully",
       "errorTitle": "Error",
       "errorDescription": "An unexpected error occurred"
+    },
+    "errors": {
+      "bankExists" : "A Bank with this email already exists"
+    },
+    "success": {
+      "created": "Bank created successfully"
     }
   },
   "BankSignupForm": {
