@@ -7,13 +7,13 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { toast } from "@/hooks/use-toast";
 import { getBankById, updateBank, updateBankOnboardingStatus } from "../actions";
 import { cn } from "@/lib/utils";
 import { useLocale, useTranslations } from "next-intl";
 import { BankInfoData, createBankInfoSchema } from "@/app/[locale]/saas/(auth)/banksignup/schema";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 
 interface BankInformationFormProps extends React.HTMLAttributes<HTMLDivElement> {
   bankId: string;
@@ -27,18 +27,11 @@ export function BankInformationForm({ className, bankId, setCurrentStep, ...prop
   const bankInformationSchema = createBankInfoSchema(v);
 
   const router = useRouter();
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [success, setSuccess] = useState(false);
   const [bankName, setBankName] = useState("");
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-    setValue,
-  } = useForm<BankInfoData>({
+  const form = useForm<BankInfoData>({
     resolver: zodResolver(bankInformationSchema),
     defaultValues: {
       contactNumber: "",
@@ -52,13 +45,18 @@ export function BankInformationForm({ className, bankId, setCurrentStep, ...prop
     },
   });
 
-  // Fetch existing bank data
+  const {
+    control,
+    handleSubmit,
+    setError,
+    setValue,
+    formState: { isSubmitting },
+  } = form;
+
   useEffect(() => {
     const fetchBankData = async () => {
-      setIsLoading(true);
       try {
         const response = await getBankById(bankId);
-        console.log("Fetched bank data:", response);
         if (response.success && response.data) {
           const bankData = response.data;
           setBankName(bankData.name);
@@ -97,7 +95,6 @@ export function BankInformationForm({ className, bankId, setCurrentStep, ...prop
   }, [bankId, setValue]);
 
   const onSubmit = async (data: BankInfoData) => {
-    setIsSubmitting(true);
     try {
       // Convert regulatoryLicenses string to JSON if provided
       let processedData = { ...data };
@@ -129,7 +126,6 @@ export function BankInformationForm({ className, bankId, setCurrentStep, ...prop
         variant: "destructive",
       });
     } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -155,108 +151,142 @@ export function BankInformationForm({ className, bankId, setCurrentStep, ...prop
             </Alert>
           )}
 
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="grid gap-6">
-              {/* Contact & Legal Entity (Row 1) */}
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                <div className="grid gap-2">
-                  <Label htmlFor="contactNumber">Contact Number</Label>
-                  <Input id="contactNumber" placeholder="Contact Number" {...register("contactNumber")} />
-                  {errors.contactNumber && (
-                    <Alert variant="destructive">
-                      <AlertDescription>{errors.contactNumber.message}</AlertDescription>
-                    </Alert>
-                  )}
+          <Form {...form}>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <div className="grid gap-6">
+                {/* Contact & Legal Entity (Row 1) */}
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                  <FormField
+                    control={control}
+                    name="contactNumber"
+                    render={({ field }) => (
+                      <FormItem className="grid gap-2">
+                        <FormLabel>Contact Number</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Contact Number" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={control}
+                    name="legalEntityName"
+                    render={({ field }) => (
+                      <FormItem className="grid gap-2">
+                        <FormLabel>Legal Entity Name</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Legal Entity Name" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                 </div>
 
-                <div className="grid gap-2">
-                  <Label htmlFor="legalEntityName">Legal Entity Name</Label>
-                  <Input id="legalEntityName" placeholder="Legal Entity Name" {...register("legalEntityName")} />
-                  {errors.legalEntityName && (
-                    <Alert variant="destructive">
-                      <AlertDescription>{errors.legalEntityName.message}</AlertDescription>
-                    </Alert>
+                {/* Address Line */}
+                <FormField
+                  control={control}
+                  name="addressLine"
+                  render={({ field }) => (
+                    <FormItem className="grid gap-2">
+                      <FormLabel>Address Line</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Address Line" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
                   )}
+                />
+
+                {/* City, State, Zip (Row 3) */}
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                  <FormField
+                    control={control}
+                    name="city"
+                    render={({ field }) => (
+                      <FormItem className="grid gap-2">
+                        <FormLabel>City</FormLabel>
+                        <FormControl>
+                          <Input placeholder="City" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={control}
+                    name="state"
+                    render={({ field }) => (
+                      <FormItem className="grid gap-2">
+                        <FormLabel>State</FormLabel>
+                        <FormControl>
+                          <Input placeholder="State" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={control}
+                    name="zipCode"
+                    render={({ field }) => (
+                      <FormItem className="grid gap-2">
+                        <FormLabel>Zip Code</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Zip Code" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                {/* GST and PAN (Row 4) */}
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                  <FormField
+                    control={control}
+                    name="gstNumber"
+                    render={({ field }) => (
+                      <FormItem className="grid gap-2">
+                        <FormLabel>GST Number</FormLabel>
+                        <FormControl>
+                          <Input placeholder="GST Number" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={control}
+                    name="panNumber"
+                    render={({ field }) => (
+                      <FormItem className="grid gap-2">
+                        <FormLabel>PAN Number</FormLabel>
+                        <FormControl>
+                          <Input placeholder="PAN Number" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <div className="flex justify-end space-x-4">
+                  <Button variant="outline" type="button" onClick={() => router.push("/saas/banks/list")}>
+                    Cancel
+                  </Button>
+                  <Button type="submit" disabled={isSubmitting}>
+                    {isSubmitting ? "Updating..." : "Update Bank Profile"}
+                  </Button>
                 </div>
               </div>
-
-              {/* Address Line */}
-              <div className="grid gap-2">
-                <Label htmlFor="addressLine">Address Line</Label>
-                <Input id="addressLine" placeholder="Address Line" {...register("addressLine")} />
-                {errors.addressLine && (
-                  <Alert variant="destructive">
-                    <AlertDescription>{errors.addressLine.message}</AlertDescription>
-                  </Alert>
-                )}
-              </div>
-
-              {/* City, State, Zip (Row 3) */}
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-                <div className="grid gap-2">
-                  <Label htmlFor="city">City</Label>
-                  <Input id="city" placeholder="City" {...register("city")} />
-                  {errors.city && (
-                    <Alert variant="destructive">
-                      <AlertDescription>{errors.city.message}</AlertDescription>
-                    </Alert>
-                  )}
-                </div>
-
-                <div className="grid gap-2">
-                  <Label htmlFor="state">State</Label>
-                  <Input id="state" placeholder="State" {...register("state")} />
-                  {errors.state && (
-                    <Alert variant="destructive">
-                      <AlertDescription>{errors.state.message}</AlertDescription>
-                    </Alert>
-                  )}
-                </div>
-
-                <div className="grid gap-2">
-                  <Label htmlFor="zipCode">Zip Code</Label>
-                  <Input id="zipCode" placeholder="Zip Code" {...register("zipCode")} />
-                  {errors.zipCode && (
-                    <Alert variant="destructive">
-                      <AlertDescription>{errors.zipCode.message}</AlertDescription>
-                    </Alert>
-                  )}
-                </div>
-              </div>
-
-              {/* GST and PAN (Row 4) */}
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                <div className="grid gap-2">
-                  <Label htmlFor="gstNumber">GST Number</Label>
-                  <Input id="gstNumber" placeholder="GST Number" {...register("gstNumber")} />
-                  {errors.gstNumber && (
-                    <Alert variant="destructive">
-                      <AlertDescription>{errors.gstNumber.message}</AlertDescription>
-                    </Alert>
-                  )}
-                </div>
-
-                <div className="grid gap-2">
-                  <Label htmlFor="panNumber">PAN Number</Label>
-                  <Input id="panNumber" placeholder="PAN Number" {...register("panNumber")} />
-                  {errors.panNumber && (
-                    <Alert variant="destructive">
-                      <AlertDescription>{errors.panNumber.message}</AlertDescription>
-                    </Alert>
-                  )}
-                </div>
-              </div>
-
-              <div className="flex justify-end space-x-4">
-                <Button variant="outline" type="button" onClick={() => router.push("/saas/banks/list")}>
-                  Cancel
-                </Button>
-                <Button type="submit" disabled={isSubmitting}>
-                  {isSubmitting ? "Updating..." : "Update Bank Profile"}
-                </Button>
-              </div>
-            </div>
-          </form>
+            </form>
+          </Form>
         </CardContent>
       </Card>
     </div>
