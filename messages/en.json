@@ -63,7 +63,7 @@
   },
   "BankInformationForm": {
     "page": {
-      "title": "{bankName} - Additional Bank Info",
+      "title": "Additional Bank Info",
       "description": "Provide the following info as per bank incorporation documents",
       "contactNumber": {
         "label": "Contact Number",

@@ -63,7 +63,7 @@
   },
   "BankInformationForm": {
     "page": {
-      "title": "{bankName} - अतिरिक्त बैंक जानकारी",
+      "title": "अतिरिक्त बैंक जानकारी",
       "description": "बैंक के निगमन दस्तावेजों के अनुसार निम्नलिखित जानकारी प्रदान करें",
       "contactNumber": {
         "label": "संपर्क नंबर",

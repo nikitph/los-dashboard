@@ -10,11 +10,11 @@ import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { getBankById, updateBank, updateBankOnboardingStatus } from "../actions";
 import { cn } from "@/lib/utils";
-import { useLocale, useTranslations } from "next-intl";
 import { BankInfoData, createBankInfoSchema } from "@/app/[locale]/saas/(auth)/banksignup/schema";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { toastError, toastSuccess } from "@/lib/toastUtils";
 import { handleFormErrors } from "@/lib/formErrorHelper";
+import { useFormTranslation } from "@/hooks/useFormTranslation";
 
 interface BankInformationFormProps extends React.HTMLAttributes<HTMLDivElement> {
   bankId: string;
@@ -22,13 +22,7 @@ interface BankInformationFormProps extends React.HTMLAttributes<HTMLDivElement> 
 }
 
 export function BankInformationForm({ className, bankId, setCurrentStep, ...props }: BankInformationFormProps) {
-  const locale = useLocale();
-  const t = useTranslations("BankInformationForm.page");
-  const v = useTranslations("BankInformationForm.validation");
-  const e = useTranslations("BankInformationForm.errors");
-  const toast = useTranslations("BankInformationForm.toast");
-  const btn = useTranslations("BankInformationForm.buttons");
-  const bankInformationSchema = createBankInfoSchema(v);
+  const { page, validation, errors, toast, buttons, locale } = useFormTranslation("BankInformationForm");
 
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
@@ -36,7 +30,7 @@ export function BankInformationForm({ className, bankId, setCurrentStep, ...prop
   const [bankName, setBankName] = useState("");
 
   const form = useForm<BankInfoData>({
-    resolver: zodResolver(bankInformationSchema),
+    resolver: zodResolver(createBankInfoSchema(validation)),
     defaultValues: {
       contactNumber: "",
       addressLine: "",
@@ -66,7 +60,6 @@ export function BankInformationForm({ className, bankId, setCurrentStep, ...prop
           const bankData = response.data;
           setBankName(bankData.name);
 
-          // Set form values for each field if they exist
           setValue("contactNumber", bankData.contactNumber || "");
           setValue("addressLine", bankData.addressLine || "");
           setValue("city", bankData.city || "");
@@ -76,29 +69,20 @@ export function BankInformationForm({ className, bankId, setCurrentStep, ...prop
           setValue("gstNumber", bankData.gstNumber || "");
           setValue("panNumber", bankData.panNumber || "");
         } else {
-          toastError({
-            title: toast("errorTitle"),
-            description: e("fetchFailed"),
-          });
+          toastError({ title: toast("errorTitle"), description: errors("fetchFailed") });
         }
       } catch (error) {
         console.error("Error fetching bank details:", error);
-        toastError({
-          title: toast("errorTitle"),
-          description: e("unexpected"),
-        });
+        toastError({ title: toast("errorTitle"), description: errors("unexpected") });
       }
     };
 
-    if (bankId) {
-      fetchBankData();
-    }
+    if (bankId) fetchBankData();
   }, [bankId]);
 
   const onSubmit = async (data: BankInfoData) => {
     try {
       const response = await updateBank(bankId, data, locale);
-
       if (!response.success) {
         handleFormErrors(response, setError);
         return;
@@ -108,15 +92,15 @@ export function BankInformationForm({ className, bankId, setCurrentStep, ...prop
       await updateBankOnboardingStatus(bankId, "BANK_DETAILS_ADDED");
 
       toastSuccess({
-        title: t("toast.successTitle"),
-        description: t("toast.successDescription"),
+        title: toast("successTitle"),
+        description: toast("successDescription"),
       });
 
       setCurrentStep(3);
     } catch (error) {
       toastError({
-        title: t("toast.errorTitle"),
-        description: t("toast.errorDescription"),
+        title: toast("errorTitle"),
+        description: toast("errorDescription"),
       });
     }
   };
@@ -133,29 +117,31 @@ export function BankInformationForm({ className, bankId, setCurrentStep, ...prop
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader className="text-center">
-          <CardTitle className="text-xl">{t("title", { bankName })}</CardTitle>
-          <CardDescription>{t("description")}</CardDescription>
+          <CardTitle className="text-xl">
+            {bankName} - {page("title")}
+          </CardTitle>
+          <CardDescription>{page("description")}</CardDescription>
         </CardHeader>
         <CardContent>
           {success && (
             <Alert className="mb-6 border-green-200 bg-green-50 text-green-800">
-              <AlertDescription>{t("successAlert")}</AlertDescription>
+              <AlertDescription>{page("successAlert")}</AlertDescription>
             </Alert>
           )}
 
           <Form {...form}>
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="grid gap-6">
-                {/* Contact & Legal Entity (Row 1) */}
+                {/* Contact & Legal Entity */}
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <FormField
                     control={control}
                     name="contactNumber"
                     render={({ field }) => (
                       <FormItem className="grid gap-2">
-                        <FormLabel>{t("contactNumber.label")}</FormLabel>
+                        <FormLabel>{page("contactNumber.label")}</FormLabel>
                         <FormControl>
-                          <Input placeholder={t("contactNumber.placeholder")} {...field} />
+                          <Input placeholder={page("contactNumber.placeholder")} {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -167,9 +153,9 @@ export function BankInformationForm({ className, bankId, setCurrentStep, ...prop
                     name="legalEntityName"
                     render={({ field }) => (
                       <FormItem className="grid gap-2">
-                        <FormLabel>{t("legalEntityName.label")}</FormLabel>
+                        <FormLabel>{page("legalEntityName.label")}</FormLabel>
                         <FormControl>
-                          <Input placeholder={t("legalEntityName.placeholder")} {...field} />
+                          <Input placeholder={page("legalEntityName.placeholder")} {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -183,25 +169,25 @@ export function BankInformationForm({ className, bankId, setCurrentStep, ...prop
                   name="addressLine"
                   render={({ field }) => (
                     <FormItem className="grid gap-2">
-                      <FormLabel>{t("addressLine.label")}</FormLabel>
+                      <FormLabel>{page("addressLine.label")}</FormLabel>
                       <FormControl>
-                        <Input placeholder={t("addressLine.placeholder")} {...field} />
+                        <Input placeholder={page("addressLine.placeholder")} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
 
-                {/* City, State, Zip (Row 3) */}
+                {/* City, State, Zip */}
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
                   <FormField
                     control={control}
                     name="city"
                     render={({ field }) => (
                       <FormItem className="grid gap-2">
-                        <FormLabel>{t("city.label")}</FormLabel>
+                        <FormLabel>{page("city.label")}</FormLabel>
                         <FormControl>
-                          <Input placeholder={t("city.placeholder")} {...field} />
+                          <Input placeholder={page("city.placeholder")} {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -213,9 +199,9 @@ export function BankInformationForm({ className, bankId, setCurrentStep, ...prop
                     name="state"
                     render={({ field }) => (
                       <FormItem className="grid gap-2">
-                        <FormLabel>{t("state.label")}</FormLabel>
+                        <FormLabel>{page("state.label")}</FormLabel>
                         <FormControl>
-                          <Input placeholder={t("state.placeholder")} {...field} />
+                          <Input placeholder={page("state.placeholder")} {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -227,9 +213,9 @@ export function BankInformationForm({ className, bankId, setCurrentStep, ...prop
                     name="zipCode"
                     render={({ field }) => (
                       <FormItem className="grid gap-2">
-                        <FormLabel>{t("zipCode.label")}</FormLabel>
+                        <FormLabel>{page("zipCode.label")}</FormLabel>
                         <FormControl>
-                          <Input placeholder={t("zipCode.placeholder")} {...field} />
+                          <Input placeholder={page("zipCode.placeholder")} {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -237,16 +223,16 @@ export function BankInformationForm({ className, bankId, setCurrentStep, ...prop
                   />
                 </div>
 
-                {/* GST and PAN (Row 4) */}
+                {/* GST and PAN */}
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <FormField
                     control={control}
                     name="gstNumber"
                     render={({ field }) => (
                       <FormItem className="grid gap-2">
-                        <FormLabel>{t("gstNumber.label")}</FormLabel>
+                        <FormLabel>{page("gstNumber.label")}</FormLabel>
                         <FormControl>
-                          <Input placeholder={t("gstNumber.placeholder")} {...field} />
+                          <Input placeholder={page("gstNumber.placeholder")} {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -258,9 +244,9 @@ export function BankInformationForm({ className, bankId, setCurrentStep, ...prop
                     name="panNumber"
                     render={({ field }) => (
                       <FormItem className="grid gap-2">
-                        <FormLabel>{t("panNumber.label")}</FormLabel>
+                        <FormLabel>{page("panNumber.label")}</FormLabel>
                         <FormControl>
-                          <Input placeholder={t("panNumber.placeholder")} {...field} />
+                          <Input placeholder={page("panNumber.placeholder")} {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -268,12 +254,13 @@ export function BankInformationForm({ className, bankId, setCurrentStep, ...prop
                   />
                 </div>
 
+                {/* Buttons */}
                 <div className="flex justify-end space-x-4">
                   <Button variant="outline" type="button" onClick={() => router.push("/saas/banks/list")}>
-                    {btn("cancel")}
+                    {buttons("cancel")}
                   </Button>
                   <Button type="submit" disabled={isSubmitting}>
-                    {isSubmitting ? btn("updating") : btn("update")}
+                    {isSubmitting ? buttons("updating") : buttons("update")}
                   </Button>
                 </div>
               </div>
