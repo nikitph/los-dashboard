@@ -10,9 +10,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { createSignupSchema, SignupSchemaType } from "@/app/[locale]/saas/(auth)/banksignup/schema";
 import { updateBankOnboardingStatus } from "@/app/[locale]/saas/(auth)/banksignup/actions";
 import { handleFormErrors } from "@/lib/formErrorHelper";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 export function BankSignupForm({ className, signup, bankId, setCurrentStep, ...props }: any) {
+  const locale = useLocale();
   const t = useTranslations(BankSignupForm.name);
   const v = useTranslations("validation");
   const signupSchema = createSignupSchema(v);
@@ -37,7 +38,7 @@ export function BankSignupForm({ className, signup, bankId, setCurrentStep, ...p
   } = form;
 
   const onSubmit = async (clientData: SignupSchemaType) => {
-    const response = await signup(clientData, bankId);
+    const response = await signup(clientData, bankId, locale);
     if (!response.success) {
       handleFormErrors(response, setError);
       return;

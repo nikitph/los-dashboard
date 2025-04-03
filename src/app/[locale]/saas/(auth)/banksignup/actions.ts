@@ -8,10 +8,10 @@ import { createClient } from "@/utils/supabase/server";
 
 import {
   BankCreateInput,
-  BankUpdateData,
-  BankUpdateSchema,
+  BankInfoData,
+  createBankInfoSchema,
   createBankSchema,
-  signupSchema,
+  createSignupSchema,
   SignupSchemaType,
   SubscriptionCreateInput,
   SubscriptionCreateSchema
@@ -22,6 +22,7 @@ import { ActionResponse } from "@/types/globalTypes";
 import { handleActionError } from "@/lib/actionErrorHelpers";
 import { getMessages } from "next-intl/server";
 import { createTranslator } from "next-intl";
+import { getFormTranslation } from "@/utils/serverTranslationUtil";
 
 /**
  * Create a new bank with basic information
@@ -165,19 +166,23 @@ export async function getBankById(id: string): Promise<ActionResponse> {
  * Update a bank's profile
  * @param id The bank ID
  * @param data The updated bank data
+ * @param locale
  */
-export async function updateBank(id: string, data: BankUpdateData): Promise<ActionResponse> {
+export async function updateBank(id: string, data: BankInfoData, locale: string): Promise<ActionResponse> {
   try {
-    const validatedData = BankUpdateSchema.parse(data);
+    const { validation, errors, messages } = await getFormTranslation("BankInformationForm", locale);
+
+    const bankInfoSchema = createBankInfoSchema(validation);
+    const validatedData = bankInfoSchema.parse(data);
 
     const existingBank = await prisma.bank.findUnique({ where: { id } });
 
     if (!existingBank) {
       return {
         success: false,
-        message: "Bank not found",
+        message: errors("bankNotFound"),
         errors: {
-          root: "Bank not found",
+          root: errors("bankNotFound"),
         },
       };
     }
@@ -196,7 +201,7 @@ export async function updateBank(id: string, data: BankUpdateData): Promise<Acti
 
     return {
       success: true,
-      message: "Bank updated successfully",
+      message: messages("success"),
       data: updatedBank,
     };
   } catch (error) {
@@ -286,9 +291,15 @@ export async function updateBankOnboardingStatus(
   }
 }
 
-export async function signup(formData: SignupSchemaType, bankId: string): Promise<ActionResponse> {
+export async function signup(formData: SignupSchemaType, bankId: string, locale: string): Promise<ActionResponse> {
   try {
-    const data = signupSchema.parse(formData);
+    const messages = await getMessages({ locale }); // pulls from current context
+    const t = createTranslator({ locale, messages, namespace: "BankSignupForm" });
+    const v = createTranslator({ locale, messages, namespace: "validation" });
+    const signupSchema = createSignupSchema(v);
+    const validatedData = signupSchema.parse(formData);
+
+    const data = signupSchema.parse(validatedData);
 
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
@@ -309,7 +320,7 @@ export async function signup(formData: SignupSchemaType, bankId: string): Promis
     if (authError) {
       return {
         success: false,
-        message: "Auth error",
+        message: t("errors.authError"),
         errors: { email: authError.message },
       };
     }
@@ -332,7 +343,7 @@ export async function signup(formData: SignupSchemaType, bankId: string): Promis
 
       return {
         success: true,
-        message: "Signup successful as a part of bank onboarding",
+        message: t("success.adminCreated"),
         data: authData.user,
       };
     }
@@ -340,8 +351,8 @@ export async function signup(formData: SignupSchemaType, bankId: string): Promis
     // If sign up was successful but no user was returned from auth
     return {
       success: false,
-      message: "Unknown error occurred",
-      errors: { root: "No user was returned from auth" },
+      message: t("errors.unknownError"),
+      errors: { root: t("errors.noUser") },
     };
   } catch (error) {
     return handleActionError(error);
