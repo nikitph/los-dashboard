@@ -72,19 +72,23 @@ export const createBankSchema = (t: (key: string) => string) => {
 const bankCreateSchema = createBankSchema(identity);
 export type BankCreateSchemaType = z.infer<typeof bankCreateSchema>;
 
-export const BankUpdateSchema = z.object({
-  contactNumber: z.string().optional(),
-  addressLine: z.string().optional(),
-  city: z.string().optional(),
-  state: z.string().optional(),
-  zipCode: z.string().optional(),
-  legalEntityName: z.string().optional(),
-  gstNumber: z.string().optional(),
-  panNumber: z.string().optional(),
-  regulatoryLicenses: z.any().optional(), // Will handle JSON conversion
-});
+export const createBankInfoSchema = (t: (key: string) => string) => {
+  return z.object({
+    contactNumber: z.string().optional(),
+    addressLine: z.string().optional(),
+    city: z.string().optional(),
+    state: z.string().optional(),
+    zipCode: z.string().optional(),
+    legalEntityName: z.string().optional(),
+    gstNumber: z.string().optional(),
+    panNumber: z.string().optional(),
+    regulatoryLicenses: z.any().optional(),
+  });
+};
 
-export type BankUpdateData = z.infer<typeof BankUpdateSchema>;
+const BankInfoSchema = createBankInfoSchema(identity);
+
+export type BankInfoData = z.infer<typeof BankInfoSchema>;
 
 export type BankFormData = z.infer<typeof BankSchema>;
 

@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -13,21 +12,8 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { toast } from "@/hooks/use-toast";
 import { getBankById, updateBank, updateBankOnboardingStatus } from "../actions";
 import { cn } from "@/lib/utils";
-
-// Define the bank update schema without name and officialEmail
-const BankUpdateSchema = z.object({
-  contactNumber: z.string(),
-  addressLine: z.string(),
-  city: z.string(),
-  state: z.string(),
-  zipCode: z.string(),
-  legalEntityName: z.string(),
-  gstNumber: z.string().optional(),
-  panNumber: z.string().optional(),
-  regulatoryLicenses: z.string().optional(), // Convert to/from JSON during submit/fetch
-});
-
-type BankUpdateFormValues = z.infer<typeof BankUpdateSchema>;
+import { useLocale, useTranslations } from "next-intl";
+import { BankInfoData, createBankInfoSchema } from "@/app/[locale]/saas/(auth)/banksignup/schema";
 
 interface BankInformationFormProps extends React.HTMLAttributes<HTMLDivElement> {
   bankId: string;
@@ -35,6 +21,11 @@ interface BankInformationFormProps extends React.HTMLAttributes<HTMLDivElement> 
 }
 
 export function BankInformationForm({ className, bankId, setCurrentStep, ...props }: BankInformationFormProps) {
+  const locale = useLocale();
+  const t = useTranslations(BankInformationForm.name);
+  const v = useTranslations("validation");
+  const bankInformationSchema = createBankInfoSchema(v);
+
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -47,8 +38,8 @@ export function BankInformationForm({ className, bankId, setCurrentStep, ...prop
     formState: { errors },
     reset,
     setValue,
-  } = useForm<BankUpdateFormValues>({
-    resolver: zodResolver(BankUpdateSchema),
+  } = useForm<BankInfoData>({
+    resolver: zodResolver(bankInformationSchema),
     defaultValues: {
       contactNumber: "",
       addressLine: "",
@@ -58,7 +49,6 @@ export function BankInformationForm({ className, bankId, setCurrentStep, ...prop
       legalEntityName: "",
       gstNumber: "",
       panNumber: "",
-      regulatoryLicenses: "",
     },
   });
 
@@ -82,11 +72,6 @@ export function BankInformationForm({ className, bankId, setCurrentStep, ...prop
           setValue("legalEntityName", bankData.legalEntityName || "");
           setValue("gstNumber", bankData.gstNumber || "");
           setValue("panNumber", bankData.panNumber || "");
-
-          // Convert regulatoryLicenses JSON to string if it exists
-          if (bankData.regulatoryLicenses) {
-            setValue("regulatoryLicenses", JSON.stringify(bankData.regulatoryLicenses));
-          }
         } else {
           toast({
             title: "Error",
@@ -111,26 +96,12 @@ export function BankInformationForm({ className, bankId, setCurrentStep, ...prop
     }
   }, [bankId, setValue]);
 
-  const onSubmit = async (data: BankUpdateFormValues) => {
+  const onSubmit = async (data: BankInfoData) => {
     setIsSubmitting(true);
     try {
       // Convert regulatoryLicenses string to JSON if provided
       let processedData = { ...data };
-      if (data.regulatoryLicenses) {
-        try {
-          processedData.regulatoryLicenses = JSON.parse(data.regulatoryLicenses);
-        } catch (e) {
-          toast({
-            title: "Error",
-            description: "Invalid JSON format for regulatory licenses",
-            variant: "destructive",
-          });
-          setIsSubmitting(false);
-          return;
-        }
-      }
-
-      const response = await updateBank(bankId, processedData);
+      const response = await updateBank(bankId, processedData, locale);
 
       if (response.success) {
         setSuccess(true);
@@ -274,21 +245,6 @@ export function BankInformationForm({ className, bankId, setCurrentStep, ...prop
                     </Alert>
                   )}
                 </div>
-              </div>
-
-              {/* Regulatory Licenses (JSON) */}
-              <div className="grid gap-2">
-                <Label htmlFor="regulatoryLicenses">Regulatory Licenses (JSON format)</Label>
-                <Input
-                  id="regulatoryLicenses"
-                  placeholder='{"license1": "value1", "license2": "value2"}'
-                  {...register("regulatoryLicenses")}
-                />
-                {errors.regulatoryLicenses && (
-                  <Alert variant="destructive">
-                    <AlertDescription>{errors.regulatoryLicenses.message}</AlertDescription>
-                  </Alert>
-                )}
               </div>
 
               <div className="flex justify-end space-x-4">

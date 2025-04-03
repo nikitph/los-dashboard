@@ -8,8 +8,8 @@ import { createClient } from "@/utils/supabase/server";
 
 import {
   BankCreateInput,
-  BankUpdateData,
-  BankUpdateSchema,
+  BankInfoData,
+  createBankInfoSchema,
   createBankSchema,
   createSignupSchema,
   SignupSchemaType,
@@ -166,9 +166,13 @@ export async function getBankById(id: string): Promise<ActionResponse> {
  * @param id The bank ID
  * @param data The updated bank data
  */
-export async function updateBank(id: string, data: BankUpdateData): Promise<ActionResponse> {
+export async function updateBank(id: string, data: BankInfoData, locale: string): Promise<ActionResponse> {
   try {
-    const validatedData = BankUpdateSchema.parse(data);
+    const messages = await getMessages({ locale }); // pulls from current context
+    const t = createTranslator({ locale, messages, namespace: "BankInfoForm" });
+    const v = createTranslator({ locale, messages, namespace: "validation" });
+    const bankInfoSchema = createBankInfoSchema(v);
+    const validatedData = bankInfoSchema.parse(data);
 
     const existingBank = await prisma.bank.findUnique({ where: { id } });
 
