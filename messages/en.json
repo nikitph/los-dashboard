@@ -129,6 +129,86 @@
       "updating": "Updating..."
     }
   },
+  "BankSubscriptionForm": {
+    "page": {
+      "title": "Select your subscription",
+      "description": "Please select your subscription plan.",
+      "planTypeLabel": "Plan Type",
+      "selectPlanPlaceholder": "Select a plan",
+      "monthlyLabel": "Monthly",
+      "annualLabel": "Annual",
+      "savingsLabel": "Save up to 10%",
+      "plans": {
+        "basic": {
+          "title": "Basic",
+          "badge": "Starter",
+          "selectLabel": "Basic Plan",
+          "priceMonthly": "₹2,000",
+          "priceAnnual": "₹21,600",
+          "description": "Essential features for small businesses",
+          "feature1": "1 user",
+          "feature2": "Basic reports",
+          "feature3": "Email support"
+        },
+        "standard": {
+          "title": "Startup",
+          "badge": "Most popular",
+          "selectLabel": "Standard Plan",
+          "priceMonthly": "₹5,000",
+          "priceAnnual": "₹54,000",
+          "description": "All the basics for starting a new business",
+          "feature1": "2 users",
+          "feature2": "Plan features",
+          "feature3": "Product support"
+        },
+        "premium": {
+          "title": "Enterprise",
+          "badge": "Advanced",
+          "selectLabel": "Premium Plan",
+          "priceMonthly": "₹10,000",
+          "priceAnnual": "₹108,000",
+          "description": "Advanced features for established businesses",
+          "feature1": "Unlimited users",
+          "feature2": "Advanced analytics",
+          "feature3": "Priority support"
+        }
+      }
+    },
+    "buttons": {
+      "subscribe": "Subscribe",
+      "processing": "Processing..."
+    },
+    "errors": {
+      "fetchFailed": "Failed to fetch subscription details",
+      "unexpected": "An unexpected error occurred. Please try again.",
+      "activeSubscriptionExists": "An active subscription already exists for this bank.",
+      "bankNotFound": "Bank not found",
+      "subscriptionIdRequired": "Subscription ID is required",
+      "subscriptionNotFound": "Subscription not found"
+    },
+    "toast": {
+      "successTitle": "Subscription Created",
+      "successDescription": "Your subscription has been created successfully.",
+      "errorTitle": "Error",
+      "errorDescription": "There was an error creating your subscription."
+    },
+    "validation": {
+      "bankIdRequired": "Bank ID is required",
+      "planTypeRequired": "Plan type is required",
+      "planTypeInvalid": "Invalid plan type selected",
+      "billingCycleRequired": "Billing cycle is required",
+      "billingCycleInvalid": "Invalid billing cycle selected",
+      "startDateRequired": "Start date is required",
+      "startDateInvalidType": "Start date must be a valid date",
+      "statusRequired": "Subscription status is required",
+      "amountRequired": "Subscription amount is required",
+      "amountInvalidType": "Subscription amount must be a number"
+    },
+    "messages": {
+      "subscriptionCreated": "Subscription created successfully",
+      "subscriptionCancelled": "Subscription cancelled successfully"
+    }
+  },
   "validation": {
     "firstName": {
       "required": "First name is required"

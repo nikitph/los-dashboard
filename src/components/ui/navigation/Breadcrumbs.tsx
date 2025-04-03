@@ -4,6 +4,7 @@ import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useMemo } from "react";
+import { useLocale } from "next-intl";
 
 // Map of path segments to human-readable names
 const segmentLabels: Record<string, string> = {
@@ -30,6 +31,7 @@ const segmentLabels: Record<string, string> = {
 
 export function Breadcrumbs() {
   const pathname = usePathname();
+  const locale = useLocale();
 
   const breadcrumbs = useMemo(() => {
     // Skip empty segments
@@ -58,7 +60,7 @@ export function Breadcrumbs() {
   if (pathname === "/saas/dashboard") {
     return (
       <Link
-        href="/[locale]/saas/dashboard"
+        href={`/${locale}/saas/dashboard`}
         className="text-gray-500 transition hover:text-gray-700 dark:text-gray-400 hover:dark:text-gray-300"
       >
         Dashboard
@@ -72,7 +74,7 @@ export function Breadcrumbs() {
         {/* Always include Dashboard as the first breadcrumb */}
         <li className="flex">
           <Link
-            href="/[locale]/saas/dashboard"
+            href={`/${locale}/saas/dashboard`}
             className="text-gray-500 transition hover:text-gray-700 dark:text-gray-400 hover:dark:text-gray-300"
           >
             Dashboard
@@ -83,7 +85,8 @@ export function Breadcrumbs() {
         {breadcrumbs.map(
           (crumb, index) =>
             // Skip "saas" in the visible breadcrumbs since we already have Home
-            crumb.label !== "SaaS" && (
+            crumb.label !== "SaaS" &&
+            crumb.label !== locale && (
               <li key={crumb.href} className="flex">
                 <div className="flex items-center">
                   {index > 0 && index < breadcrumbs.length && (
