@@ -8,12 +8,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { toast } from "@/hooks/use-toast";
 import { getBankById, updateBank, updateBankOnboardingStatus } from "../actions";
 import { cn } from "@/lib/utils";
 import { useLocale, useTranslations } from "next-intl";
 import { BankInfoData, createBankInfoSchema } from "@/app/[locale]/saas/(auth)/banksignup/schema";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { toastError, toastSuccess } from "@/lib/toastUtils";
+import { handleFormErrors } from "@/lib/formErrorHelper";
 
 interface BankInformationFormProps extends React.HTMLAttributes<HTMLDivElement> {
   bankId: string;
@@ -22,8 +23,11 @@ interface BankInformationFormProps extends React.HTMLAttributes<HTMLDivElement> 
 
 export function BankInformationForm({ className, bankId, setCurrentStep, ...props }: BankInformationFormProps) {
   const locale = useLocale();
-  const t = useTranslations(BankInformationForm.name);
-  const v = useTranslations("validation");
+  const t = useTranslations("BankInformationForm.page");
+  const v = useTranslations("BankInformationForm.validation");
+  const e = useTranslations("BankInformationForm.errors");
+  const toast = useTranslations("BankInformationForm.toast");
+  const btn = useTranslations("BankInformationForm.buttons");
   const bankInformationSchema = createBankInfoSchema(v);
 
   const router = useRouter();
@@ -58,6 +62,7 @@ export function BankInformationForm({ className, bankId, setCurrentStep, ...prop
       try {
         const response = await getBankById(bankId);
         if (response.success && response.data) {
+          setIsLoading(false);
           const bankData = response.data;
           setBankName(bankData.name);
 
@@ -71,61 +76,48 @@ export function BankInformationForm({ className, bankId, setCurrentStep, ...prop
           setValue("gstNumber", bankData.gstNumber || "");
           setValue("panNumber", bankData.panNumber || "");
         } else {
-          toast({
-            title: "Error",
-            description: "Failed to fetch bank details",
-            variant: "destructive",
+          toastError({
+            title: toast("errorTitle"),
+            description: e("fetchFailed"),
           });
         }
       } catch (error) {
         console.error("Error fetching bank details:", error);
-        toast({
-          title: "Error",
-          description: "An unexpected error occurred",
-          variant: "destructive",
+        toastError({
+          title: toast("errorTitle"),
+          description: e("unexpected"),
         });
-      } finally {
-        setIsLoading(false);
       }
     };
 
     if (bankId) {
       fetchBankData();
     }
-  }, [bankId, setValue]);
+  }, [bankId]);
 
   const onSubmit = async (data: BankInfoData) => {
     try {
-      // Convert regulatoryLicenses string to JSON if provided
-      let processedData = { ...data };
-      const response = await updateBank(bankId, processedData, locale);
+      const response = await updateBank(bankId, data, locale);
 
-      if (response.success) {
-        setSuccess(true);
-        toast({
-          title: "Success",
-          description: "Bank details updated successfully",
-        });
-        await updateBankOnboardingStatus(bankId, "BANK_DETAILS_ADDED");
-        setCurrentStep(3);
-
-        // Optionally redirect after successful update
-        // router.push("/saas/banks/list");
-      } else {
-        toast({
-          title: "Error",
-          description: response.message || "Failed to update bank details",
-          variant: "destructive",
-        });
+      if (!response.success) {
+        handleFormErrors(response, setError);
+        return;
       }
-    } catch (error) {
-      console.error("Error updating bank:", error);
-      toast({
-        title: "Error",
-        description: "An unexpected error occurred",
-        variant: "destructive",
+
+      setSuccess(true);
+      await updateBankOnboardingStatus(bankId, "BANK_DETAILS_ADDED");
+
+      toastSuccess({
+        title: t("toast.successTitle"),
+        description: t("toast.successDescription"),
       });
-    } finally {
+
+      setCurrentStep(3);
+    } catch (error) {
+      toastError({
+        title: t("toast.errorTitle"),
+        description: t("toast.errorDescription"),
+      });
     }
   };
 
@@ -141,13 +133,13 @@ export function BankInformationForm({ className, bankId, setCurrentStep, ...prop
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader className="text-center">
-          <CardTitle className="text-xl">{bankName} - Additional Bank Info</CardTitle>
-          <CardDescription>Provide the following info as per bank incorporation documents</CardDescription>
+          <CardTitle className="text-xl">{t("title", { bankName })}</CardTitle>
+          <CardDescription>{t("description")}</CardDescription>
         </CardHeader>
         <CardContent>
           {success && (
             <Alert className="mb-6 border-green-200 bg-green-50 text-green-800">
-              <AlertDescription>Bank details updated successfully!</AlertDescription>
+              <AlertDescription>{t("successAlert")}</AlertDescription>
             </Alert>
           )}
 
@@ -161,9 +153,9 @@ export function BankInformationForm({ className, bankId, setCurrentStep, ...prop
                     name="contactNumber"
                     render={({ field }) => (
                       <FormItem className="grid gap-2">
-                        <FormLabel>Contact Number</FormLabel>
+                        <FormLabel>{t("contactNumber.label")}</FormLabel>
                         <FormControl>
-                          <Input placeholder="Contact Number" {...field} />
+                          <Input placeholder={t("contactNumber.placeholder")} {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -175,9 +167,9 @@ export function BankInformationForm({ className, bankId, setCurrentStep, ...prop
                     name="legalEntityName"
                     render={({ field }) => (
                       <FormItem className="grid gap-2">
-                        <FormLabel>Legal Entity Name</FormLabel>
+                        <FormLabel>{t("legalEntityName.label")}</FormLabel>
                         <FormControl>
-                          <Input placeholder="Legal Entity Name" {...field} />
+                          <Input placeholder={t("legalEntityName.placeholder")} {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -191,9 +183,9 @@ export function BankInformationForm({ className, bankId, setCurrentStep, ...prop
                   name="addressLine"
                   render={({ field }) => (
                     <FormItem className="grid gap-2">
-                      <FormLabel>Address Line</FormLabel>
+                      <FormLabel>{t("addressLine.label")}</FormLabel>
                       <FormControl>
-                        <Input placeholder="Address Line" {...field} />
+                        <Input placeholder={t("addressLine.placeholder")} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -207,9 +199,9 @@ export function BankInformationForm({ className, bankId, setCurrentStep, ...prop
                     name="city"
                     render={({ field }) => (
                       <FormItem className="grid gap-2">
-                        <FormLabel>City</FormLabel>
+                        <FormLabel>{t("city.label")}</FormLabel>
                         <FormControl>
-                          <Input placeholder="City" {...field} />
+                          <Input placeholder={t("city.placeholder")} {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -221,9 +213,9 @@ export function BankInformationForm({ className, bankId, setCurrentStep, ...prop
                     name="state"
                     render={({ field }) => (
                       <FormItem className="grid gap-2">
-                        <FormLabel>State</FormLabel>
+                        <FormLabel>{t("state.label")}</FormLabel>
                         <FormControl>
-                          <Input placeholder="State" {...field} />
+                          <Input placeholder={t("state.placeholder")} {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -235,9 +227,9 @@ export function BankInformationForm({ className, bankId, setCurrentStep, ...prop
                     name="zipCode"
                     render={({ field }) => (
                       <FormItem className="grid gap-2">
-                        <FormLabel>Zip Code</FormLabel>
+                        <FormLabel>{t("zipCode.label")}</FormLabel>
                         <FormControl>
-                          <Input placeholder="Zip Code" {...field} />
+                          <Input placeholder={t("zipCode.placeholder")} {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -252,9 +244,9 @@ export function BankInformationForm({ className, bankId, setCurrentStep, ...prop
                     name="gstNumber"
                     render={({ field }) => (
                       <FormItem className="grid gap-2">
-                        <FormLabel>GST Number</FormLabel>
+                        <FormLabel>{t("gstNumber.label")}</FormLabel>
                         <FormControl>
-                          <Input placeholder="GST Number" {...field} />
+                          <Input placeholder={t("gstNumber.placeholder")} {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -266,9 +258,9 @@ export function BankInformationForm({ className, bankId, setCurrentStep, ...prop
                     name="panNumber"
                     render={({ field }) => (
                       <FormItem className="grid gap-2">
-                        <FormLabel>PAN Number</FormLabel>
+                        <FormLabel>{t("panNumber.label")}</FormLabel>
                         <FormControl>
-                          <Input placeholder="PAN Number" {...field} />
+                          <Input placeholder={t("panNumber.placeholder")} {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -278,10 +270,10 @@ export function BankInformationForm({ className, bankId, setCurrentStep, ...prop
 
                 <div className="flex justify-end space-x-4">
                   <Button variant="outline" type="button" onClick={() => router.push("/saas/banks/list")}>
-                    Cancel
+                    {btn("cancel")}
                   </Button>
                   <Button type="submit" disabled={isSubmitting}>
-                    {isSubmitting ? "Updating..." : "Update Bank Profile"}
+                    {isSubmitting ? btn("updating") : btn("update")}
                   </Button>
                 </div>
               </div>

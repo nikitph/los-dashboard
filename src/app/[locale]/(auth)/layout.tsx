@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { ThemeProvider } from "next-themes";
 import { cookies } from "next/headers";
-import "../globals.css";
-import { siteConfig } from "../siteConfig";
+import "../../globals.css";
+import { siteConfig } from "../../siteConfig";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://yoururl.com"),

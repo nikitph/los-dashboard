@@ -74,15 +74,16 @@ export type BankCreateSchemaType = z.infer<typeof bankCreateSchema>;
 
 export const createBankInfoSchema = (t: (key: string) => string) => {
   return z.object({
-    contactNumber: z.string().optional(),
-    addressLine: z.string().optional(),
-    city: z.string().optional(),
-    state: z.string().optional(),
-    zipCode: z.string().optional(),
-    legalEntityName: z.string().optional(),
-    gstNumber: z.string().optional(),
-    panNumber: z.string().optional(),
-    regulatoryLicenses: z.any().optional(),
+    contactNumber: z.string().regex(/^[6-9]\d{9}$/, { message: t("contactNumber") }),
+    addressLine: z.string().min(5, { message: t("addressLine") }),
+    city: z.string().min(2, { message: t("city") }),
+    state: z.string().min(2, { message: t("state") }),
+    zipCode: z.string().regex(/^\d{6}$/, { message: t("zipCode") }),
+    legalEntityName: z.string().min(3, { message: t("legalEntityName") }),
+    gstNumber: z
+      .string()
+      .regex(/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/, { message: t("gstNumber") }),
+    panNumber: z.string().regex(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, { message: t("panNumber") }),
   });
 };
 

@@ -61,6 +61,74 @@
       "authError": "An error occurred while trying to sign up"
     }
   },
+  "BankInformationForm": {
+    "page": {
+      "title": "{bankName} - Additional Bank Info",
+      "description": "Provide the following info as per bank incorporation documents",
+      "contactNumber": {
+        "label": "Contact Number",
+        "placeholder": "Contact Number"
+      },
+      "legalEntityName": {
+        "label": "Legal Entity Name",
+        "placeholder": "Legal Entity Name"
+      },
+      "addressLine": {
+        "label": "Address Line",
+        "placeholder": "Address Line"
+      },
+      "city": {
+        "label": "City",
+        "placeholder": "City"
+      },
+      "state": {
+        "label": "State",
+        "placeholder": "State"
+      },
+      "zipCode": {
+        "label": "Zip Code",
+        "placeholder": "Zip Code"
+      },
+      "gstNumber": {
+        "label": "GST Number",
+        "placeholder": "GST Number"
+      },
+      "panNumber": {
+        "label": "PAN Number",
+        "placeholder": "PAN Number"
+      },
+      "successAlert": "Bank details updated successfully!",
+      "loading": "Loading bank details..."
+    },
+    "validation": {
+      "contactNumber": "Enter a valid Indian mobile number",
+      "addressLine": "Address must be at least 5 characters",
+      "city": "City must be at least 2 characters",
+      "state": "State must be at least 2 characters",
+      "zipCode": "Enter a valid 6-digit Indian PIN code",
+      "legalEntityName": "Legal entity name must be at least 3 characters",
+      "gstNumber": "Enter a valid GSTIN (15-character alphanumeric)",
+      "panNumber": "Enter a valid PAN number (e.g. ABCDE1234F)"
+    },
+    "errors": {
+      "fetchFailed": "Failed to fetch bank details",
+      "updateFailed": "Failed to update bank details",
+      "invalidData": "The provided information is invalid",
+      "missingFields": "Please fill in all required fields",
+      "unexpected": "An unexpected error occurred"
+    },
+    "toast": {
+      "successTitle": "Success",
+      "successDescription": "Bank details updated successfully",
+      "errorTitle": "Error",
+      "errorDescription": "An unexpected error occurred"
+    },
+    "buttons": {
+      "cancel": "Cancel",
+      "update": "Update Bank Profile",
+      "updating": "Updating..."
+    }
+  },
   "validation": {
     "firstName": {
       "required": "First name is required"
