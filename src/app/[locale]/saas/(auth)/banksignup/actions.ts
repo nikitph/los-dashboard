@@ -11,7 +11,7 @@ import {
   BankUpdateData,
   BankUpdateSchema,
   createBankSchema,
-  signupSchema,
+  createSignupSchema,
   SignupSchemaType,
   SubscriptionCreateInput,
   SubscriptionCreateSchema
@@ -286,9 +286,15 @@ export async function updateBankOnboardingStatus(
   }
 }
 
-export async function signup(formData: SignupSchemaType, bankId: string): Promise<ActionResponse> {
+export async function signup(formData: SignupSchemaType, bankId: string, locale: string): Promise<ActionResponse> {
   try {
-    const data = signupSchema.parse(formData);
+    const messages = await getMessages({ locale }); // pulls from current context
+    const t = createTranslator({ locale, messages, namespace: "BankSignupForm" });
+    const v = createTranslator({ locale, messages, namespace: "validation" });
+    const signupSchema = createSignupSchema(v);
+    const validatedData = signupSchema.parse(formData);
+
+    const data = signupSchema.parse(validatedData);
 
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
@@ -309,7 +315,7 @@ export async function signup(formData: SignupSchemaType, bankId: string): Promis
     if (authError) {
       return {
         success: false,
-        message: "Auth error",
+        message: t("errors.authError"),
         errors: { email: authError.message },
       };
     }
@@ -332,7 +338,7 @@ export async function signup(formData: SignupSchemaType, bankId: string): Promis
 
       return {
         success: true,
-        message: "Signup successful as a part of bank onboarding",
+        message: t("success.adminCreated"),
         data: authData.user,
       };
     }
@@ -340,8 +346,8 @@ export async function signup(formData: SignupSchemaType, bankId: string): Promis
     // If sign up was successful but no user was returned from auth
     return {
       success: false,
-      message: "Unknown error occurred",
-      errors: { root: "No user was returned from auth" },
+      message: t("errors.unknownError"),
+      errors: { root: t("errors.noUser") },
     };
   } catch (error) {
     return handleActionError(error);

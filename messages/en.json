@@ -51,6 +51,14 @@
     "submit": {
       "label": "Create Admin",
       "loading": "Please Wait..."
+    },
+    "success": {
+      "adminCreated": "Admin Signup successful as a part of bank onboarding"
+    },
+    "errors": {
+      "unknownError": "An unknown error occurred",
+      "noUser": "No user was returned from auth",
+      "authError": "An error occurred while trying to sign up"
     }
   },
   "validation": {
