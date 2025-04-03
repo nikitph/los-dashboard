@@ -12,9 +12,9 @@ import {
   createBankInfoSchema,
   createBankSchema,
   createSignupSchema,
+  generateSubscriptionCreateSchema,
   SignupSchemaType,
-  SubscriptionCreateInput,
-  SubscriptionCreateSchema
+  SubscriptionCreateInput
 } from "@/app/[locale]/saas/(auth)/banksignup/schema";
 
 import { BankSchema } from "@/schemas/zodSchemas";
@@ -362,11 +362,15 @@ export async function signup(formData: SignupSchemaType, bankId: string, locale:
 /**
  * Server action to create a new subscription
  * @param data Subscription data validated against Zod schema
+ * @param locale
  * @returns ActionResponse containing success/error status and subscription data if successful
  */
-export async function createSubscription(data: SubscriptionCreateInput): Promise<ActionResponse> {
+export async function createSubscription(data: SubscriptionCreateInput, locale: string): Promise<ActionResponse> {
   try {
-    const validated = SubscriptionCreateSchema.safeParse(data);
+    const { validation, errors, messages } = await getFormTranslation("BankSubscriptionForm", locale);
+    const subscriptionCreateSchema = generateSubscriptionCreateSchema(validation);
+
+    const validated = subscriptionCreateSchema.safeParse(data);
     if (!validated.success) return handleActionError(validated.error);
 
     const bank = await prisma.bank.findUnique({
@@ -376,8 +380,8 @@ export async function createSubscription(data: SubscriptionCreateInput): Promise
     if (!bank) {
       return {
         success: false,
-        message: "Bank not found",
-        errors: { bankId: "Bank not found" },
+        message: errors("bankNotFound"),
+        errors: { bankId: errors("bankNotFound") },
       };
     }
 
@@ -392,8 +396,8 @@ export async function createSubscription(data: SubscriptionCreateInput): Promise
     if (existingSubscription) {
       return {
         success: false,
-        message: "An active subscription already exists",
-        errors: { bankId: "Active subscription already exists" },
+        message: errors("activeSubscriptionExists"),
+        errors: { bankId: errors("activeSubscriptionExists") },
       };
     }
 
@@ -423,7 +427,7 @@ export async function createSubscription(data: SubscriptionCreateInput): Promise
 
     return {
       success: true,
-      message: "Subscription created successfully",
+      message: messages("subscriptionCreated"),
       data: { subscription },
     };
   } catch (error) {

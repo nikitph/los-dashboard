@@ -13,18 +13,23 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { SubscriptionCreateInput, SubscriptionCreateSchema } from "@/app/[locale]/saas/(auth)/banksignup/schema";
+import {
+  generateSubscriptionCreateSchema,
+  PlanDetails,
+  SubscriptionCreateInput,
+} from "@/app/[locale]/saas/(auth)/banksignup/schema";
 import { createSubscription, updateBankOnboardingStatus } from "@/app/[locale]/saas/(auth)/banksignup/actions";
-import { useToast } from "@/hooks/use-toast";
+import { handleFormErrors } from "@/lib/formErrorHelper";
+import { useFormTranslation } from "@/hooks/useFormTranslation";
 
 interface SubscriptionFormProps {
   className?: string;
   bankId: string;
 }
 
-export default function SubscriptionForm({ className, bankId }: SubscriptionFormProps) {
+export default function BankSubscriptionForm({ className, bankId }: SubscriptionFormProps) {
   const router = useRouter();
-  const { toast } = useToast();
+  const { page, buttons, errors, toast, validation, locale } = useFormTranslation("BankSubscriptionForm");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [billingCycle, setBillingCycle] = useState<"MONTHLY" | "ANNUAL">("MONTHLY");
 
@@ -44,9 +49,11 @@ export default function SubscriptionForm({ className, bankId }: SubscriptionForm
     },
   };
 
+  const subscriptionSchema = generateSubscriptionCreateSchema(validation);
+
   // Form setup with Zod resolver
   const form = useForm<SubscriptionCreateInput>({
-    resolver: zodResolver(SubscriptionCreateSchema),
+    resolver: zodResolver(subscriptionSchema),
     defaultValues: {
       bankId: bankId,
       planType: "STANDARD",
@@ -77,67 +84,46 @@ export default function SubscriptionForm({ className, bankId }: SubscriptionForm
   const onSubmit = async (data: SubscriptionCreateInput) => {
     setIsSubmitting(true);
     try {
-      const response = await createSubscription(data);
+      const response = await createSubscription(data, locale);
 
       if (!response.success) {
-        if (response.errors) {
-          Object.entries(response.errors).forEach(([field, msg]) => {
-            toast({
-              title: `Error in ${field}`,
-              description: msg,
-              variant: "destructive",
-            });
-          });
-        } else {
-          toast({
-            title: "Error",
-            description: response.message || "Unexpected error occurred. Please try again.",
-            variant: "destructive",
-          });
-        }
+        handleFormErrors(response, form.setError);
+        setIsSubmitting(false);
         return;
       }
+
       await updateBankOnboardingStatus(bankId, "SUBSCRIPTION_CREATED");
       router.refresh();
       router.push("/saas/dashboard");
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "An unexpected error occurred. Please try again.",
-        variant: "destructive",
+      form.setError("root", {
+        type: "manual",
+        message: errors("unexpected"),
       });
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  // Plan details configuration
-  const planDetails = {
-    BASIC: {
-      title: "Basic",
-      badge: "Starter",
-      price: billingCycle === "MONTHLY" ? "₹2,000" : "₹21,600",
-      description: "Essential features for small businesses",
-      features: ["1 user", "Basic reports", "Email support"],
-    },
-    STANDARD: {
-      title: "Startup",
-      badge: "Most popular",
-      price: billingCycle === "MONTHLY" ? "₹5,000" : "₹54,000",
-      description: "All the basics for starting a new business",
-      features: ["2 users", "Plan features", "Product support"],
-    },
-    PREMIUM: {
-      title: "Enterprise",
-      badge: "Advanced",
-      price: billingCycle === "MONTHLY" ? "₹10,000" : "₹108,000",
-      description: "Advanced features for established businesses",
-      features: ["Unlimited users", "Advanced analytics", "Priority support"],
-    },
+  // Plan details configuration with translations
+  const getPlanDetails = (planType: "BASIC" | "STANDARD" | "PREMIUM"): PlanDetails => {
+    const planKey = planType.toLowerCase();
+    return {
+      title: page(`plans.${planKey}.title`),
+      badge: page(`plans.${planKey}.badge`),
+      selectLabel: page(`plans.${planKey}.selectLabel`),
+      priceMonthly: page(`plans.${planKey}.priceMonthly`),
+      priceAnnual: page(`plans.${planKey}.priceAnnual`),
+      description: page(`plans.${planKey}.description`),
+      feature1: page(`plans.${planKey}.feature1`),
+      feature2: page(`plans.${planKey}.feature2`),
+      feature3: page(`plans.${planKey}.feature3`),
+    };
   };
 
   // Get current selected plan
   const selectedPlan = form.watch("planType") || "STANDARD";
+  const planDetails = getPlanDetails(selectedPlan as "BASIC" | "STANDARD" | "PREMIUM");
 
   return (
     <Form {...form}>
@@ -147,8 +133,8 @@ export default function SubscriptionForm({ className, bankId }: SubscriptionForm
           <Card className="w-full">
             {/* Title */}
             <CardHeader className="text-center">
-              <CardTitle className="text-xl">Select your subscription</CardTitle>
-              <CardDescription>Please select your subscription plan.</CardDescription>
+              <CardTitle className="text-xl">{page("title")}</CardTitle>
+              <CardDescription>{page("description")}</CardDescription>
             </CardHeader>
             {/* End Title */}
             {/* Switch */}
@@ -159,20 +145,20 @@ export default function SubscriptionForm({ className, bankId }: SubscriptionForm
                 name="planType"
                 render={({ field }) => (
                   <FormItem className="mb-8">
-                    <FormLabel className="mb-3 block text-center">Plan Type</FormLabel>
+                    <FormLabel className="mb-3 block text-center">{page("planTypeLabel")}</FormLabel>
                     <Select
                       onValueChange={(value) => handlePlanTypeChange(value as "BASIC" | "STANDARD" | "PREMIUM")}
                       defaultValue={field.value}
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select a plan" />
+                          <SelectValue placeholder={page("selectPlanPlaceholder")} />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="BASIC">Basic Plan</SelectItem>
-                        <SelectItem value="STANDARD">Standard Plan</SelectItem>
-                        <SelectItem value="PREMIUM">Premium Plan</SelectItem>
+                        <SelectItem value="BASIC">{page("plans.basic.selectLabel")}</SelectItem>
+                        <SelectItem value="STANDARD">{page("plans.standard.selectLabel")}</SelectItem>
+                        <SelectItem value="PREMIUM">{page("plans.premium.selectLabel")}</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -185,21 +171,27 @@ export default function SubscriptionForm({ className, bankId }: SubscriptionForm
                 {/* Card */}
                 <Card className="flex flex-col border-muted">
                   <CardHeader className="pb-2 text-center">
-                    <Badge className="mb-3 w-max self-center uppercase">{planDetails[selectedPlan].badge}</Badge>
-                    <CardTitle className="mb-7">{planDetails[selectedPlan].title}</CardTitle>
-                    <span className="text-5xl font-bold">{planDetails[selectedPlan].price}</span>
+                    <Badge className="mb-3 w-max self-center uppercase">{planDetails.badge}</Badge>
+                    <CardTitle className="mb-7">{planDetails.title}</CardTitle>
+                    <span className="text-5xl font-bold">
+                      {billingCycle === "MONTHLY" ? planDetails.priceMonthly : planDetails.priceAnnual}
+                    </span>
                   </CardHeader>
-                  <CardDescription className="mx-auto w-11/12 text-center">
-                    {planDetails[selectedPlan].description}
-                  </CardDescription>
+                  <CardDescription className="mx-auto w-11/12 text-center">{planDetails.description}</CardDescription>
                   <CardContent className="flex-1">
                     <ul className="mt-7 space-y-2.5 text-sm">
-                      {planDetails[selectedPlan].features.map((feature, index) => (
-                        <li key={index} className="flex space-x-2">
-                          <CheckIcon className="mt-0.5 h-4 w-4 flex-shrink-0" />
-                          <span className="text-muted-foreground">{feature}</span>
-                        </li>
-                      ))}
+                      <li className="flex space-x-2">
+                        <CheckIcon className="mt-0.5 h-4 w-4 flex-shrink-0" />
+                        <span className="text-muted-foreground">{planDetails.feature1}</span>
+                      </li>
+                      <li className="flex space-x-2">
+                        <CheckIcon className="mt-0.5 h-4 w-4 flex-shrink-0" />
+                        <span className="text-muted-foreground">{planDetails.feature2}</span>
+                      </li>
+                      <li className="flex space-x-2">
+                        <CheckIcon className="mt-0.5 h-4 w-4 flex-shrink-0" />
+                        <span className="text-muted-foreground">{planDetails.feature3}</span>
+                      </li>
                     </ul>
                   </CardContent>
                 </Card>
@@ -214,7 +206,7 @@ export default function SubscriptionForm({ className, bankId }: SubscriptionForm
                     <FormItem>
                       <div className="flex items-center">
                         <Label htmlFor="billing-cycle" className="me-3">
-                          Monthly
+                          {page("monthlyLabel")}
                         </Label>
                         <FormControl>
                           <Switch
@@ -224,7 +216,7 @@ export default function SubscriptionForm({ className, bankId }: SubscriptionForm
                           />
                         </FormControl>
                         <Label htmlFor="billing-cycle" className="relative ms-3">
-                          Annual
+                          {page("annualLabel")}
                           <span className="absolute -end-28 -top-10 start-auto">
                             <span className="flex items-center">
                               <svg
@@ -241,7 +233,7 @@ export default function SubscriptionForm({ className, bankId }: SubscriptionForm
                                   className="text-muted-foreground"
                                 />
                               </svg>
-                              <Badge className="mt-3 uppercase">Save up to 10%</Badge>
+                              <Badge className="mt-3 uppercase">{page("savingsLabel")}</Badge>
                             </span>
                           </span>
                         </Label>
@@ -293,7 +285,7 @@ export default function SubscriptionForm({ className, bankId }: SubscriptionForm
 
               <div className="mt-8 flex w-full justify-center align-middle">
                 <Button type="submit" className="w-[120px]" disabled={isSubmitting}>
-                  {isSubmitting ? "Processing..." : "Subscribe"}
+                  {isSubmitting ? buttons("processing") : buttons("subscribe")}
                 </Button>
               </div>
             </CardContent>

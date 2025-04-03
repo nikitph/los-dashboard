@@ -5,7 +5,7 @@ export function useFormTranslation(namespace: string) {
   const locale = useLocale();
 
   return {
-    page: (key: string) => t(`page.${key}`),
+    page: (key: string): any => t(`page.${key}`),
     validation: (key: string) => t(`validation.${key}`),
     errors: (key: string) => t(`errors.${key}`),
     toast: (key: string) => t(`toast.${key}`),

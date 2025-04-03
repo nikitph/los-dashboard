@@ -129,6 +129,86 @@
       "updating": "अपडेट हो रहा है..."
     }
   },
+  "BankSubscriptionForm": {
+    "page": {
+      "title": "अपनी सदस्यता चुनें",
+      "description": "कृपया अपनी सदस्यता योजना चुनें।",
+      "planTypeLabel": "प्लान प्रकार",
+      "selectPlanPlaceholder": "एक प्लान चुनें",
+      "monthlyLabel": "मासिक",
+      "annualLabel": "वार्षिक",
+      "savingsLabel": "10% तक बचाएं",
+      "plans": {
+        "basic": {
+          "title": "बेसिक",
+          "badge": "स्टार्टर",
+          "selectLabel": "बेसिक प्लान",
+          "priceMonthly": "₹2,000",
+          "priceAnnual": "₹21,600",
+          "description": "छोटे व्यवसायों के लिए आवश्यक सुविधाएँ",
+          "feature1": "1 उपयोगकर्ता",
+          "feature2": "बेसिक रिपोर्ट",
+          "feature3": "ईमेल समर्थन"
+        },
+        "standard": {
+          "title": "स्टार्टअप",
+          "badge": "सबसे लोकप्रिय",
+          "selectLabel": "स्टैंडर्ड प्लान",
+          "priceMonthly": "₹5,000",
+          "priceAnnual": "₹54,000",
+          "description": "नया व्यवसाय शुरू करने के लिए सभी बुनियादी सुविधाएँ",
+          "feature1": "2 उपयोगकर्ता",
+          "feature2": "प्लान सुविधाएँ",
+          "feature3": "उत्पाद समर्थन"
+        },
+        "premium": {
+          "title": "एंटरप्राइज",
+          "badge": "उन्नत",
+          "selectLabel": "प्रीमियम प्लान",
+          "priceMonthly": "₹10,000",
+          "priceAnnual": "₹108,000",
+          "description": "स्थापित व्यवसायों के लिए उन्नत सुविधाएँ",
+          "feature1": "असीमित उपयोगकर्ता",
+          "feature2": "उन्नत विश्लेषण",
+          "feature3": "प्राथमिकता समर्थन"
+        }
+      }
+    },
+    "buttons": {
+      "subscribe": "सदस्यता लें",
+      "processing": "प्रोसेसिंग..."
+    },
+    "errors": {
+      "fetchFailed": "सदस्यता विवरण प्राप्त करने में विफल",
+      "unexpected": "एक अनपेक्षित त्रुटि हुई। कृपया पुनः प्रयास करें।",
+      "activeSubscriptionExists": "इस बैंक के लिए एक सक्रिय सदस्यता पहले से मौजूद है।",
+      "bankNotFound": "बैंक नहीं मिला",
+      "subscriptionIdRequired": "सदस्यता आईडी आवश्यक है",
+      "subscriptionNotFound": "सदस्यता नहीं मिली"
+    },
+    "toast": {
+      "successTitle": "सदस्यता बनाई गई",
+      "successDescription": "आपकी सदस्यता सफलतापूर्वक बनाई गई है।",
+      "errorTitle": "त्रुटि",
+      "errorDescription": "आपकी सदस्यता बनाने में त्रुटि हुई थी।"
+    },
+    "validation": {
+      "bankIdRequired": "बैंक आईडी आवश्यक है",
+      "planTypeRequired": "प्लान प्रकार आवश्यक है",
+      "planTypeInvalid": "अमान्य प्लान प्रकार चयनित",
+      "billingCycleRequired": "बिलिंग चक्र आवश्यक है",
+      "billingCycleInvalid": "अमान्य बिलिंग चक्र चयनित",
+      "startDateRequired": "प्रारंभ तिथि आवश्यक है",
+      "startDateInvalidType": "प्रारंभ तिथि एक वैध तिथि होनी चाहिए",
+      "statusRequired": "सदस्यता स्थिति आवश्यक है",
+      "amountRequired": "सदस्यता राशि आवश्यक है",
+      "amountInvalidType": "सदस्यता राशि एक संख्या होनी चाहिए"
+    },
+    "messages": {
+      "subscriptionCreated": "सदस्यता सफलतापूर्वक बनाई गई",
+      "subscriptionCancelled": "सदस्यता सफलतापूर्वक रद्द की गई"
+    }
+  },
   "validation": {
     "firstName": {
       "required": "पहला नाम आवश्यक है"
