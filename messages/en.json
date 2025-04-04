@@ -246,6 +246,7 @@
       "unexpected": "An unexpected error occurred",
       "formErrors": "Please correct the errors in the form before submitting",
       "userExists": "A user with this email already exists",
+      "phoneExists": "A user with this phone already exists",
       "bankNotFound": "The selected bank was not found"
     },
     "toast": {

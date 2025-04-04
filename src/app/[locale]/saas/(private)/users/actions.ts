@@ -13,13 +13,10 @@ export async function getUsersForBank(bankId: string): Promise<UserRecord[]> {
   const userProfiles = await prisma.userRoles.findMany({
     where: { bankId },
     include: {
-      user: true, // includes UserProfile fields
+      user: true,
     },
   });
 
-  console.log(userProfiles);
-
-  // Transform into the shape your UI expects
   return userProfiles.map((userRole) => ({
     id: userRole.userId,
     firstName: userRole.user.firstName ?? "",
@@ -29,7 +26,7 @@ export async function getUsersForBank(bankId: string): Promise<UserRecord[]> {
     status: "Active",
     lastLogin: "N/A",
     branch: userRole.bankId ? "Main Branch" : "Unknown",
-    avatarUrl: undefined, // or store a URL in the user table
+    avatarUrl: undefined,
   }));
 }
 
@@ -57,8 +54,6 @@ export async function createUser(formData: UserData, locale: string): Promise<Ac
     // Create user in Supabase Auth
     const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SERVICE_ROLE_KEY!);
 
-    console.log("formData", validatedData);
-
     const { data: authData, error: authError } = await supabase.auth.admin.createUser({
       email: validatedData.email,
       phone: validatedData.phoneNumber,
@@ -71,12 +66,19 @@ export async function createUser(formData: UserData, locale: string): Promise<Ac
     });
 
     if (authError) {
-      // Check if user already exists
       if (authError.message.includes("already exists")) {
         return {
           success: false,
           message: errors("userExists"),
           errors: { email: errors("userExists") },
+        };
+      }
+
+      if (authError.code?.includes("phone_exists")) {
+        return {
+          success: false,
+          message: errors("phoneExists"),
+          errors: { phoneNumber: errors("phoneExists") },
         };
       }
 
@@ -95,7 +97,7 @@ export async function createUser(formData: UserData, locale: string): Promise<Ac
       };
     }
 
-    // 2) Create the UserRoles record for that user
+    // Create the UserRoles record for that user
     if (authData?.user?.id) {
       await prisma.userRoles.create({
         data: {

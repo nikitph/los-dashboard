@@ -65,7 +65,7 @@ export default function UserForm({ bankId }: UserFormProps) {
         description: response.message || toastMessages("successDescription"),
       });
 
-      router.push(`${locale}/saas/users/list`);
+      router.push(`/${locale}/saas/users/list`);
       router.refresh();
     } catch (error) {
       toastError({
