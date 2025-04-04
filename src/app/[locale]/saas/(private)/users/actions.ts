@@ -22,7 +22,7 @@ export async function getUsersForBank(bankId: string): Promise<UserRecord[]> {
     firstName: userRole.user.firstName ?? "",
     lastName: userRole.user.lastName ?? "",
     email: userRole.user.email ?? "",
-    role: userRole.role, // e.g. "Administrator"
+    role: userRole.role,
     status: "Active",
     lastLogin: "N/A",
     branch: userRole.bankId ? "Main Branch" : "Unknown",
