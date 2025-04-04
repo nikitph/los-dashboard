@@ -39,6 +39,7 @@ export function toastWarning({ title, description }: ToastParams) {
 }
 
 export function toastErrorFromResponse(response: ErrorResponse) {
+  console.log(response);
   if (response.errors?.root) {
     toastError({
       title: "Something went wrong",

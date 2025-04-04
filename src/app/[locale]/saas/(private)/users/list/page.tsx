@@ -22,6 +22,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getUsersForBank } from "@/app/[locale]/saas/(private)/users/actions";
 import { useUser } from "@/contexts/userContext";
 import { useRouter } from "next/navigation";
+import { useLocale } from "next-intl";
 
 type UserRecord = {
   id: string;
@@ -36,6 +37,7 @@ type UserRecord = {
 };
 
 export default function ManageUsersPage() {
+  const locale = useLocale();
   const { user } = useUser();
   const router = useRouter();
   const [searchTerm, setSearchTerm] = React.useState("");
@@ -82,7 +84,7 @@ export default function ManageUsersPage() {
 
   // Example actions
   const handleAddUser = () => {
-    router.push("/saas/users/create");
+    router.push(`/${locale}/saas/users/create`);
   };
 
   const handleEdit = (userId: string) => {
