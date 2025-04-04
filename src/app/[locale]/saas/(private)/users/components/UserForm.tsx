@@ -9,34 +9,35 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { toast } from "@/hooks/use-toast";
 
 import { createUser } from "@/app/[locale]/saas/(private)/users/actions";
-import { CreateUserFormValues, CreateUserSchema } from "@/app/[locale]/saas/(private)/users/schema"; // Adjust path
-// If you have a typed enum from Prisma:
-// import { RoleType } from "@prisma/client";
 
-// -------------------------
-// 1) Define the Zod schema
-// -------------------------
+import { useFormTranslation } from "@/hooks/useFormTranslation";
+import { handleFormErrors } from "@/lib/formErrorHelper";
+import { createUserSchema, UserFormValues } from "@/app/[locale]/saas/(private)/users/schema";
+import { toastError, toastSuccess } from "@/lib/toastUtils";
 
 interface UserFormProps {
-  bankId?: string; // passed in if you want to link user to a bank
-  // If you want an edit mode, you could add `initialData?: Partial<CreateUserFormValues>` and `isEditMode?: boolean`
+  bankId?: string;
 }
 
 export default function UserForm({ bankId }: UserFormProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
+  // Load translations
+  const { page, validation, buttons, errors, toast: toastMessages, locale } = useFormTranslation("UserCreateForm");
+  const userSchema = createUserSchema(validation);
+
   const {
     register,
     handleSubmit,
     watch,
     setValue,
-    formState: { errors },
-  } = useForm<CreateUserFormValues>({
-    resolver: zodResolver(CreateUserSchema),
+    setError,
+    formState: { errors: formErrors },
+  } = useForm<UserFormValues>({
+    resolver: zodResolver(userSchema),
     defaultValues: {
       firstName: "",
       lastName: "",
@@ -54,37 +55,28 @@ export default function UserForm({ bankId }: UserFormProps) {
     }
   }, [bankId, setValue]);
 
-  // -----------------------------------
-  // 3) Submit handler
-  // -----------------------------------
-  const onSubmit = async (data: CreateUserFormValues) => {
+  const onSubmit = async (data: UserFormValues) => {
     setIsSubmitting(true);
 
     try {
-      // Debug: see the form data
       console.log("Creating user with data:", data);
 
-      const response = await createUser(data);
-      if (response.success) {
-        toast({
-          title: "User Created",
-          description: response.message || "User created successfully.",
-        });
-        router.push("/saas/users/list"); // Adjust to your user list route
-        router.refresh();
-      } else {
-        toast({
-          title: "Error",
-          description: response.error || "Failed to create user",
-          variant: "destructive",
-        });
+      const response = await createUser(data, locale);
+      if (!response.success) {
+        handleFormErrors(response, setError);
+        return;
       }
+      toastSuccess({
+        title: toastMessages("successTitle"),
+        description: response.message || toastMessages("successDescription"),
+      });
+      router.push(`${locale}/saas/users/list`);
+      router.refresh();
     } catch (error) {
       console.error("Error creating user:", error);
-      toast({
-        title: "Error",
-        description: "An unexpected error occurred",
-        variant: "destructive",
+      toastError({
+        title: toastMessages("errorTitle"),
+        description: errors("unexpected"),
       });
     } finally {
       setIsSubmitting(false);
@@ -92,50 +84,50 @@ export default function UserForm({ bankId }: UserFormProps) {
   };
 
   return (
-    <div className="bg-transparent">
+    <div className="mx-left max-w-2xl bg-transparent">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <div className="grid grid-cols-2 gap-4">
           {/* First Name */}
           <div>
             <Label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
-              First Name
+              {page("firstName")}
             </Label>
             <Input id="firstName" type="text" className="mt-1 bg-white" {...register("firstName")} />
-            {errors.firstName && <p className="mt-1 text-sm text-red-600">{errors.firstName.message}</p>}
+            {formErrors.firstName && <p className="mt-1 text-sm text-red-600">{formErrors.firstName.message}</p>}
           </div>
 
           {/* Last Name */}
           <div>
             <Label htmlFor="lastName" className="block text-sm font-medium text-gray-700">
-              Last Name
+              {page("lastName")}
             </Label>
             <Input id="lastName" type="text" className="mt-1 bg-white" {...register("lastName")} />
-            {errors.lastName && <p className="mt-1 text-sm text-red-600">{errors.lastName.message}</p>}
+            {formErrors.lastName && <p className="mt-1 text-sm text-red-600">{formErrors.lastName.message}</p>}
           </div>
         </div>
 
         {/* Email */}
         <div>
           <Label htmlFor="email" className="block text-sm font-medium text-gray-700">
-            Email
+            {page("email")}
           </Label>
           <Input id="email" type="email" className="mt-1 bg-white" {...register("email")} />
-          {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>}
+          {formErrors.email && <p className="mt-1 text-sm text-red-600">{formErrors.email.message}</p>}
         </div>
 
         {/* Phone Number */}
         <div>
           <Label htmlFor="phoneNumber" className="block text-sm font-medium text-gray-700">
-            Phone Number
+            {page("phoneNumber")}
           </Label>
           <Input id="phoneNumber" type="text" className="mt-1 bg-white" {...register("phoneNumber")} />
-          {errors.phoneNumber && <p className="mt-1 text-sm text-red-600">{errors.phoneNumber.message}</p>}
+          {formErrors.phoneNumber && <p className="mt-1 text-sm text-red-600">{formErrors.phoneNumber.message}</p>}
         </div>
 
         {/* Role */}
         <div>
           <Label htmlFor="role" className="block text-sm font-medium text-gray-700">
-            Role
+            {page("role")}
           </Label>
           <Select
             onValueChange={(value) => {
@@ -157,7 +149,7 @@ export default function UserForm({ bankId }: UserFormProps) {
               </SelectGroup>
             </SelectContent>
           </Select>
-          {errors.role && <p className="mt-1 text-sm text-red-600">{errors.role.message}</p>}
+          {formErrors.role && <p className="mt-1 text-sm text-red-600">{formErrors.role.message}</p>}
         </div>
 
         {/* Hidden bankId (if needed) */}
@@ -165,13 +157,20 @@ export default function UserForm({ bankId }: UserFormProps) {
 
         {/* Submit Button */}
         <Button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? "Creating..." : "Create User"}
+          {isSubmitting ? buttons("creating") : buttons("create")}
         </Button>
 
         {/* Show an alert if there are form errors */}
-        {Object.keys(errors).length > 0 && (
+        {Object.keys(formErrors).length > 0 && (
           <Alert variant="destructive">
-            <AlertDescription>Please correct the errors in the form before submitting.</AlertDescription>
+            <AlertDescription>{errors("formErrors")}</AlertDescription>
+          </Alert>
+        )}
+
+        {/* Show root error if present */}
+        {formErrors.root && (
+          <Alert variant="destructive">
+            <AlertDescription>{formErrors.root.message}</AlertDescription>
           </Alert>
         )}
       </form>
