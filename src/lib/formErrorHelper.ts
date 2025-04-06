@@ -12,6 +12,8 @@ export function handleFormErrors<T extends FieldValues>(
 ): void {
   const { errors } = response;
 
+  console.log("Errors:", errors);
+
   if (errors) {
     Object.entries(errors).forEach(([key, msg]) => {
       if (key !== "root") {

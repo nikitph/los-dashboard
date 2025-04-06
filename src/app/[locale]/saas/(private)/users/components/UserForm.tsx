@@ -4,87 +4,73 @@ import * as React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { toast } from "@/hooks/use-toast";
 
 import { createUser } from "@/app/[locale]/saas/(private)/users/actions";
-import { CreateUserFormValues, CreateUserSchema } from "@/app/[locale]/saas/(private)/users/schema"; // Adjust path
-// If you have a typed enum from Prisma:
-// import { RoleType } from "@prisma/client";
-
-// -------------------------
-// 1) Define the Zod schema
-// -------------------------
+import { useFormTranslation } from "@/hooks/useFormTranslation";
+import { handleFormErrors } from "@/lib/formErrorHelper";
+import { createUserSchema, UserFormValues } from "@/app/[locale]/saas/(private)/users/schema";
+import { toastError, toastSuccess } from "@/lib/toastUtils";
 
 interface UserFormProps {
-  bankId?: string; // passed in if you want to link user to a bank
-  // If you want an edit mode, you could add `initialData?: Partial<CreateUserFormValues>` and `isEditMode?: boolean`
+  bankId?: string;
 }
 
 export default function UserForm({ bankId }: UserFormProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
-  const {
-    register,
-    handleSubmit,
-    watch,
-    setValue,
-    formState: { errors },
-  } = useForm<CreateUserFormValues>({
-    resolver: zodResolver(CreateUserSchema),
+  const { page, validation, buttons, errors, toast: toastMessages, locale } = useFormTranslation("UserCreateForm");
+  const userSchema = createUserSchema(validation);
+
+  const form = useForm<UserFormValues>({
+    resolver: zodResolver(userSchema),
     defaultValues: {
       firstName: "",
       lastName: "",
       email: "",
       phoneNumber: "",
-      role: "USER",
+      role: undefined,
       bankId: bankId || "",
     },
   });
 
-  // If bankId changes (e.g., after context load), update the form
+  const {
+    setValue,
+    setError,
+    watch,
+    formState: { errors: formErrors },
+  } = form;
+
   React.useEffect(() => {
-    if (bankId) {
-      setValue("bankId", bankId);
-    }
+    if (bankId) setValue("bankId", bankId);
   }, [bankId, setValue]);
 
-  // -----------------------------------
-  // 3) Submit handler
-  // -----------------------------------
-  const onSubmit = async (data: CreateUserFormValues) => {
+  const onSubmit = async (data: UserFormValues) => {
     setIsSubmitting(true);
-
     try {
-      // Debug: see the form data
-      console.log("Creating user with data:", data);
-
-      const response = await createUser(data);
-      if (response.success) {
-        toast({
-          title: "User Created",
-          description: response.message || "User created successfully.",
-        });
-        router.push("/saas/users/list"); // Adjust to your user list route
-        router.refresh();
-      } else {
-        toast({
-          title: "Error",
-          description: response.error || "Failed to create user",
-          variant: "destructive",
-        });
+      const response = await createUser(data, locale);
+      if (!response.success) {
+        handleFormErrors(response, setError);
+        return;
       }
+
+      toastSuccess({
+        title: toastMessages("successTitle"),
+        description: response.message || toastMessages("successDescription"),
+      });
+
+      router.push(`/${locale}/saas/users/list`);
+      router.refresh();
     } catch (error) {
-      console.error("Error creating user:", error);
-      toast({
-        title: "Error",
-        description: "An unexpected error occurred",
-        variant: "destructive",
+      toastError({
+        title: toastMessages("errorTitle"),
+        description: errors("unexpected"),
       });
     } finally {
       setIsSubmitting(false);
@@ -92,89 +78,115 @@ export default function UserForm({ bankId }: UserFormProps) {
   };
 
   return (
-    <div className="bg-transparent">
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        <div className="grid grid-cols-2 gap-4">
-          {/* First Name */}
-          <div>
-            <Label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
-              First Name
-            </Label>
-            <Input id="firstName" type="text" className="mt-1 bg-white" {...register("firstName")} />
-            {errors.firstName && <p className="mt-1 text-sm text-red-600">{errors.firstName.message}</p>}
+    <div className="mx-left max-w-2xl bg-transparent">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <div className="grid grid-cols-2 gap-4">
+            <FormField
+              control={form.control}
+              name="firstName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{page("firstName")}</FormLabel>
+                  <FormControl>
+                    <Input {...field} className="bg-white" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="lastName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{page("lastName")}</FormLabel>
+                  <FormControl>
+                    <Input {...field} className="bg-white" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </div>
 
-          {/* Last Name */}
-          <div>
-            <Label htmlFor="lastName" className="block text-sm font-medium text-gray-700">
-              Last Name
-            </Label>
-            <Input id="lastName" type="text" className="mt-1 bg-white" {...register("lastName")} />
-            {errors.lastName && <p className="mt-1 text-sm text-red-600">{errors.lastName.message}</p>}
-          </div>
-        </div>
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{page("email")}</FormLabel>
+                <FormControl>
+                  <Input type="email" {...field} className="bg-white" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        {/* Email */}
-        <div>
-          <Label htmlFor="email" className="block text-sm font-medium text-gray-700">
-            Email
-          </Label>
-          <Input id="email" type="email" className="mt-1 bg-white" {...register("email")} />
-          {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>}
-        </div>
+          <FormField
+            control={form.control}
+            name="phoneNumber"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{page("phoneNumber")}</FormLabel>
+                <FormControl>
+                  <Input type="text" {...field} className="bg-white" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        {/* Phone Number */}
-        <div>
-          <Label htmlFor="phoneNumber" className="block text-sm font-medium text-gray-700">
-            Phone Number
-          </Label>
-          <Input id="phoneNumber" type="text" className="mt-1 bg-white" {...register("phoneNumber")} />
-          {errors.phoneNumber && <p className="mt-1 text-sm text-red-600">{errors.phoneNumber.message}</p>}
-        </div>
+          <FormField
+            control={form.control}
+            name="role"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{page("role")}</FormLabel>
+                <FormControl>
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <SelectTrigger className="bg-white">
+                      <SelectValue placeholder={page("selectRole")} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectItem value="CLERK">CLERK</SelectItem>
+                        <SelectItem value="INSPECTOR">INSPECTOR</SelectItem>
+                        <SelectItem value="LOAN_OFFICER">LOAN OFFICER</SelectItem>
+                        <SelectItem value="CEO">CEO</SelectItem>
+                        <SelectItem value="LOAN_COMMITTEE">LOAN COMMITTEE MEMBER</SelectItem>
+                        <SelectItem value="BOARD">BOARD MEMBER</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        {/* Role */}
-        <div>
-          <Label htmlFor="role" className="block text-sm font-medium text-gray-700">
-            Role
-          </Label>
-          <Select
-            onValueChange={(value) => {
-              setValue("role", value);
-            }}
-            value={watch("role")}
-          >
-            <SelectTrigger className="mt-1 bg-white">
-              <SelectValue placeholder="Select a role" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectItem value="CLERK">CLERK</SelectItem>
-                <SelectItem value="INSPECTOR">INSPECTOR</SelectItem>
-                <SelectItem value="LOAN_OFFICER">LOAN OFFICER</SelectItem>
-                <SelectItem value="CEO">CEO</SelectItem>
-                <SelectItem value="LOAN_COMMITTEE">LOAN COMMITTEE MEMBER</SelectItem>
-                <SelectItem value="BOARD">BOARD MEMBER</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-          {errors.role && <p className="mt-1 text-sm text-red-600">{errors.role.message}</p>}
-        </div>
+          {/* Hidden bankId */}
+          <input type="hidden" {...form.register("bankId")} />
 
-        {/* Hidden bankId (if needed) */}
-        <input type="hidden" {...register("bankId")} />
+          <Button type="submit" disabled={isSubmitting}>
+            {isSubmitting ? buttons("creating") : buttons("create")}
+          </Button>
 
-        {/* Submit Button */}
-        <Button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? "Creating..." : "Create User"}
-        </Button>
+          {/* Form-wide error alerts */}
+          {Object.keys(formErrors).length > 0 && (
+            <Alert variant="destructive">
+              <AlertDescription>{errors("formErrors")}</AlertDescription>
+            </Alert>
+          )}
 
-        {/* Show an alert if there are form errors */}
-        {Object.keys(errors).length > 0 && (
-          <Alert variant="destructive">
-            <AlertDescription>Please correct the errors in the form before submitting.</AlertDescription>
-          </Alert>
-        )}
-      </form>
+          {formErrors.root && (
+            <Alert variant="destructive">
+              <AlertDescription>{formErrors.root.message}</AlertDescription>
+            </Alert>
+          )}
+        </form>
+      </Form>
     </div>
   );
 }

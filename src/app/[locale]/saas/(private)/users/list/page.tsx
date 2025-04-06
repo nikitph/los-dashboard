@@ -3,7 +3,6 @@
 import * as React from "react";
 import { Edit2, Key, Lock, MoreHorizontal, RefreshCw, Search, Unlock, UserPlus, Users } from "lucide-react";
 
-// shadcn/ui components
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -22,20 +21,22 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getUsersForBank } from "@/app/[locale]/saas/(private)/users/actions";
 import { useUser } from "@/contexts/userContext";
 import { useRouter } from "next/navigation";
+import { useLocale } from "next-intl";
 
 type UserRecord = {
   id: string;
   firstName: string;
   lastName: string;
   email: string;
-  role: string; // e.g. "Administrator", "Loan Officer"
-  status: string; // e.g. "Active", "Pending", "Locked"
+  role: string;
+  status: string;
   lastLogin: string;
   branch: string;
   avatarUrl?: string;
 };
 
 export default function ManageUsersPage() {
+  const locale = useLocale();
   const { user } = useUser();
   const router = useRouter();
   const [searchTerm, setSearchTerm] = React.useState("");
@@ -56,7 +57,6 @@ export default function ManageUsersPage() {
     fetchData();
   }, [user]);
 
-  // Derived list of users based on filters/search
   const filteredUsers = React.useMemo(() => {
     return users.filter((user) => {
       const matchesSearch =
@@ -80,23 +80,19 @@ export default function ManageUsersPage() {
     setStatusFilter("all");
   };
 
-  // Example actions
   const handleAddUser = () => {
-    router.push("/saas/users/create");
+    router.push(`/${locale}/saas/users/create`);
   };
 
   const handleEdit = (userId: string) => {
-    // Show a modal or navigate to an edit page
     alert(`Edit user ${userId}`);
   };
 
   const handleResetPassword = (userId: string) => {
-    // Trigger password reset flow
     alert(`Reset password for user ${userId}`);
   };
 
   const handleLockUnlock = (user: UserRecord) => {
-    // Lock or unlock user
     if (user.status === "Locked") {
       alert(`Unlock account for user ${user.id}`);
     } else {

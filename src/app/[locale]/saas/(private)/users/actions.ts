@@ -3,89 +3,124 @@
 import { prisma } from "@/lib/prisma";
 
 import { createClient } from "@supabase/supabase-js";
-import { CreateUserFormValues, CreateUserSchema } from "@/app/[locale]/saas/(private)/users/schema";
-
-type UserRecord = {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  role: string;
-  status: string;
-  lastLogin: string;
-  branch: string;
-  avatarUrl?: string;
-};
-
-type ActionResponse = {
-  success: boolean;
-  message: string;
-  data?: any;
-  error?: string;
-};
+import { createUserSchema, UserData, UserRecord } from "@/app/[locale]/saas/(private)/users/schema";
+import { getFormTranslation } from "@/utils/serverTranslationUtil";
+import { revalidatePath } from "next/cache";
+import { handleActionError } from "@/lib/actionErrorHelpers";
+import { ActionResponse } from "@/types/globalTypes";
 
 export async function getUsersForBank(bankId: string): Promise<UserRecord[]> {
   const userProfiles = await prisma.userRoles.findMany({
     where: { bankId },
     include: {
-      user: true, // includes UserProfile fields
+      user: true,
     },
   });
 
-  console.log(userProfiles);
-
-  // Transform into the shape your UI expects
   return userProfiles.map((userRole) => ({
     id: userRole.userId,
     firstName: userRole.user.firstName ?? "",
     lastName: userRole.user.lastName ?? "",
     email: userRole.user.email ?? "",
-    role: userRole.role, // e.g. "Administrator"
+    role: userRole.role,
     status: "Active",
     lastLogin: "N/A",
     branch: userRole.bankId ? "Main Branch" : "Unknown",
-    avatarUrl: undefined, // or store a URL in the user table
+    avatarUrl: undefined,
   }));
 }
 
-export async function createUser(formData: CreateUserFormValues) {
+export async function createUser(formData: UserData, locale: string): Promise<ActionResponse> {
   try {
-    const validatedData = CreateUserSchema.parse(formData);
+    const { validation, errors, toast } = await getFormTranslation("UserCreateForm", locale);
+    const userSchema = createUserSchema(validation);
+
+    // Validate the input data
+    const validatedData = userSchema.parse(formData);
+
+    // Check if the bank exists
+    const bank = await prisma.bank.findUnique({
+      where: { id: validatedData.bankId, deletedAt: null },
+    });
+
+    if (!bank) {
+      return {
+        success: false,
+        message: errors("bankNotFound"),
+        errors: { bankId: errors("bankNotFound") },
+      };
+    }
+
+    // Create user in Supabase Auth
     const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SERVICE_ROLE_KEY!);
 
-    console.log("formData", validatedData);
-
-    const { data, error } = await supabase.auth.admin.createUser({
-      phone: formData.phoneNumber,
-      email: formData.email,
+    const { data: authData, error: authError } = await supabase.auth.admin.createUser({
+      email: validatedData.email,
+      phone: validatedData.phoneNumber,
       email_confirm: true,
       user_metadata: {
-        first_name: formData.firstName,
-        last_name: formData.lastName,
+        first_name: validatedData.firstName,
+        last_name: validatedData.lastName,
+        phone: validatedData.phoneNumber,
       },
     });
 
-    // 2) Create the UserRoles record for that user
-    if (data?.user?.id) {
+    if (authError) {
+      if (authError.message.includes("already exists")) {
+        return {
+          success: false,
+          message: errors("userExists"),
+          errors: { email: errors("userExists") },
+        };
+      }
+
+      if (authError.code?.includes("phone_exists")) {
+        return {
+          success: false,
+          message: errors("phoneExists"),
+          errors: { phoneNumber: errors("phoneExists") },
+        };
+      }
+
+      return {
+        success: false,
+        message: errors("createFailed"),
+        errors: { root: authError.message },
+      };
+    }
+
+    if (!authData?.user?.id) {
+      return {
+        success: false,
+        message: errors("unexpected"),
+        errors: { root: errors("unexpected") },
+      };
+    }
+
+    // Create the UserRoles record for that user
+    if (authData?.user?.id) {
       await prisma.userRoles.create({
         data: {
-          userId: data.user.id,
-          role: formData.role,
-          bankId: formData.bankId,
+          userId: authData.user.id,
+          role: validatedData.role,
+          bankId: validatedData.bankId,
+          assignedAt: new Date(),
         },
       });
     }
 
+    revalidatePath("/saas/users/list");
+
     return {
       success: true,
-      message: "User created successfully",
-      data,
+      message: toast("successDescription"),
+      data: {
+        id: authData.user.id,
+        ...validatedData,
+      },
     };
   } catch (error) {
     console.error("Error creating user:", error);
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : "Unknown error",
-    };
+    return handleActionError(error);
   }
 }

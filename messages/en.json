@@ -209,6 +209,68 @@
       "subscriptionCancelled": "Subscription cancelled successfully"
     }
   },
+  "UserCreateForm": {
+    "page": {
+      "title": "Create User",
+      "description": "Add a new user to the system",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email",
+      "phoneNumber": "Phone Number",
+      "role": "Role",
+      "selectRole": "Select a role for this user",
+      "bankId": "Bank"
+    },
+    "validation": {
+      "firstName": {
+        "required": "First name is required"
+      },
+      "lastName": {
+        "required": "Last name is required"
+      },
+      "email": {
+        "invalid": "Please enter a valid email address"
+      },
+      "phoneNumber": {
+        "invalid": "Phone number must be 10 digits"
+      },
+      "bankId": {
+        "required": "Bank selection is required"
+      },
+      "role": {
+        "required": "Role selection is required"
+      }
+    },
+    "errors": {
+      "createFailed": "Failed to create user",
+      "unexpected": "An unexpected error occurred",
+      "formErrors": "Please correct the errors in the form before submitting",
+      "userExists": "A user with this email already exists",
+      "phoneExists": "A user with this phone already exists",
+      "bankNotFound": "The selected bank was not found"
+    },
+    "toast": {
+      "successTitle": "Success",
+      "successDescription": "User created successfully",
+      "errorTitle": "Error",
+      "errorDescription": "Failed to create user"
+    },
+    "buttons": {
+      "create": "Create User",
+      "creating": "Creating..."
+    },
+    "messages": {
+      "passwordNotice": "A temporary password has been generated and will be sent to the user by email",
+      "roleDescription": {
+        "CLERK": "Can input customer data and create loan applications",
+        "INSPECTOR": "Can conduct and record physical verifications",
+        "LOAN_OFFICER": "Can review and approve/reject loans",
+        "CEO": "Has full access to bank operations",
+        "LOAN_COMMITTEE": "Can approve high-value loans",
+        "BOARD": "Has oversight of all bank activities"
+      }
+    }
+  },
   "validation": {
     "firstName": {
       "required": "First name is required"

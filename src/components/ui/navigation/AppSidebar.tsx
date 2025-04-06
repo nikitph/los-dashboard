@@ -22,7 +22,6 @@ import * as React from "react";
 import { useEffect, useState } from "react";
 import { Logo } from "../../../../public/Logo";
 import { UserProfile } from "./UserProfile";
-import LoanSteps from "@/components/LoanSteps";
 
 const mainNavigation = [
   {
@@ -264,7 +263,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </div>
         </div>
       </SidebarHeader>
-      <SidebarContent>
+      <SidebarContent className={"[scrollbar-width:none] [&::-webkit-scrollbar]:hidden"}>
         <SidebarGroup>
           <SidebarGroupContent>
             <Input type="search" placeholder="Search items..." className="[&>input]:sm:py-1.5" />
@@ -346,7 +345,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </SidebarGroup>
         ))}
 
-        <LoanSteps steps={updateSteps(currentStep)} currentStep={currentStep} />
+        {/*<LoanSteps steps={updateSteps(currentStep)} currentStep={currentStep} />*/}
       </SidebarContent>
       <SidebarFooter>
         <div className="border-t border-gray-200 dark:border-gray-800" />
