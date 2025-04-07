@@ -15,7 +15,7 @@ import { useLocale, useTranslations } from "next-intl";
 
 export function BankCreationForm({ className, setCurrentStep, setBank, ...props }: BankCreationFormProps) {
   const locale = useLocale();
-  const t = useTranslations(BankCreationForm.name);
+  const t = useTranslations("BankCreationForm");
   const v = useTranslations("validation");
   const bankCreationSchema = createBankSchema(v);
 
