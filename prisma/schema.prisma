@@ -520,8 +520,9 @@ model PendingAction {
   targetModel    String? // Optional refinement: e.g., "UserProfile" or "UserRoles"
   targetRecordId String? // Optional: If approved, store the ID of the created/modified record (e.g., the new user's authId)
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
 
   // Relations
   bank        Bank?        @relation(fields: [bankId], references: [id])
