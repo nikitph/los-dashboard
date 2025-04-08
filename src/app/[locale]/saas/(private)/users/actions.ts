@@ -167,3 +167,14 @@ export async function submitPendingUserRequest(
     };
   }
 }
+
+export async function getPendingUserCreations(bankId: string) {
+  return prisma.pendingAction.findMany({
+    where: {
+      bankId,
+      actionType: "REQUEST_BANK_USER_CREATION",
+      status: "PENDING",
+    },
+    orderBy: { requestedAt: "desc" },
+  });
+}
