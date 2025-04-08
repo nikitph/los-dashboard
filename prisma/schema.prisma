@@ -32,6 +32,13 @@ enum BankOnboardingStatus {
   CONFIGURATIONS_CREATED
 }
 
+enum ApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  CANCELLED
+}
+
 enum LoanType {
   PERSONAL
   VEHICLE
@@ -45,6 +52,10 @@ enum LoanStatus {
   APPROVED
   REJECTED
   UNDER_REVIEW
+}
+
+enum PendingActionType {
+  REQUEST_BANK_USER_CREATION
 }
 
 enum VerificationType {
@@ -100,10 +111,12 @@ model UserProfile {
   deletedAt   DateTime?
 
   // Relations
-  userRoles     UserRoles[]
-  applicants    Applicant[]
-  verifications Verification[]
-  auditLogs     AuditLog[]
+  userRoles        UserRoles[]
+  applicants       Applicant[]
+  verifications    Verification[]
+  auditLogs        AuditLog[]
+  actionsRequested PendingAction[] @relation("RequestedActions") // Actions this user initiated (Maker)
+  actionsReviewed  PendingAction[] @relation("ReviewedActions") // Actions this user reviewed (Checker)
 
   documents Document[]
 }
@@ -247,6 +260,7 @@ model Bank {
   loanApplications LoanApplication[]
   configurations   BankConfiguration[]
   applicants       Applicant[]
+  pendingAction    PendingAction[]
 }
 
 model Subscription {
@@ -336,7 +350,7 @@ model CoApplicant {
   deletedAt      DateTime?
   documents      Document[]
 
-  //Relationships
+  // Relationships
 
   loanApplicationId String
   loanApplication   LoanApplication @relation(fields: [loanApplicationId], references: [id])
@@ -490,6 +504,34 @@ model VehicleVerification {
   rcUrl               String?
   inspectionReportUrl String?
   vehiclePhotoUrl     String?
+}
+
+model PendingAction {
+  id             String            @id @default(dbgenerated("gen_random_uuid()"))
+  bankId         String? // Context: Which bank? (Null if global) - Use for bank user creation
+  actionType     PendingActionType // What kind of action? e.g., REQUEST_BANK_USER_CREATION
+  payload        Json // Data needed to execute the action upon approval (e.g., { firstName, lastName, email, phone, role, bankId })
+  status         ApprovalStatus    @default(PENDING)
+  requestedById  String // Maker's User ID (authId)
+  requestedAt    DateTime          @default(now()) // When the request was made
+  reviewedById   String? // Checker's User ID (authId) - Null until reviewed
+  reviewedAt     DateTime? // When the review decision was made
+  reviewRemarks  String? // Checker's comments (especially for rejection)
+  targetModel    String? // Optional refinement: e.g., "UserProfile" or "UserRoles"
+  targetRecordId String? // Optional: If approved, store the ID of the created/modified record (e.g., the new user's authId)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  // Relations
+  bank        Bank?        @relation(fields: [bankId], references: [id])
+  requestedBy UserProfile  @relation("RequestedActions", fields: [requestedById], references: [authId])
+  reviewedBy  UserProfile? @relation("ReviewedActions", fields: [reviewedById], references: [authId])
+
+  @@index([status, bankId])
+  @@index([requestedById])
+  @@index([reviewedById])
 }
 
 model AuditLog {

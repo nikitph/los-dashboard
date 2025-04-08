@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { startTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
@@ -11,11 +12,11 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
-import { createUser } from "@/app/[locale]/saas/(private)/users/actions";
+import { submitPendingUserRequest } from "@/app/[locale]/saas/(private)/users/actions";
 import { useFormTranslation } from "@/hooks/useFormTranslation";
-import { handleFormErrors } from "@/lib/formErrorHelper";
 import { createUserSchema, UserFormValues } from "@/app/[locale]/saas/(private)/users/schema";
 import { toastError, toastSuccess } from "@/lib/toastUtils";
+import { useUser } from "@/contexts/userContext";
 
 interface UserFormProps {
   bankId?: string;
@@ -23,6 +24,7 @@ interface UserFormProps {
 
 export default function UserForm({ bankId }: UserFormProps) {
   const router = useRouter();
+  const { user } = useUser();
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
   const { page, validation, buttons, errors, toast: toastMessages, locale } = useFormTranslation("UserCreateForm");
@@ -45,36 +47,26 @@ export default function UserForm({ bankId }: UserFormProps) {
     setError,
     watch,
     formState: { errors: formErrors },
+    reset,
   } = form;
 
   React.useEffect(() => {
     if (bankId) setValue("bankId", bankId);
   }, [bankId, setValue]);
 
-  const onSubmit = async (data: UserFormValues) => {
-    setIsSubmitting(true);
-    try {
-      const response = await createUser(data, locale);
-      if (!response.success) {
-        handleFormErrors(response, setError);
-        return;
+  const onSubmit = (values: UserFormValues) => {
+    if (!user) return;
+
+    startTransition(async () => {
+      const res = await submitPendingUserRequest(values, user.id, "en");
+
+      if (res.success) {
+        toastSuccess({ title: "Success", description: "User creation request submitted for approval." });
+        reset();
+      } else {
+        toastError({ title: "Error", description: "User creation request failed." });
       }
-
-      toastSuccess({
-        title: toastMessages("successTitle"),
-        description: response.message || toastMessages("successDescription"),
-      });
-
-      router.push(`/${locale}/saas/users/list`);
-      router.refresh();
-    } catch (error) {
-      toastError({
-        title: toastMessages("errorTitle"),
-        description: errors("unexpected"),
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
+    });
   };
 
   return (
