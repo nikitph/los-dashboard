@@ -3,15 +3,7 @@
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { getUserRoles } from "@/contexts/actions/user-actions";
-
-type User = {
-  firstName?: string;
-  lastName?: string;
-  email?: string;
-  id: string;
-  roles: { role: string; bankId: string | null }[];
-  currentRole: { role: string; bankId: string | null };
-};
+import { User } from "@/types/globalTypes";
 
 type UserContextType = {
   user: User | null;
