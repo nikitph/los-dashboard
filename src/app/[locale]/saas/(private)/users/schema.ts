@@ -8,7 +8,7 @@ export type RoleTypeValues = z.infer<typeof RoleType>;
  * @param t Translation function that returns localized error messages
  * @returns Zod schema with translated validation messages
  */
-export const generateRequestUserCreationSchema = (t: (key: string) => string) => {
+export const createUserSchema = (t: (key: string) => string) => {
   return z.object({
     firstName: z.string().min(1, { message: t("firstName.required") }),
     lastName: z.string().min(1, { message: t("lastName.required") }),
@@ -23,17 +23,17 @@ export const generateRequestUserCreationSchema = (t: (key: string) => string) =>
  * Base schema for validation in non-translated contexts
  * Uses default error messages as fallback
  */
-const RequestUserCreationSchema = generateRequestUserCreationSchema((key) => key);
+const userSchema = createUserSchema((key) => key);
 
 /**
  * Type definition derived from the user schema
  */
-export type RequestUserCreationData = z.infer<typeof RequestUserCreationSchema>;
+export type UserData = z.infer<typeof userSchema>;
 
 /**
  * Type for user creation form values
  */
-export type UserFormValues = RequestUserCreationData;
+export type UserFormValues = UserData;
 
 /**
  * Interface for user creation form component props
@@ -54,19 +54,3 @@ export type UserRecord = {
   branch: string;
   avatarUrl?: string;
 };
-
-export const ProcessPendingUserSchema = z
-  .object({
-    pendingActionId: z.string().uuid(),
-    decision: z.enum(["approve", "reject"]),
-    remarks: z.string().optional(),
-  })
-  .refine(
-    (data) =>
-      data.decision === "approve" || (data.decision === "reject" && data.remarks && data.remarks.trim().length > 0),
-    {
-      message: "Remarks are required when rejecting.",
-      path: ["remarks"], // Associate error with the remarks field
-    },
-  );
-export type ProcessPendingUserData = z.infer<typeof ProcessPendingUserSchema>;

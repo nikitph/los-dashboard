@@ -8,6 +8,7 @@ import { getFormTranslation } from "@/utils/serverTranslationUtil";
 import { revalidatePath } from "next/cache";
 import { handleActionError } from "@/lib/actionErrorHelpers";
 import { ActionResponse } from "@/types/globalTypes";
+import { services } from "@/lib/machines/userCreationMachine";
 
 export async function getUsersForBank(bankId: string): Promise<UserRecord[]> {
   const userProfiles = await prisma.userRoles.findMany({
@@ -122,5 +123,47 @@ export async function createUser(formData: UserData, locale: string): Promise<Ac
   } catch (error) {
     console.error("Error creating user:", error);
     return handleActionError(error);
+  }
+}
+
+export async function submitPendingUserRequest(
+  formData: UserData,
+  requestedById: string,
+  locale: string,
+): Promise<ActionResponse> {
+  try {
+    const { validation, errors, toast } = await getFormTranslation("UserCreateForm", locale);
+    const schema = createUserSchema(validation);
+    const validated = schema.parse(formData);
+
+    const result = await services.createPendingAction(
+      {
+        pendingActionId: null,
+        reviewedById: null,
+        requestedById: null,
+        payload: null,
+        status: null,
+        error: null,
+        createdUserId: null,
+      },
+      {
+        type: "SUBMIT_REQUEST",
+        data: validated,
+        requestedById,
+      },
+    );
+
+    return {
+      success: true,
+      message: "Successfully submitted request",
+      data: result,
+    };
+  } catch (error) {
+    console.error("Error submitting pending user creation request:", error);
+    return {
+      success: false,
+      message: "Something went wrong",
+      errors: { root: "Failed to submit request" },
+    };
   }
 }
