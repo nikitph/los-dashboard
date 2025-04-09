@@ -62,7 +62,7 @@ export default function UserForm({ bankId }: UserFormProps) {
 
       if (res.success) {
         toastSuccess({ title: "Success", description: "User creation request submitted for approval." });
-        reset();
+        router.push(`/${locale}/saas/users/list`);
       } else {
         toastError({ title: "Error", description: "User creation request failed." });
       }

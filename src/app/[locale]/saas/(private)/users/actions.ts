@@ -8,7 +8,9 @@ import { getFormTranslation } from "@/utils/serverTranslationUtil";
 import { revalidatePath } from "next/cache";
 import { handleActionError } from "@/lib/actionErrorHelpers";
 import { ActionResponse } from "@/types/globalTypes";
-import { services } from "@/lib/machines/userCreationMachine";
+import { ApprovalStatus, PendingActionType } from "@prisma/client";
+import { getServerSessionUser } from "@/lib/getServerUser";
+import { getLocale } from "next-intl/server";
 
 export async function getUsersForBank(bankId: string): Promise<UserRecord[]> {
   const userProfiles = await prisma.userRoles.findMany({
@@ -136,27 +138,42 @@ export async function submitPendingUserRequest(
     const schema = createUserSchema(validation);
     const validated = schema.parse(formData);
 
-    const result = await services.createPendingAction(
-      {
-        pendingActionId: null,
+    const existingRequest = await prisma.pendingAction.findFirst({
+      where: {
+        bankId: validated.bankId,
+        actionType: PendingActionType.REQUEST_BANK_USER_CREATION,
+        status: ApprovalStatus.PENDING,
+        // @ts-ignore
+        payload: { email: validated.email },
+      },
+    });
+
+    if (existingRequest) {
+      return {
+        success: false,
+        message: "A pending request for this user already exists",
+        errors: { root: "Duplicate request" },
+      };
+    }
+
+    const pendingAction = await prisma.pendingAction.create({
+      data: {
+        payload: validated,
+        requestedById: requestedById,
+        bankId: validated.bankId,
+        targetModel: "UserProfile",
+        actionType: PendingActionType.REQUEST_BANK_USER_CREATION,
         reviewedById: null,
-        requestedById: null,
-        payload: null,
-        status: null,
-        error: null,
-        createdUserId: null,
+        reviewRemarks: null,
+        targetRecordId: null,
+        deletedAt: null,
       },
-      {
-        type: "SUBMIT_REQUEST",
-        data: validated,
-        requestedById,
-      },
-    );
+    });
 
     return {
       success: true,
       message: "Successfully submitted request",
-      data: result,
+      data: pendingAction,
     };
   } catch (error) {
     console.error("Error submitting pending user creation request:", error);
@@ -166,4 +183,69 @@ export async function submitPendingUserRequest(
       errors: { root: "Failed to submit request" },
     };
   }
+}
+
+export async function getPendingUserCreations(bankId: string) {
+  return prisma.pendingAction.findMany({
+    where: {
+      bankId,
+      actionType: "REQUEST_BANK_USER_CREATION",
+      status: "PENDING",
+    },
+    orderBy: { requestedAt: "desc" },
+  });
+}
+
+export async function approvePendingAction(id: string) {
+  const user = await getServerSessionUser();
+  const locale = await getLocale();
+  if (!user) throw new Error("Unauthorized");
+
+  const response = await prisma.pendingAction.update({
+    where: { id },
+    data: {
+      status: ApprovalStatus.APPROVED,
+      reviewedById: user.id,
+      reviewedAt: new Date(),
+    },
+  });
+
+  revalidatePath(`/${locale}/saas/users/${id}`);
+
+  // Create the user
+  // @ts-ignore
+  return createUser(response.payload, locale);
+}
+
+export async function rejectPendingAction(id: string, remarks?: string) {
+  const user = await getServerSessionUser();
+  const locale = await getLocale();
+  if (!user) throw new Error("Unauthorized");
+
+  const response = prisma.pendingAction.update({
+    where: { id },
+    data: {
+      status: ApprovalStatus.REJECTED,
+      reviewedById: user.id,
+      reviewedAt: new Date(),
+      reviewRemarks: remarks ?? null,
+    },
+  });
+
+  revalidatePath(`/${locale}/saas/users/${id}`);
+  return response;
+}
+
+export async function cancelPendingAction(id: string) {
+  const user = await getServerSessionUser();
+  if (!user) throw new Error("Unauthorized");
+
+  return prisma.pendingAction.update({
+    where: { id },
+    data: {
+      status: ApprovalStatus.CANCELLED,
+      reviewedById: user.id,
+      reviewedAt: new Date(),
+    },
+  });
 }

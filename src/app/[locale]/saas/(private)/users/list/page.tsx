@@ -46,7 +46,7 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { getUsersForBank } from "@/app/[locale]/saas/(private)/users/actions";
+import { getPendingUserCreations, getUsersForBank } from "@/app/[locale]/saas/(private)/users/actions";
 import { useUser } from "@/contexts/userContext";
 import { useRouter } from "next/navigation";
 import { useLocale } from "next-intl";
@@ -62,6 +62,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Link } from "@/i18n/navigation";
 
 type UserRecord = {
   id: string;
@@ -80,9 +81,11 @@ export default function ManageUsersPage() {
   const { user } = useUser();
   const router = useRouter();
   const [users, setUsers] = React.useState<UserRecord[]>([]);
+  const [pendingUsers, setPendingUsers] = React.useState<UserRecord[]>([]);
   const [searchTerm, setSearchTerm] = React.useState("");
   const [roleFilter, setRoleFilter] = React.useState<string>("all");
   const [statusFilter, setStatusFilter] = React.useState<string>("all");
+  const [isPendingView, setIsPendingView] = React.useState(false);
 
   // Table state
   const [rowSelection, setRowSelection] = React.useState({});
@@ -98,8 +101,24 @@ export default function ManageUsersPage() {
       }
     }
 
+    async function fetchPendingApprovals() {
+      if (user?.currentRole?.bankId) {
+        const data = await getPendingUserCreations(user.currentRole.bankId);
+        const transformed = data.map((entry) => ({
+          ...entry.payload,
+          id: entry.id,
+          status: "Pending",
+          lastLogin: "—", // or entry.requestedAt.toISOString()
+          branch: "—",
+        })) as UserRecord[];
+
+        setPendingUsers(transformed);
+      }
+    }
+
     fetchData();
-  }, [user]);
+    fetchPendingApprovals();
+  }, [user, isPendingView]);
 
   // Reset filters
   const handleReset = () => {
@@ -201,18 +220,23 @@ export default function ManageUsersPage() {
       cell: ({ row }) => {
         const user = row.original;
         return (
-          <div className="flex items-center gap-2">
-            <Avatar className="h-8 w-8">
-              {user.avatarUrl && <AvatarImage src={user.avatarUrl} alt="avatar" />}
-              <AvatarFallback>{(user.firstName?.[0] + user.lastName?.[0] || "U").toUpperCase()}</AvatarFallback>
-            </Avatar>
-            <div className="flex flex-col">
-              <span className="text-sm font-semibold">
-                {user.firstName} {user.lastName}
-              </span>
-              <span className="text-xs text-muted-foreground">{user.email}</span>
+          <Link
+            href={`/saas/users/${user.id}?approve=${isPendingView}`}
+            className="flex items-center gap-2 rounded-md p-2 transition hover:bg-muted/40"
+          >
+            <div className="flex items-center gap-2">
+              <Avatar className="h-8 w-8">
+                {user.avatarUrl && <AvatarImage src={user.avatarUrl} alt="avatar" />}
+                <AvatarFallback>{(user.firstName?.[0] + user.lastName?.[0] || "U").toUpperCase()}</AvatarFallback>
+              </Avatar>
+              <div className="flex flex-col">
+                <span className="text-sm font-semibold">
+                  {user.firstName} {user.lastName}
+                </span>
+                <span className="text-xs text-muted-foreground">{user.email}</span>
+              </div>
             </div>
-          </div>
+          </Link>
         );
       },
       enableSorting: true,
@@ -228,7 +252,7 @@ export default function ManageUsersPage() {
     {
       accessorKey: "status",
       header: "Status",
-      cell: ({ row }) => <Badge variant={getStatusVariant(row.original.status)}>{row.original.status}</Badge>,
+      cell: ({ row }) => <Badge variant={getStatusVariant(row?.original?.status)}>{row.original.status}</Badge>,
       enableSorting: true,
       enableHiding: true,
     },
@@ -290,7 +314,7 @@ export default function ManageUsersPage() {
 
   // Initialize table
   const table = useReactTable({
-    data: users,
+    data: isPendingView ? pendingUsers : users,
     columns,
     state: {
       sorting,
@@ -330,21 +354,21 @@ export default function ManageUsersPage() {
       </div>
 
       {/* Stats row */}
-      <div className="mb-4 flex w-full flex-wrap items-start gap-4">
-        <Card className="flex-1">
-          <CardContent className="flex items-center gap-4 px-6 py-6">
-            <span className="text-brand-700 text-2xl font-bold">{filteredUsers.length}</span>
-            <span className="text-brand-700 text-sm font-medium">Total Users</span>
-          </CardContent>
-        </Card>
-        <Card className="flex-1">
-          <CardContent className="flex items-center gap-4 px-6 py-6">
-            <span className="text-2xl font-bold text-green-700">{activeCount}</span>
+      <div className="mb-4 grid grid-cols-1 gap-4 md:grid-cols-3">
+        <Card className="h-full cursor-pointer transition hover:shadow-lg" onClick={() => setIsPendingView(false)}>
+          <CardContent className="flex h-full items-center gap-4 px-6 py-6">
+            <span className="text-2xl font-bold text-green-700">{users.length}</span>
             <span className="text-sm font-medium text-green-700">Active Users</span>
           </CardContent>
         </Card>
-        <Card className="flex-1">
-          <CardContent className="flex items-center gap-4 px-6 py-6">
+        <Card className="h-full cursor-pointer transition hover:shadow-lg" onClick={() => setIsPendingView(true)}>
+          <CardContent className="flex h-full items-center gap-4 px-6 py-6">
+            <span className="text-2xl font-bold text-yellow-600">{pendingUsers.length}</span>
+            <span className="text-sm font-medium text-yellow-600">Pending Approval</span>
+          </CardContent>
+        </Card>
+        <Card className="h-full">
+          <CardContent className="flex h-full items-center gap-4 px-6 py-6">
             <span className="text-2xl font-bold text-red-700">{lockedCount}</span>
             <span className="text-sm font-medium text-red-700">Locked Accounts</span>
           </CardContent>
