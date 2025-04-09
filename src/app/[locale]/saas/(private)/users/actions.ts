@@ -138,7 +138,23 @@ export async function submitPendingUserRequest(
     const schema = createUserSchema(validation);
     const validated = schema.parse(formData);
 
-    // TODO ensure no duplicate pending actions exist
+    const existingRequest = await prisma.pendingAction.findFirst({
+      where: {
+        bankId: validated.bankId,
+        actionType: PendingActionType.REQUEST_BANK_USER_CREATION,
+        status: ApprovalStatus.PENDING,
+        // @ts-ignore
+        payload: { email: validated.email },
+      },
+    });
+
+    if (existingRequest) {
+      return {
+        success: false,
+        message: "A pending request for this user already exists",
+        errors: { root: "Duplicate request" },
+      };
+    }
 
     const pendingAction = await prisma.pendingAction.create({
       data: {
@@ -197,6 +213,7 @@ export async function approvePendingAction(id: string) {
   revalidatePath(`/${locale}/saas/users/${id}`);
 
   // Create the user
+  // @ts-ignore
   return createUser(response.payload, locale);
 }
 
