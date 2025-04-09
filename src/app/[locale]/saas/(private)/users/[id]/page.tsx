@@ -55,7 +55,7 @@ export default async function ViewUserPage({ params, searchParams }: ViewUserPag
       ...pendingAction.payload,
       id: pendingAction.id,
       status: "Pending",
-      lastLogin: "—", // or entry.requestedAt.toISOString()
+      lastLogin: "—",
       branch: "—",
     };
   } else {
@@ -85,7 +85,7 @@ export default async function ViewUserPage({ params, searchParams }: ViewUserPag
         <h1 className="text-2xl font-semibold tracking-tight">User Details</h1>
       </div>
 
-      <UserView user={userRecord} />
+      <UserView user={userRecord} approveMode={approveMode} />
     </div>
   );
 }
