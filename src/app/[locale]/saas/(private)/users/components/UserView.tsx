@@ -5,48 +5,57 @@ import { Card } from "@/components/ui/card"; // adjust if you're not using shadc
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
 
 export default function UserView({ user, approveMode }: { user: UserRecord; approveMode: boolean }) {
   const fullName = `${user.firstName} ${user.lastName}`;
   const initials = `${user.firstName?.[0] ?? ""}${user.lastName?.[0] ?? ""}`.toUpperCase();
 
   return (
-    <Card className="p-6">
-      <div className="flex items-center gap-4">
-        <Avatar className="h-16 w-16">
-          <AvatarImage src={user.avatarUrl} alt={fullName} />
-          <AvatarFallback>{initials}</AvatarFallback>
-        </Avatar>
+    <>
+      <Card className="p-6">
+        <div className="flex items-center gap-4">
+          <Avatar className="h-16 w-16">
+            <AvatarImage src={user.avatarUrl} alt={fullName} />
+            <AvatarFallback>{initials}</AvatarFallback>
+          </Avatar>
 
-        <div>
-          <h2 className="text-xl font-semibold">{fullName}</h2>
-          <p className="text-sm text-muted-foreground">{user.email}</p>
-          <Badge variant="outline" className="mt-1">
-            {user.role}
-          </Badge>
+          <div>
+            <h2 className="text-xl font-semibold">{fullName}</h2>
+            <p className="text-sm text-muted-foreground">{user.email}</p>
+            <Badge variant="outline" className="mt-1">
+              {user.role}
+            </Badge>
+          </div>
         </div>
+
+        <Separator className="my-4" />
+
+        <div className="grid grid-cols-1 gap-4 text-sm sm:grid-cols-2">
+          <div>
+            <p className="text-muted-foreground">Phone Number</p>
+            <p>{user.phoneNumber || "—"}</p>
+          </div>
+          <div>
+            <p className="text-muted-foreground">Branch</p>
+            <p>{user.branch || "—"}</p>
+          </div>
+          <div>
+            <p className="text-muted-foreground">Status</p>
+            <p>{user.status}</p>
+          </div>
+          <div>
+            <p className="text-muted-foreground">Last Login</p>
+            <p>{user.lastLogin || "—"}</p>
+          </div>
+        </div>
+      </Card>
+      <div className="flex justify-start gap-4 pt-4">
+        <Button variant="default">Approve</Button>
+        <Button variant={"outline"} className={"border-red-500 text-red-500 hover:text-red-500"}>
+          Reject
+        </Button>
       </div>
-
-      <Separator className="my-4" />
-
-      <div className="grid grid-cols-1 gap-4 text-sm sm:grid-cols-2">
-        <div>
-          <p className="text-muted-foreground">Phone Number</p>
-          <p>{user.phoneNumber || "—"}</p>
-        </div>
-        <div>
-          <p className="text-muted-foreground">Branch</p>
-          <p>{user.branch || "—"}</p>
-        </div>
-        <div>
-          <p className="text-muted-foreground">Status</p>
-          <p>{user.status}</p>
-        </div>
-        <div>
-          <p className="text-muted-foreground">Last Login</p>
-          <p>{user.lastLogin || "—"}</p>
-        </div>
-      </div>
-    </Card>
+    </>
   );
 }
