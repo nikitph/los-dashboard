@@ -53,4 +53,5 @@ export type UserRecord = {
   lastLogin: string;
   branch: string;
   avatarUrl?: string;
+  phoneNumber?: string;
 };

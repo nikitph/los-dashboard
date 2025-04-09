@@ -8,7 +8,7 @@ import { getFormTranslation } from "@/utils/serverTranslationUtil";
 import { revalidatePath } from "next/cache";
 import { handleActionError } from "@/lib/actionErrorHelpers";
 import { ActionResponse } from "@/types/globalTypes";
-import { services } from "@/lib/machines/userCreationMachine";
+import { PendingActionType } from "@prisma/client";
 
 export async function getUsersForBank(bankId: string): Promise<UserRecord[]> {
   const userProfiles = await prisma.userRoles.findMany({
@@ -136,27 +136,26 @@ export async function submitPendingUserRequest(
     const schema = createUserSchema(validation);
     const validated = schema.parse(formData);
 
-    const result = await services.createPendingAction(
-      {
-        pendingActionId: null,
+    // TODO ensure no duplicate pending actions exist
+
+    const pendingAction = await prisma.pendingAction.create({
+      data: {
+        payload: validated,
+        requestedById: requestedById,
+        bankId: validated.bankId,
+        targetModel: "UserProfile",
+        actionType: PendingActionType.REQUEST_BANK_USER_CREATION,
         reviewedById: null,
-        requestedById: null,
-        payload: null,
-        status: null,
-        error: null,
-        createdUserId: null,
+        reviewRemarks: null,
+        targetRecordId: null,
+        deletedAt: null,
       },
-      {
-        type: "SUBMIT_REQUEST",
-        data: validated,
-        requestedById,
-      },
-    );
+    });
 
     return {
       success: true,
       message: "Successfully submitted request",
-      data: result,
+      data: pendingAction,
     };
   } catch (error) {
     console.error("Error submitting pending user creation request:", error);

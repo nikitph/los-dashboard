@@ -62,6 +62,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Link } from "@/i18n/navigation";
 
 type UserRecord = {
   id: string;
@@ -219,18 +220,23 @@ export default function ManageUsersPage() {
       cell: ({ row }) => {
         const user = row.original;
         return (
-          <div className="flex items-center gap-2">
-            <Avatar className="h-8 w-8">
-              {user.avatarUrl && <AvatarImage src={user.avatarUrl} alt="avatar" />}
-              <AvatarFallback>{(user.firstName?.[0] + user.lastName?.[0] || "U").toUpperCase()}</AvatarFallback>
-            </Avatar>
-            <div className="flex flex-col">
-              <span className="text-sm font-semibold">
-                {user.firstName} {user.lastName}
-              </span>
-              <span className="text-xs text-muted-foreground">{user.email}</span>
+          <Link
+            href={`/saas/users/${user.id}?approve=${isPendingView}`}
+            className="flex items-center gap-2 rounded-md p-2 transition hover:bg-muted/40"
+          >
+            <div className="flex items-center gap-2">
+              <Avatar className="h-8 w-8">
+                {user.avatarUrl && <AvatarImage src={user.avatarUrl} alt="avatar" />}
+                <AvatarFallback>{(user.firstName?.[0] + user.lastName?.[0] || "U").toUpperCase()}</AvatarFallback>
+              </Avatar>
+              <div className="flex flex-col">
+                <span className="text-sm font-semibold">
+                  {user.firstName} {user.lastName}
+                </span>
+                <span className="text-xs text-muted-foreground">{user.email}</span>
+              </div>
             </div>
-          </div>
+          </Link>
         );
       },
       enableSorting: true,
