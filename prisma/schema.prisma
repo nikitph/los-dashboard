@@ -138,29 +138,32 @@ model UserRoles {
 }
 
 model Applicant {
-  id                       String            @id @default(dbgenerated("gen_random_uuid()"))
-  userId                   String
-  user                     UserProfile       @relation(fields: [userId], references: [id])
-  bankId                   String
-  bank                     Bank              @relation(fields: [bankId], references: [id])
-  loanApplications         LoanApplication[]
-  createdAt                DateTime          @default(now())
-  updatedAt                DateTime          @updatedAt
-  deletedAt                DateTime?
-  dateOfBirth              DateTime
-  addressState             String
-  addressCity              String
-  addressFull              String
-  addressPinCode           String
-  aadharNumber             String
-  panNumber                String
-  aadharVerificationStatus Boolean           @default(false)
-  panVerificationStatus    Boolean           @default(false)
-  photoUrl                 String
-  incomes                  Income[]
-  dependents               Dependent[]
-  loanObligations          LoanObligation[]
-  documents                Document[]
+  id               String            @id @default(dbgenerated("gen_random_uuid()"))
+  userId           String
+  user             UserProfile       @relation(fields: [userId], references: [id])
+  bankId           String
+  bank             Bank              @relation(fields: [bankId], references: [id])
+  loanApplications LoanApplication[]
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  deletedAt        DateTime?
+
+  dateOfBirth              DateTime?
+  aadharNumber             String?
+  panNumber                String?
+  aadharVerificationStatus Boolean   @default(false)
+  panVerificationStatus    Boolean   @default(false)
+  photoUrl                 String?
+
+  addressState   String?
+  addressCity    String?
+  addressFull    String?
+  addressPinCode String?
+
+  incomes         Income[]
+  dependents      Dependent[]
+  loanObligations LoanObligation[]
+  documents       Document[]
 }
 
 model LoanObligation {
