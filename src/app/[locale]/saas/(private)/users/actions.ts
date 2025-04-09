@@ -8,7 +8,9 @@ import { getFormTranslation } from "@/utils/serverTranslationUtil";
 import { revalidatePath } from "next/cache";
 import { handleActionError } from "@/lib/actionErrorHelpers";
 import { ActionResponse } from "@/types/globalTypes";
-import { PendingActionType } from "@prisma/client";
+import { ApprovalStatus, PendingActionType } from "@prisma/client";
+import { getServerSessionUser } from "@/lib/getServerUser";
+import { getLocale } from "next-intl/server";
 
 export async function getUsersForBank(bankId: string): Promise<UserRecord[]> {
   const userProfiles = await prisma.userRoles.findMany({
@@ -175,5 +177,58 @@ export async function getPendingUserCreations(bankId: string) {
       status: "PENDING",
     },
     orderBy: { requestedAt: "desc" },
+  });
+}
+
+export async function approvePendingAction(id: string) {
+  const user = await getServerSessionUser();
+  const locale = await getLocale();
+  if (!user) throw new Error("Unauthorized");
+
+  const response = await prisma.pendingAction.update({
+    where: { id },
+    data: {
+      status: ApprovalStatus.APPROVED,
+      reviewedById: user.id,
+      reviewedAt: new Date(),
+    },
+  });
+
+  revalidatePath(`/${locale}/saas/users/${id}`);
+
+  // Create the user
+  return createUser(response.payload, locale);
+}
+
+export async function rejectPendingAction(id: string, remarks?: string) {
+  const user = await getServerSessionUser();
+  const locale = await getLocale();
+  if (!user) throw new Error("Unauthorized");
+
+  const response = prisma.pendingAction.update({
+    where: { id },
+    data: {
+      status: ApprovalStatus.REJECTED,
+      reviewedById: user.id,
+      reviewedAt: new Date(),
+      reviewRemarks: remarks ?? null,
+    },
+  });
+
+  revalidatePath(`/${locale}/saas/users/${id}`);
+  return response;
+}
+
+export async function cancelPendingAction(id: string) {
+  const user = await getServerSessionUser();
+  if (!user) throw new Error("Unauthorized");
+
+  return prisma.pendingAction.update({
+    where: { id },
+    data: {
+      status: ApprovalStatus.CANCELLED,
+      reviewedById: user.id,
+      reviewedAt: new Date(),
+    },
   });
 }

@@ -54,7 +54,7 @@ export default async function ViewUserPage({ params, searchParams }: ViewUserPag
       // @ts-ignore
       ...pendingAction.payload,
       id: pendingAction.id,
-      status: "Pending",
+      status: pendingAction.status,
       lastLogin: "—",
       branch: "—",
     };
