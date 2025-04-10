@@ -115,7 +115,7 @@ export async function createInitialLoanApplication(formData: InitialLoanApplicat
 
       const newUserRoles = await prisma.userProfile.findFirst({
         where: {
-          authId: data.user?.id,
+          id: data.user?.id,
         },
       });
 
