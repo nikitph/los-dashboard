@@ -249,12 +249,12 @@ model CoApplicant {
 }
 
 model Document {
-  id                     String                @id @default(dbgenerated("gen_random_uuid()"))
+  id                     String             @id @default(dbgenerated("gen_random_uuid()"))
   loanApplicationId      String?
   fileUrl                String
   storageType            String
   metadata               Json?
-  uploadedAt             DateTime              @default(now())
+  uploadedAt             DateTime           @default(now())
   deletedAt              DateTime?
   applicantId            String?
   bankConfigurationId    String?
@@ -269,26 +269,28 @@ model Document {
   loanObligationDetailId String?
   loanObligationId       String?
   mimeType               String
-  status                 VerificationStatus    @default(PENDING)
+  status                 VerificationStatus @default(PENDING)
   subscriptionId         String?
   uploadedById           String
   verificationId         String?
   documentType           DocumentType
   userProfileId          String?
-  applicant              Applicant?            @relation(fields: [applicantId], references: [id])
-  bankConfiguration      BankConfiguration?    @relation(fields: [bankConfigurationId], references: [id])
-  bank                   Bank?                 @relation(fields: [bankId], references: [id])
-  coApplicant            CoApplicant?          @relation(fields: [coApplicantId], references: [id])
-  dependent              Dependent?            @relation(fields: [dependentId], references: [id])
-  guarantor              Guarantor?            @relation(fields: [guarantorId], references: [id])
-  incomeDetail           IncomeDetail?         @relation(fields: [incomeDetailId], references: [id])
-  income                 Income?               @relation(fields: [incomeId], references: [id])
-  loanApplication        LoanApplication?      @relation(fields: [loanApplicationId], references: [id])
-  loanObligationDetail   LoanObligationDetail? @relation(fields: [loanObligationDetailId], references: [id])
-  loanObligation         LoanObligation?       @relation(fields: [loanObligationId], references: [id])
-  subscription           Subscription?         @relation(fields: [subscriptionId], references: [id])
-  userProfile            UserProfile?          @relation(fields: [userProfileId], references: [id])
-  verification           Verification?         @relation(fields: [verificationId], references: [id])
+
+  // Relations
+  applicant            Applicant?            @relation(fields: [applicantId], references: [id])
+  bankConfiguration    BankConfiguration?    @relation(fields: [bankConfigurationId], references: [id])
+  bank                 Bank?                 @relation(fields: [bankId], references: [id])
+  coApplicant          CoApplicant?          @relation(fields: [coApplicantId], references: [id])
+  dependent            Dependent?            @relation(fields: [dependentId], references: [id])
+  guarantor            Guarantor?            @relation(fields: [guarantorId], references: [id])
+  incomeDetail         IncomeDetail?         @relation(fields: [incomeDetailId], references: [id])
+  income               Income?               @relation(fields: [incomeId], references: [id])
+  loanApplication      LoanApplication?      @relation(fields: [loanApplicationId], references: [id])
+  loanObligationDetail LoanObligationDetail? @relation(fields: [loanObligationDetailId], references: [id])
+  loanObligation       LoanObligation?       @relation(fields: [loanObligationId], references: [id])
+  subscription         Subscription?         @relation(fields: [subscriptionId], references: [id])
+  userProfile          UserProfile?          @relation(fields: [userProfileId], references: [id])
+  verification         Verification?         @relation(fields: [verificationId], references: [id])
 }
 
 model Verification {
