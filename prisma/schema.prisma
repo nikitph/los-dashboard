@@ -384,12 +384,14 @@ model PendingAction {
   reviewRemarks  String?
   targetModel    String?
   targetRecordId String?
-  createdAt      DateTime          @default(now())
-  updatedAt      DateTime          @updatedAt
-  deletedAt      DateTime?
-  bank           Bank?             @relation(fields: [bankId], references: [id])
-  requestedBy    UserProfile       @relation("RequestedActions", fields: [requestedById], references: [id])
-  reviewedBy     UserProfile?      @relation("ReviewedActions", fields: [reviewedById], references: [id])
+
+  // Date fields
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  deletedAt   DateTime?
+  bank        Bank?        @relation(fields: [bankId], references: [id])
+  requestedBy UserProfile  @relation("RequestedActions", fields: [requestedById], references: [id])
+  reviewedBy  UserProfile? @relation("ReviewedActions", fields: [reviewedById], references: [id])
 
   @@index([status, bankId])
   @@index([requestedById])
