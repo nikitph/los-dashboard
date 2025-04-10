@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
@@ -13,23 +12,7 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useToast } from "@/hooks/use-toast";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useUser } from "@/contexts/userContext";
-
-// Define the form schema with Zod
-const loanFormSchema = z.object({
-  loanType: z.enum(["PERSONAL", "VEHICLE", "HOUSE_CONSTRUCTION", "PLOT_PURCHASE", "MORTGAGE"], {
-    required_error: "Please select a loan type",
-  }),
-  requestedAmount: z.string().refine((val) => !isNaN(parseFloat(val)) && parseFloat(val) > 0, {
-    message: "Please enter a valid amount greater than zero",
-  }),
-  firstName: z.string().min(1, "First name is required"),
-  lastName: z.string().min(1, "Last name is required"),
-  phoneNumber: z.string().regex(/^\d{10}$/, "Phone number must be 10 digits"),
-  email: z.string().email("Please enter a valid email address"),
-});
-
-// Infer TypeScript type from the schema
-type LoanFormValues = z.infer<typeof loanFormSchema>;
+import { loanFormSchema, LoanFormValues } from "@/app/[locale]/saas/(private)/loan-applications/schema";
 
 export default function LoanStreamPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -62,7 +45,6 @@ export default function LoanStreamPage() {
   const onSubmit = async (data: LoanFormValues) => {
     setIsLoading(true);
     try {
-      // Call server action with the validated data
       const result = await createInitialLoanApplication({
         ...data,
         bankId: currentUser?.currentRole.bankId,
@@ -75,8 +57,7 @@ export default function LoanStreamPage() {
           variant: "default",
         });
 
-        // Redirect to the application details page
-        router.push(`/applications/${result.data.id}`);
+        // router.push(`/applications/${result.data.id}`);
       } else {
         toast({
           title: "Error",

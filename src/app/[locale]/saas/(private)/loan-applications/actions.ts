@@ -1,23 +1,18 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { undefined, z } from "zod";
+import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { InitialLoanApplicationSchema, LoanApplicationSchema } from "@/schemas/zodSchemas";
 import { createClient } from "@supabase/supabase-js";
+import { RoleType } from "@prisma/client";
+import { ActionResponse } from "@/types/globalTypes";
+import { handleActionError } from "@/lib/actionErrorHelpers";
 
 // Type for loan application input data
 export type LoanApplicationFormData = z.infer<typeof LoanApplicationSchema>;
 export type InitialLoanApplicationData = z.infer<typeof InitialLoanApplicationSchema> & {
   authId?: string;
-};
-
-// Response type for actions
-type ActionResponse = {
-  success: boolean;
-  message: string;
-  data?: any;
-  error?: string;
 };
 
 /**
@@ -31,41 +26,126 @@ type ActionResponse = {
  */
 export async function createInitialLoanApplication(formData: InitialLoanApplicationData): Promise<ActionResponse> {
   try {
-    let userProfile;
-    // Validate the initial form data
     const validatedData = InitialLoanApplicationSchema.parse(formData);
-    const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SERVICE_ROLE_KEY!);
 
-    console.log("formData", validatedData);
-
-    const { data, error } = await supabase.auth.admin.createUser({
-      phone: formData.phoneNumber,
-      email: formData.email,
-      email_confirm: true,
+    /* Find all the roles for the user */
+    const userRoles = await prisma.userRoles.findMany({
+      where: {
+        bankId: validatedData.bankId,
+        user: {
+          email: validatedData.email,
+          phoneNumber: validatedData.phoneNumber,
+        },
+      },
+      include: {
+        user: true,
+      },
     });
 
-    // Step 1: Check if the user has a profile with our app
-    userProfile = await prisma.userProfile.findUnique({
-      where: { email: validatedData.email },
-    });
+    console.log("userRoles", userRoles);
 
-    if (userProfile) {
-      console.log("user profile already exists", userProfile);
-      // Check if an applicant exist for this user with this bank
-      const userRoles = await prisma.userRoles.findMany({
-        where: {
-          userId: userProfile.authId,
+    if (userRoles.length > 0) {
+      /* Check if the user has already an applicant role */
+      const applicantRole = userRoles.find((role) => role.role === RoleType.APPLICANT);
+
+      if (!applicantRole?.id) {
+        /* Create the applicant role since it doesnt exist for the user */
+        await prisma.userRoles.create({
+          data: {
+            userId: userRoles[0].user.id,
+            role: "APPLICANT",
+            bankId: validatedData.bankId,
+            assignedAt: new Date(),
+          },
+        });
+      }
+
+      console.log("userRoles 2");
+
+      /* Create the applicant record. New for every application */
+      const applicant = await prisma.applicant.create({
+        data: {
           bankId: validatedData.bankId,
-          role: "APPLICANT",
+          userId: userRoles[0].user.id,
         },
       });
-      console.log("userRoles", userRoles);
-      if (userRoles.length > 0) {
-        // we have the applicant also now we need to create the loan application
+
+      console.log("userRoles 3");
+      /* Create loan application */
+      const loanApplication = await prisma.loanApplication.create({
+        data: {
+          applicantId: applicant.id,
+          bankId: validatedData.bankId,
+          loanType: validatedData.loanType,
+          amountRequested: parseFloat(validatedData.requestedAmount),
+          status: "PENDING",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      });
+      console.log("userRoles 4");
+      return {
+        success: true,
+        message: "Loan application created successfully",
+        data: loanApplication,
+      };
+    } else {
+      /* user does not have any roles, create a new user */
+      const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SERVICE_ROLE_KEY!);
+
+      console.log("userRoles 5");
+
+      const { data, error } = await supabase.auth.admin.createUser({
+        email: validatedData.email,
+        phone: validatedData.phoneNumber,
+        email_confirm: true,
+        user_metadata: {
+          first_name: validatedData.firstName,
+          last_name: validatedData.lastName,
+          phone: validatedData.phoneNumber,
+        },
+      });
+
+      // const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+      //
+      // // Usage
+      // await sleep(5000);
+      //
+      // console.log("userRoles 6");
+
+      const newUserRoles = await prisma.userProfile.findFirst({
+        where: {
+          authId: data.user?.id,
+        },
+      });
+
+      console.log("userRoles 7", newUserRoles);
+
+      /* Create an applicant role for the user */
+      if (!error && newUserRoles) {
+        const applicantRole = await prisma.userRoles.create({
+          data: {
+            userId: data.user.id,
+            role: "APPLICANT",
+            bankId: validatedData.bankId,
+            assignedAt: new Date(),
+          },
+        });
+
+        const applicant = await prisma.applicant.create({
+          data: {
+            bankId: validatedData.bankId,
+            userId: newUserRoles.id,
+          },
+        });
+
+        console.log("applicant", applicant);
+
+        /* Create loan application */
         const loanApplication = await prisma.loanApplication.create({
           data: {
             applicantId: applicant.id,
-            bankId: bank.id,
+            bankId: validatedData.bankId,
             loanType: validatedData.loanType,
             amountRequested: parseFloat(validatedData.requestedAmount),
             status: "PENDING",
@@ -73,162 +153,20 @@ export async function createInitialLoanApplication(formData: InitialLoanApplicat
             updatedAt: new Date(),
           },
         });
-        return { data: undefined, error: "", message: "", success: false };
+        return {
+          success: true,
+          message: "Loan application created successfully",
+          data: loanApplication,
+        };
       }
-    }
-
-    if (error) {
-      console.error("Error creating user:", error.code);
-      switch (error.code) {
-        case "email_exists":
-          userProfile = await prisma.userProfile.findUnique({
-            where: { email: validatedData.email },
-          });
-          if (userProfile) {
-            console.log("user profile already exists", userProfile);
-            const userRoles = await prisma.userRoles.findMany({
-              where: {
-                userId: userProfile.authId,
-                role: "USER",
-              },
-            });
-            console.log("userRoles", userRoles);
-            if (userRoles.length > 0) {
-              // we have a user role. now lets check applicant
-
-              return { data: undefined, error: "", message: "", success: false };
-            }
-          }
-          return { data: undefined, error: "", message: "", success: false };
-      }
-      console.error("Error creating user:", error.code);
-    }
-
-    console.log("User created successfully:", data);
-
-    // 1. Check if a user profile exists with the provided phone number. We will not use email address as phone number is unique
-
-    // 2. If no user profile, create a new Supabase user and user profile
-    let authId;
-    if (!userProfile) {
-      // Create Supabase user through dedicated API route
-      const authResponse = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/auth/create-user`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          firstName: validatedData.firstName,
-          lastName: validatedData.lastName,
-          email: validatedData.email,
-          phoneNumber: validatedData.phoneNumber,
-        }),
-      });
-
-      const authResult = await authResponse.json();
-      if (!authResult.success) {
-        throw new Error(authResult.error || "Failed to create user in authentication system");
-      }
-
-      authId = authResult.userId;
-
-      // Create user profile
-      userProfile = await prisma.userProfile.create({
-        data: {
-          authId,
-          firstName: validatedData.firstName,
-          lastName: validatedData.lastName,
-          email: validatedData.email,
-          phoneNumber: validatedData.phoneNumber,
-          isOnboarded: false,
-        },
-      });
-    }
-
-    // 3. Check/create APPLICANT role
-    const existingRole = await prisma.userRoles.findFirst({
-      where: {
-        userId: userProfile.id,
-        role: "APPLICANT",
-      },
-    });
-
-    if (!existingRole) {
-      await prisma.userRoles.create({
-        data: {
-          userId: userProfile.id,
-          role: "APPLICANT",
-        },
-      });
-    }
-
-    // 4. Check/create Applicant
-    let applicant = await prisma.applicant.findFirst({
-      where: { userId: userProfile.id },
-    });
-
-    if (!applicant) {
-      applicant = await prisma.applicant.create({
-        data: {
-          userId: userProfile.id,
-          dateOfBirth: new Date(), // Placeholder
-          addressState: "Unknown", // Placeholder
-          addressCity: "Unknown", // Placeholder
-          addressFull: "Unknown", // Placeholder
-          addressPinCode: "000000", // Placeholder
-          aadharNumber: "000000000000", // Placeholder
-          panNumber: "XXXXX0000X", // Placeholder
-          aadharVerificationStatus: false,
-          panVerificationStatus: false,
-          photoUrl: "", // Placeholder
-        },
-      });
-    }
-
-    // 5. Get bank ID (assuming there's a default or first bank)
-    const bank = await prisma.bank.findFirst({
-      select: { id: true },
-    });
-
-    if (!bank) {
-      throw new Error("No bank found in the system");
-    }
-
-    // 6. Create loan application
-    const loanApplication = await prisma.loanApplication.create({
-      data: {
-        applicantId: applicant.id,
-        bankId: bank.id,
-        loanType: validatedData.loanType,
-        amountRequested: parseFloat(validatedData.requestedAmount),
-        status: "PENDING",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-    });
-
-    // Revalidate relevant paths
-    revalidatePath("/saas/loan-applications/list");
-
-    return {
-      success: true,
-      message: "Loan application created successfully",
-      data: loanApplication,
-    };
-  } catch (error) {
-    console.error("Error creating initial loan application:", error);
-    if (error instanceof z.ZodError) {
-      return {
-        success: false,
-        message: "Validation failed",
-        error: error.errors[0].message,
-      };
     }
     return {
       success: false,
       message: "Failed to create loan application",
-      error: error instanceof Error ? error.message : "Unknown error",
+      errors: { root: "Unknown error" },
     };
+  } catch (error) {
+    return handleActionError(error);
   }
 }
 

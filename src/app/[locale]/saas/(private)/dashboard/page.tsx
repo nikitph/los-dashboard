@@ -27,6 +27,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Link } from "@/i18n/navigation";
 
 function IconWithBackground({ icon, variant = "default", size = "default" }) {
   const Icon = icon;
@@ -59,10 +60,12 @@ function Dashboard() {
             <h1 className="text-2xl font-bold">Welcome back, Sarah</h1>
             <p className="text-sm font-medium text-slate-500">Monday, March 25, 2024</p>
           </div>
-          <Button className="flex items-center gap-2">
-            <Plus size={16} />
-            New Application
-          </Button>
+          <Link href="/saas/loan-applications/new">
+            <Button className="flex items-center gap-2">
+              <Plus size={16} />
+              New Application
+            </Button>
+          </Link>
         </div>
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">

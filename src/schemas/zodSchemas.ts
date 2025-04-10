@@ -253,7 +253,7 @@ export const InitialLoanApplicationSchema = z.object({
   requestedAmount: z.string().refine((val) => !isNaN(parseFloat(val)) && parseFloat(val) > 0, {
     message: "Amount must be a valid positive number",
   }),
-  bankId: z.string().uuid().optional().nullable(),
+  bankId: z.string().uuid(),
   firstName: z.string().min(1, "First name is required"),
   lastName: z.string().min(1, "Last name is required"),
   phoneNumber: z.string().regex(/^\d{10}$/, "Phone number must be 10 digits"),
