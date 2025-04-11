@@ -117,7 +117,7 @@ export default function PersonalInformationForm({ initialData, loanApplication }
             <Label htmlFor="dateOfBirth" className="block text-sm font-medium text-gray-700">
               Date of Birth
             </Label>
-            <div className="mt-1 flex space-x-2">
+            <div className="mt-1 flex w-[150px] space-x-2">
               <Input
                 type="date"
                 id="dateOfBirth"
