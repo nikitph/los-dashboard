@@ -278,6 +278,8 @@ export default function CoApplicantDetailsPage({ params }: { params: { id: strin
           onUploadComplete={() => {
             console.log("Upload complete");
           }}
+          entityId={params.id}
+          entityType="coApplicant"
         />
 
         {/* Date Information */}

@@ -13,9 +13,11 @@ import { useToast } from "@/hooks/use-toast";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useUser } from "@/contexts/userContext";
 import { loanFormSchema, LoanFormValues } from "@/app/[locale]/saas/(private)/loan-applications/schema";
+import { useLocale } from "next-intl";
 
 export default function LoanStreamPage() {
   const [isLoading, setIsLoading] = useState(false);
+  const locale = useLocale();
   const router = useRouter();
   const { user: currentUser } = useUser();
   const supabase = createClientComponentClient();
@@ -57,7 +59,7 @@ export default function LoanStreamPage() {
           variant: "default",
         });
 
-        // router.push(`/applications/${result.data.id}`);
+        router.push(`/${locale}/saas/personal?lid=${result.data.id}`);
       } else {
         toast({
           title: "Error",

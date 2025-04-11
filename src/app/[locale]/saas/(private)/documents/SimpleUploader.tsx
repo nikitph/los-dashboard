@@ -5,9 +5,15 @@ import { validateFile } from "@/utils/backblaze/backblazeUtils";
 
 interface SimpleBackblazeUploaderProps {
   onUploadComplete?: (fileInfo: { fileName: string; fileUrl: string; fileSize: number }) => void;
+  entityType: string;
+  entityId: string;
 }
 
-export default function SimpleBackblazeUploader({ onUploadComplete }: SimpleBackblazeUploaderProps) {
+export default function SimpleBackblazeUploader({
+  onUploadComplete,
+  entityType,
+  entityId,
+}: SimpleBackblazeUploaderProps) {
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -60,6 +66,8 @@ export default function SimpleBackblazeUploader({ onUploadComplete }: SimpleBack
           fileName: file.name,
           contentType: file.type,
           fileSize: file.size,
+          entityType: entityType,
+          entityId: entityId,
         }),
       });
 

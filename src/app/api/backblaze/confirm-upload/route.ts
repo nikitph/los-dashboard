@@ -17,7 +17,7 @@ export async function POST(request: Request) {
     // 3. Perform any post-upload processing
 
     // For now, we'll just construct a public URL for the file
-    const publicUrl = `${process.env.BACKBLAZE_PUBLIC_BASE_URL}/${fileKey}`;
+    const publicUrl = `${process.env.NEXT_PUBLIC_BACKBLAZE_PUBLIC_URL}/${fileKey}`;
 
     // Return success with the file URL
     return NextResponse.json({
