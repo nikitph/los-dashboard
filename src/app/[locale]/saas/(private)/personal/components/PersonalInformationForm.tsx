@@ -29,15 +29,13 @@ export default function PersonalInformationForm({ initialData, loanApplication }
   const [panOtp, setPanOtp] = useState("");
   const { fetchDocuments } = useDocuments();
 
-  console.log("loanApplication", loanApplication);
-
   const {
     register,
     handleSubmit,
     setValue,
     watch,
     reset,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<PersonalInformationFormValues>({
     resolver: zodResolver(PersonalInformationSchema),
     defaultValues: {
@@ -51,6 +49,7 @@ export default function PersonalInformationForm({ initialData, loanApplication }
       aadharVerificationStatus: initialData?.aadharVerificationStatus || false,
       panVerificationStatus: initialData?.panVerificationStatus || false,
     },
+    mode: "onBlur",
   });
 
   const onSubmit = async (data: PersonalInformationFormValues) => {
@@ -69,7 +68,8 @@ export default function PersonalInformationForm({ initialData, loanApplication }
       } else {
         toast({
           title: "Error",
-          description: response.error || "Operation failed",
+          //@ts-ignore
+          description: response?.errors[0] || "Operation failed",
           variant: "destructive",
         });
       }
@@ -165,6 +165,9 @@ export default function PersonalInformationForm({ initialData, loanApplication }
                   >
                     Verify
                   </Button>
+                  {errors.aadharVerificationStatus && (
+                    <p className="mt-1 text-sm text-red-600">{errors.aadharVerificationStatus.message}</p>
+                  )}
                 </div>
                 {errors.aadharNumber && <p className="mt-1 text-sm text-red-600">{errors.aadharNumber.message}</p>}
                 <p className="mt-1 text-sm text-gray-500">Less than 5 MB</p>
@@ -204,6 +207,9 @@ export default function PersonalInformationForm({ initialData, loanApplication }
                   >
                     Verify
                   </Button>
+                  {errors.panVerificationStatus && (
+                    <p className="mt-1 text-sm text-red-600">{errors.panVerificationStatus.message}</p>
+                  )}
                 </div>
                 {errors.panNumber && <p className="mt-1 text-sm text-red-600">{errors.panNumber.message}</p>}
                 <p className="mt-1 text-sm text-gray-500">Less than 5 MB</p>
@@ -256,8 +262,8 @@ export default function PersonalInformationForm({ initialData, loanApplication }
             </div>
           </div>
 
-          <input type="hidden" {...register("aadharVerificationStatus")} />
-          <input type="hidden" {...register("panVerificationStatus")} />
+          <input type="hidden" defaultValue={"false"} {...register("aadharVerificationStatus")} />
+          <input type="hidden" defaultValue={"false"} {...register("panVerificationStatus")} />
 
           {/* Submit Button */}
           <div className="justify-left flex">
@@ -265,12 +271,6 @@ export default function PersonalInformationForm({ initialData, loanApplication }
               {isSubmitting ? "Processing..." : "Submit Information"}
             </Button>
           </div>
-
-          {!(watch("aadharVerificationStatus") && watch("panVerificationStatus")) && (
-            <Alert variant="destructive">
-              <AlertDescription>Please Validate Aadhar and PAN</AlertDescription>
-            </Alert>
-          )}
 
           {Object.keys(errors).length > 0 && (
             <Alert variant="destructive">

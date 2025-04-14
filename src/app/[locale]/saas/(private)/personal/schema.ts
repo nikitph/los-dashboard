@@ -24,8 +24,18 @@ export const PersonalInformationSchema = z.object({
       { message: "Invalid Aadhar number" },
     ),
   panNumber: z.string().regex(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "PAN must be valid format (e.g., ABCDE1234F)"),
-  aadharVerificationStatus: z.boolean().default(false),
-  panVerificationStatus: z.boolean().default(false),
+  aadharVerificationStatus: z
+    .boolean()
+    .default(false)
+    .refine((data) => data, {
+      message: "Aadhar must be verified",
+    }),
+  panVerificationStatus: z
+    .boolean()
+    .default(false)
+    .refine((data) => data, {
+      message: "PAN must be verified",
+    }),
 });
 
 export type PersonalInformationFormValues = z.infer<typeof PersonalInformationSchema>;
