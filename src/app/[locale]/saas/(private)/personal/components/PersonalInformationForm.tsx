@@ -63,7 +63,7 @@ export default function PersonalInformationForm({ initialData, loanApplication }
           description: response.message,
         });
 
-        router.push("/saas/applicants/list");
+        router.push(`/saas/photocapture?aid=${loanApplication.applicant.id}&lid=${loanApplication.id}`);
         router.refresh();
       } else {
         toast({

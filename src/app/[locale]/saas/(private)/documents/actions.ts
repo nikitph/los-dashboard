@@ -46,6 +46,7 @@ const documentMetadataSchema = z.object({
     "VERIFICATION_PHOTO",
     "KYC_DOCUMENT",
     "APPLICATION_FORM",
+    "APPLICANT_PHOTO",
     "OTHER",
   ]),
   mimeType: z.string(),

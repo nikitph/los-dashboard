@@ -40,6 +40,7 @@ export type DocumentMetadata = {
     | "VERIFICATION_PHOTO"
     | "KYC_DOCUMENT"
     | "APPLICATION_FORM"
+    | "APPLICANT_PHOTO"
     | "OTHER";
   description?: string;
   uploadedById: string;

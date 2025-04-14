@@ -134,3 +134,35 @@ const indianStates = [
 ];
 
 export const identity = <T>(x: T): T => x;
+
+/**
+ * Converts a data URL to a File object
+ * @param {string} dataUrl - The data URL (e.g. from canvas.toDataURL())
+ * @param {string} filename - The filename to use for the File object
+ * @param {string} [mimeType] - Optional MIME type (will attempt to extract from dataURL if not provided)
+ * @return {File} - The converted File object
+ */
+export function dataURLtoFile(dataUrl: string, filename: string): File {
+  // Extract the MIME type from the dataURL
+  const arr: string[] = dataUrl.split(",");
+  const matches: RegExpMatchArray | null = arr[0].match(/:(.*?);/);
+
+  if (!matches || matches.length < 2) {
+    throw new Error("Invalid data URL format");
+  }
+
+  const mime: string = matches[1];
+
+  // Convert base64 to binary
+  const bstr: string = atob(arr[1]);
+  let n: number = bstr.length;
+  const u8arr: Uint8Array = new Uint8Array(n);
+
+  // Convert binary to Uint8Array
+  while (n--) {
+    u8arr[n] = bstr.charCodeAt(n);
+  }
+
+  // Create and return File object
+  return new File([u8arr], filename, { type: mime });
+}
