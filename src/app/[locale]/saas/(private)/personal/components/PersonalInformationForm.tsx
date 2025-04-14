@@ -90,7 +90,6 @@ export default function PersonalInformationForm({ initialData, loanApplication }
   }, []);
 
   const verifyDocument = (documentType: "aadhar" | "pan") => {
-    // Simulate verification process
     setTimeout(() => {
       if (documentType === "aadhar") {
         setValue("aadharVerificationStatus", true);
@@ -268,7 +267,9 @@ export default function PersonalInformationForm({ initialData, loanApplication }
           </div>
 
           {!(watch("aadharVerificationStatus") && watch("panVerificationStatus")) && (
-            <p className="text-left text-sm text-gray-500">Please Validate Aadhar and PAN card</p>
+            <Alert variant="destructive">
+              <AlertDescription>Please Validate Aadhar and PAN</AlertDescription>
+            </Alert>
           )}
 
           {Object.keys(errors).length > 0 && (
