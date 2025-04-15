@@ -97,15 +97,18 @@ model LoanObligationDetail {
 }
 
 model Income {
-  id            String         @id @default(dbgenerated("gen_random_uuid()"))
-  applicantId   String
-  type          String
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-  deletedAt     DateTime?
-  documents     Document[]
-  applicant     Applicant      @relation(fields: [applicantId], references: [id])
-  incomeDetails IncomeDetail[]
+  id                        String         @id @default(dbgenerated("gen_random_uuid()"))
+  applicantId               String
+  type                      String
+  createdAt                 DateTime       @default(now())
+  updatedAt                 DateTime       @updatedAt
+  deletedAt                 DateTime?
+  dependents                Int            @default(0)
+  averageMonthlyExpenditure Float          @default(0.0)
+  averageGrossCashIncome    Float          @default(0.0)
+  documents                 Document[]
+  applicant                 Applicant      @relation(fields: [applicantId], references: [id])
+  incomeDetails             IncomeDetail[]
 }
 
 model IncomeDetail {
