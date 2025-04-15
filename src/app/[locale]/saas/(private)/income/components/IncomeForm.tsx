@@ -87,6 +87,9 @@ export default function IncomeForm({ applicantId }: IncomeFormProps) {
     resolver: zodResolver(FormSchema),
     defaultValues: {
       type: "",
+      dependents: "",
+      averageMonthlyExpenditure: "",
+      averageGrossCashIncome: "",
       incomeDetails: [
         {
           year: 1,
@@ -147,8 +150,7 @@ export default function IncomeForm({ applicantId }: IncomeFormProps) {
         (Number(income?.grossIncome) || 0) +
         (Number(income?.rentalIncome) || 0) +
         (Number(income?.incomeFromBusiness) || 0) +
-        (Number(income?.depreciation) || 0) +
-        (Number(income?.grossCashIncome) || 0)
+        (Number(income?.depreciation) || 0)
       );
     }, 0);
   };
@@ -167,6 +169,9 @@ export default function IncomeForm({ applicantId }: IncomeFormProps) {
       formData.append("applicantId", applicantId);
       formData.append("type", data.type);
       formData.append("incomeDetails", JSON.stringify(data.incomeDetails));
+      formData.append("dependents", data.dependents || "");
+      formData.append("averageMonthlyExpenditure", data.averageMonthlyExpenditure || "");
+      formData.append("averageGrossCashIncome", data.averageGrossCashIncome || "");
 
       // Append documents
       documents.forEach((doc, index) => {
@@ -327,20 +332,9 @@ export default function IncomeForm({ applicantId }: IncomeFormProps) {
 
           <Card>
             <div className="space-y-6 p-6">
-              <h3 className="text-lg font-semibold">General Income Information</h3>
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                <div className="space-y-2">
-                  <Label htmlFor="averageGrossCashIncome">Average Gross Cash Income</Label>
-                  <Input
-                    id="averageGrossCashIncome"
-                    placeholder="Enter amount"
-                    className="pl-8"
-                    {...register("averageGrossCashIncome")}
-                  />
-                  {errors.averageGrossCashIncome && (
-                    <p className="text-sm text-red-500">{errors.averageGrossCashIncome.message}</p>
-                  )}
-                </div>
+              <div className="flex items-center justify-between">
+                <h4 className="font-medium">Average Gross Cash Income</h4>
+                <div className="text-2xl font-semibold text-primary">₹{calculateTotalIncome().toLocaleString()}</div>
               </div>
             </div>
           </Card>

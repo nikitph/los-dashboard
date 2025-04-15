@@ -35,6 +35,26 @@ const formSchema = z.object({
   applicantId: z.string().uuid(),
   type: z.string().min(1),
   incomeDetails: z.array(incomeDetailSchema),
+  dependents: z
+    .string()
+    .transform((val) => (val ? parseInt(val, 10) : 0))
+    .optional(),
+  averageMonthlyExpenditure: z
+    .string()
+    .transform((val) => {
+      if (!val) return 0;
+      // Handle percentage strings like "20% or more"
+      if (val.includes("%")) {
+        const percentMatch = val.match(/(\d+)/);
+        return percentMatch ? parseInt(percentMatch[0], 10) / 100 : 0;
+      }
+      return parseFloat(val) || 0;
+    })
+    .optional(),
+  averageGrossCashIncome: z
+    .string()
+    .transform((val) => (val ? parseFloat(val) : 0))
+    .optional(),
 });
 
 export async function saveIncomeData(formData: FormData): Promise<ActionResponse> {
@@ -43,6 +63,9 @@ export async function saveIncomeData(formData: FormData): Promise<ActionResponse
     const applicantId = formData.get("applicantId") as string;
     const type = formData.get("type") as string;
     const incomeDetailsString = formData.get("incomeDetails") as string;
+    const dependents = formData.get("dependents") as string;
+    const averageMonthlyExpenditure = formData.get("averageMonthlyExpenditure") as string;
+    const averageGrossCashIncome = formData.get("averageGrossCashIncome") as string;
 
     if (!applicantId || !type || !incomeDetailsString) {
       return {
@@ -58,7 +81,14 @@ export async function saveIncomeData(formData: FormData): Promise<ActionResponse
     try {
       incomeDetails = JSON.parse(incomeDetailsString);
       // Validate the parsed data
-      formSchema.parse({ applicantId, type, incomeDetails });
+      formSchema.parse({
+        applicantId,
+        type,
+        incomeDetails,
+        dependents,
+        averageMonthlyExpenditure,
+        averageGrossCashIncome,
+      });
     } catch (error) {
       if (error instanceof z.ZodError) {
         const fieldErrors: Record<string, string> = {};
@@ -91,6 +121,9 @@ export async function saveIncomeData(formData: FormData): Promise<ActionResponse
         data: {
           applicantId,
           type,
+          dependents: parseInt(dependents || "0"),
+          averageMonthlyExpenditure: parseFloat(averageMonthlyExpenditure) || 0,
+          averageGrossCashIncome: parseFloat(averageGrossCashIncome || "0"),
         },
       });
 
