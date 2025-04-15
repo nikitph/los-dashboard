@@ -1,134 +1,244 @@
 "use client";
 
 import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Card } from "@/components/ui/card";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { ArrowRight, Briefcase, Save, TrendingUp, Upload } from "lucide-react";
+import { ArrowLeft, ArrowRight, Briefcase, Building, Plus } from "lucide-react";
+import { Progress } from "@/components/ui/progress";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+
+// Zod Schema
+const incomeFieldsSchema = z.object({
+  taxableIncomeITR: z.string().optional(),
+  taxPaidITR: z.string().optional(),
+  grossIncomeCOI: z.string().optional(),
+  rentalIncome: z.string().optional(),
+  incomeFromBusiness: z.string().optional(),
+  depreciationCOI: z.string().optional(),
+  grossCashIncome: z.string().optional(),
+});
+
+const FormSchema = z.object({
+  dependents: z.string().optional(),
+  monthlyExpenditure: z.string().optional(),
+  incomes: z.record(z.string(), incomeFieldsSchema),
+});
 
 export default function LoanStream() {
   const [years, setYears] = useState([1]);
+  const [activeYear, setActiveYear] = useState(1);
+  const [employmentType, setEmploymentType] = useState("");
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(FormSchema),
+    defaultValues: {
+      dependents: "",
+      monthlyExpenditure: "",
+      incomes: {
+        "1": {
+          taxableIncomeITR: "",
+          taxPaidITR: "",
+          grossIncomeCOI: "",
+          rentalIncome: "",
+          incomeFromBusiness: "",
+          depreciationCOI: "",
+          grossCashIncome: "",
+        },
+      },
+    },
+  });
+
+  const watchedIncomes = watch("incomes");
 
   const addYear = () => {
-    setYears((prev) => [...prev, prev.length + 1]);
+    const newYear = years.length + 1;
+    setYears((prev) => [...prev, newYear]);
+    setActiveYear(newYear);
+    setValue(`incomes.${newYear}`, {
+      taxableIncomeITR: "",
+      taxPaidITR: "",
+      grossIncomeCOI: "",
+      rentalIncome: "",
+      incomeFromBusiness: "",
+      depreciationCOI: "",
+      grossCashIncome: "",
+    });
   };
 
   const removeYear = () => {
     if (years.length > 1) {
+      const lastYear = years[years.length - 1];
       setYears((prev) => prev.slice(0, -1));
+      setValue(`incomes.${lastYear}`, undefined);
+      setActiveYear((prev) => (prev === lastYear ? prev - 1 : prev));
     }
   };
 
+  const calculateTotalIncome = () => {
+    return Object.values(watchedIncomes || {}).reduce((sum, income) => {
+      return (
+        sum +
+        (Number(income?.taxableIncomeITR) || 0) +
+        (Number(income?.taxPaidITR) || 0) +
+        (Number(income?.grossIncomeCOI) || 0) +
+        (Number(income?.rentalIncome) || 0) +
+        (Number(income?.incomeFromBusiness) || 0) +
+        (Number(income?.depreciationCOI) || 0) +
+        (Number(income?.grossCashIncome) || 0)
+      );
+    }, 0);
+  };
+
+  const onSubmit = (data: any) => {
+    console.log("Submitted:", data);
+  };
+
   return (
-    <div className="flex w-full flex-col items-start gap-6 p-6">
-      {/* Header */}
-      <div className="flex w-full items-center justify-between">
-        <div className="flex flex-col items-start gap-1">
-          <h2 className="text-2xl font-semibold">Income Documentation</h2>
-          <p className="text-muted-foreground">Please provide your income details for the last 3 years</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <Button variant="outline">
-            <Save className="mr-2 h-4 w-4" />
-            Save Draft
-          </Button>
-          <Button>Continue</Button>
-        </div>
-      </div>
-
-      {/* Employment Type */}
-      <Card className="w-full p-6">
-        <h3 className="mb-4 text-lg font-semibold">Employment Type</h3>
-        <ToggleGroup type="single" className="flex gap-4">
-          <ToggleGroupItem value="salaried" className="flex items-center gap-2">
-            <Briefcase className="h-4 w-4" />
-            Salaried Employee
-          </ToggleGroupItem>
-          <ToggleGroupItem value="business" className="flex items-center gap-2">
-            <TrendingUp className="h-4 w-4" />
-            Business Owner
-          </ToggleGroupItem>
-        </ToggleGroup>
-      </Card>
-
-      {/* Income Sections by Year */}
-      <Accordion type="single" collapsible className="w-full">
-        {years.map((year) => (
-          <AccordionItem key={year} value={`year-${year}`}>
-            <AccordionTrigger className="text-base font-medium text-black">Year {year} Income Details</AccordionTrigger>
-            <AccordionContent>
-              <Card className="p-6">
-                <div className="grid grid-cols-2 gap-4">
-                  {["Taxable Income (ITR)", "Tax Paid (ITR)", "Gross Income (COI)", "Rental Income"].map(
-                    (label, idx) => (
-                      <div key={idx} className="flex flex-col gap-1">
-                        <Label>{label}</Label>
-                        <Input placeholder="Enter amount" />
-                      </div>
-                    ),
-                  )}
-                </div>
-                <div className="mt-6 flex w-full items-center justify-between rounded-md bg-muted px-4 py-4">
-                  <span className="font-medium">Total Annual Income (Year {year})</span>
-                  <span className="text-xl font-bold text-primary">₹ 0.00</span>
-                </div>
-                <Card className="mt-6 p-6">
-                  <h4 className="mb-4 font-semibold">Supporting Documents</h4>
-                  <div className="flex flex-wrap gap-4">
-                    <Button variant="outline">
-                      <Upload className="mr-2 h-4 w-4" />
-                      Upload ITR
-                    </Button>
-                    <Button variant="outline">
-                      <Upload className="mr-2 h-4 w-4" />
-                      Upload Salary Slips
-                    </Button>
-                    <Button variant="outline">
-                      <Upload className="mr-2 h-4 w-4" />
-                      Upload Bank Statements
-                    </Button>
-                  </div>
-                </Card>
-              </Card>
-            </AccordionContent>
-          </AccordionItem>
-        ))}
-      </Accordion>
-
-      {/* Add / Remove Year */}
-      <div className="flex w-full items-center justify-between border-t pt-4">
-        <Button variant="outline" onClick={addYear}>
-          Add Year
-        </Button>
-        <Button variant="outline" onClick={removeYear} disabled={years.length === 1}>
-          Remove Year
-        </Button>
-      </div>
-
-      {/* Additional Details */}
-      <Card className="w-full p-6">
-        <h3 className="mb-4 text-lg font-semibold">Additional Details</h3>
-        <div className="grid grid-cols-2 gap-4">
-          {["Number of Dependents", "Average Monthly Expenditure"].map((label, idx) => (
-            <div key={idx} className="flex flex-col gap-1">
-              <Label>{label}</Label>
-              <Input placeholder="Enter value" />
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <div className="flex min-h-screen w-full flex-col items-center bg-background p-4 sm:p-8">
+        <div className="w-full max-w-4xl space-y-6">
+          {/* Header with Progress */}
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <h1 className="text-2xl font-bold text-gray-900">Income Documentation</h1>
+              <span className="text-sm text-gray-500">Step 3/4</span>
             </div>
-          ))}
-        </div>
-      </Card>
+            <Progress value={75} className="h-2" />
+            <p className="text-sm text-gray-500">
+              Provide income details for the last {years.length} {years.length > 1 ? "years" : "year"}
+            </p>
+          </div>
 
-      {/* Footer */}
-      <div className="flex w-full items-center justify-between border-t pt-4">
-        <Button variant="outline">Back</Button>
-        <Button>
-          Proceed to Loan Verification
-          <ArrowRight className="ml-2 h-4 w-4" />
-        </Button>
+          {/* Employment Type Card */}
+          <Card>
+            <div className="space-y-4 p-6">
+              <h3 className="text-lg font-semibold">Tell us about your employment</h3>
+              <ToggleGroup
+                type="single"
+                value={employmentType}
+                onValueChange={setEmploymentType}
+                className="grid grid-cols-1 gap-4 sm:grid-cols-2"
+              >
+                <ToggleGroupItem value="salaried" className="h-24 flex-col gap-2" id="salaried">
+                  <Briefcase className="h-6 w-6" />
+                  <span className="font-medium">Salaried</span>
+                  <span className="text-sm text-gray-500">Full-time employment</span>
+                </ToggleGroupItem>
+                <ToggleGroupItem value="business" className="h-24 flex-col gap-2" id="business">
+                  <Building className="h-6 w-6" />
+                  <span className="font-medium">Business Owner</span>
+                  <span className="text-sm text-gray-500">Self-employed or entrepreneur</span>
+                </ToggleGroupItem>
+              </ToggleGroup>
+            </div>
+          </Card>
+
+          {/* Year Navigation */}
+          <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
+            <Tabs value={activeYear.toString()}>
+              <TabsList>
+                {years.map((year) => (
+                  <TabsTrigger key={year} value={year.toString()} onClick={() => setActiveYear(year)}>
+                    Year {year}
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+            </Tabs>
+            <div className="flex gap-2">
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button variant="outline" size="sm" onClick={addYear} className="gap-2">
+                      <Plus className="h-4 w-4" />
+                      Add Year
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>Add another financial year</TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button variant="outline" size="sm" onClick={removeYear} disabled={years.length === 1}>
+                      Remove Year
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    {years.length === 1 ? "At least one year required" : "Remove last financial year"}
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+          </div>
+
+          {/* Income Inputs */}
+          <Card>
+            <div className="space-y-6 p-6">
+              <h3 className="mb-4 text-lg font-semibold">Year {activeYear} Income Details</h3>
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                {[
+                  { key: "taxableIncomeITR", label: "Taxable Income as per ITR" },
+                  { key: "taxPaidITR", label: "Tax Paid as per ITR" },
+                  { key: "grossIncomeCOI", label: "Gross Income as per COI" },
+                  { key: "rentalIncome", label: "Rental Income" },
+                  { key: "incomeFromBusiness", label: "Income From Business" },
+                  { key: "depreciationCOI", label: "Depreciation as per COI" },
+                  { key: "grossCashIncome", label: "Gross Cash Income" },
+                ].map(({ key, label }) => (
+                  <div key={key} className="space-y-2">
+                    <Label htmlFor={`${key}-${activeYear}`}>{label}</Label>
+                    <Input
+                      id={`${key}-${activeYear}`}
+                      placeholder="Enter amount"
+                      className="pl-8"
+                      {...register(`incomes.${activeYear}.${key}`)}
+                    />
+                  </div>
+                ))}
+              </div>
+
+              <div className="border-t pt-4">
+                <div className="flex items-center justify-between">
+                  <h4 className="font-medium">Combined Total Income</h4>
+                  <div className="text-2xl font-semibold text-primary">₹{calculateTotalIncome().toLocaleString()}</div>
+                </div>
+              </div>
+            </div>
+          </Card>
+
+          {/* Document Upload */}
+          <Card>
+            <div className="space-y-4 p-6">
+              <h3 className="text-lg font-semibold">Supporting Documents</h3>
+              <div className="space-y-3">{/* Dropzones (placeholder) */}</div>
+            </div>
+          </Card>
+
+          {/* Action Buttons */}
+          <div className="flex flex-col-reverse justify-end gap-4 sm:flex-row">
+            <Button variant="outline" className="gap-2">
+              <ArrowLeft className="h-4 w-4" />
+              Previous Step
+            </Button>
+            <Button type="submit" className="gap-2">
+              Save & Continue
+              <ArrowRight className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
       </div>
-    </div>
+    </form>
   );
 }
