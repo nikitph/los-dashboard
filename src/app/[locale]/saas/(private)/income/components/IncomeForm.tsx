@@ -141,18 +141,23 @@ export default function IncomeForm({ applicantId }: IncomeFormProps) {
     }
   };
 
-  const calculateTotalIncome = () => {
-    return watchedIncomeDetails.reduce((sum, income) => {
-      return (
-        sum +
-        (Number(income?.taxableIncome) || 0) +
-        (Number(income?.taxPaid) || 0) +
-        (Number(income?.grossIncome) || 0) +
-        (Number(income?.rentalIncome) || 0) +
-        (Number(income?.incomeFromBusiness) || 0) +
-        (Number(income?.depreciation) || 0)
-      );
+  const calculateGrossCashIncome = (incomeDetail: any) => {
+    return (
+      (Number(incomeDetail?.taxableIncome) || 0) +
+      (Number(incomeDetail?.taxPaid) || 0) +
+      (Number(incomeDetail?.grossIncome) || 0) +
+      (Number(incomeDetail?.rentalIncome) || 0) +
+      (Number(incomeDetail?.incomeFromBusiness) || 0) +
+      (Number(incomeDetail?.depreciation) || 0)
+    );
+  };
+
+  const calculateAverageGrossIncome = () => {
+    const total = watchedIncomeDetails.reduce((sum, income) => {
+      return sum + calculateGrossCashIncome(income);
     }, 0);
+
+    return (total / years.length).toFixed(2);
   };
 
   const handleDocumentUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -168,15 +173,15 @@ export default function IncomeForm({ applicantId }: IncomeFormProps) {
       const formData = new FormData();
       formData.append("applicantId", applicantId);
       formData.append("type", data.type);
-      formData.append("incomeDetails", JSON.stringify(data.incomeDetails));
+
+      const incomeDetailsWithGrossCashIncome = data.incomeDetails.map((income) => {
+        const grossCashIncome = calculateGrossCashIncome(income);
+        return { ...income, grossCashIncome };
+      });
+      formData.append("incomeDetails", JSON.stringify(incomeDetailsWithGrossCashIncome));
       formData.append("dependents", data.dependents || "");
       formData.append("averageMonthlyExpenditure", data.averageMonthlyExpenditure || "");
-      formData.append("averageGrossCashIncome", data.averageGrossCashIncome || "");
-
-      // Append documents
-      documents.forEach((doc, index) => {
-        formData.append(`document-${index}`, doc);
-      });
+      formData.append("averageGrossCashIncome", calculateAverageGrossIncome());
 
       const response = await saveIncomeData(formData);
 
@@ -299,7 +304,6 @@ export default function IncomeForm({ applicantId }: IncomeFormProps) {
                   { key: "rentalIncome", label: "Rental Income" },
                   { key: "incomeFromBusiness", label: "Income From Business" },
                   { key: "depreciation", label: "Depreciation" },
-                  { key: "grossCashIncome", label: "Gross Cash Income" },
                 ].map(({ key, label }) => {
                   const yearIndex = activeYear - 1;
                   return (
@@ -324,7 +328,9 @@ export default function IncomeForm({ applicantId }: IncomeFormProps) {
               <div className="border-t pt-4">
                 <div className="flex items-center justify-between">
                   <h4 className="font-medium">Gross Cash Income</h4>
-                  <div className="text-2xl font-semibold text-primary">₹{calculateTotalIncome().toLocaleString()}</div>
+                  <div className="text-2xl font-semibold text-primary">
+                    ₹{calculateGrossCashIncome(watchedIncomeDetails[activeYear - 1]).toLocaleString()}
+                  </div>
                 </div>
               </div>
             </div>
@@ -334,7 +340,9 @@ export default function IncomeForm({ applicantId }: IncomeFormProps) {
             <div className="space-y-6 p-6">
               <div className="flex items-center justify-between">
                 <h4 className="font-medium">Average Gross Cash Income</h4>
-                <div className="text-2xl font-semibold text-primary">₹{calculateTotalIncome().toLocaleString()}</div>
+                <div className="text-2xl font-semibold text-primary">
+                  ₹{parseFloat(calculateAverageGrossIncome()).toLocaleString()}
+                </div>
               </div>
             </div>
           </Card>

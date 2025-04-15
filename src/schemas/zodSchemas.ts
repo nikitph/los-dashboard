@@ -14,7 +14,14 @@ export const RoleType = z.enum([
   "USER",
 ]);
 
-export const LoanType = z.enum(["PERSONAL", "VEHICLE", "HOUSE_CONSTRUCTION", "PLOT_PURCHASE", "MORTGAGE"]);
+export const LoanType = z.enum([
+  "PERSONAL",
+  "VEHICLE",
+  "HOUSE_CONSTRUCTION",
+  "PLOT_PURCHASE",
+  "MORTGAGE",
+  "PLOT_AND_HOUSE_CONSTRUCTION",
+]);
 
 export const LoanStatus = z.enum(["PENDING", "APPROVED", "REJECTED", "UNDER_REVIEW"]);
 
