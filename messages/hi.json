@@ -271,6 +271,45 @@
       }
     }
   },
+  "LoanForm": {
+    "page": {
+      "title": "नया ऋण आवेदन",
+      "description": "आवेदन प्रक्रिया शुरू करने के लिए ग्राहक की मूल जानकारी भरें",
+      "loanTypeLabel": "ऋण का प्रकार",
+      "loanTypePlaceholder": "ऋण प्रकार चुनें",
+      "requestedAmountLabel": "अनुरोधित राशि",
+      "requestedAmountPlaceholder": "वांछित ऋण राशि दर्ज करें",
+      "firstNameLabel": "प्रथम नाम",
+      "firstNamePlaceholder": "प्रथम नाम दर्ज करें",
+      "lastNameLabel": "अंतिम नाम",
+      "lastNamePlaceholder": "अंतिम नाम दर्ज करें",
+      "phoneNumberLabel": "फोन नंबर",
+      "phoneNumberPlaceholder": "फोन नंबर दर्ज करें",
+      "emailLabel": "ईमेल पता",
+      "emailPlaceholder": "ईमेल पता दर्ज करें"
+    },
+    "validation": {
+      "loanType": "कृपया ऋण का प्रकार चुनें",
+      "requestedAmount": "कृपया शून्य से अधिक मान्य राशि दर्ज करें",
+      "firstName": "प्रथम नाम आवश्यक है",
+      "lastName": "अंतिम नाम आवश्यक है",
+      "phoneNumber": "फोन नंबर 10 अंकों का होना चाहिए",
+      "email": "कृपया एक मान्य ईमेल पता दर्ज करें"
+    },
+    "errors": {
+      "fetchFailed": "ऋण डेटा लाने में विफल",
+      "unexpected": "एक अप्रत्याशित त्रुटि हुई"
+    },
+    "toast": {
+      "successTitle": "सफलता",
+      "successDescription": "ऋण आवेदन सफलतापूर्वक जमा हुआ"
+    },
+    "buttons": {
+      "sendLink": "लिंक भेजें",
+      "submit": "जारी रखें",
+      "submitting": "प्रक्रिया जारी है..."
+    }
+  },
   "validation": {
     "firstName": {
       "required": "पहला नाम आवश्यक है"
