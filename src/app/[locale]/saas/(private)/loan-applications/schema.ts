@@ -1,49 +1,17 @@
 import { z } from "zod";
-import { identity } from "@/lib/utils";
 
-export const createLoanSchema = (t: (key: string) => string) => {
-  return z.object({
-    loanType: z.enum(
-      ["PERSONAL", "VEHICLE", "HOUSE_CONSTRUCTION", "PLOT_PURCHASE", "MORTGAGE", "PLOT_AND_HOUSE_CONSTRUCTION"],
-      {
-        required_error: t("loanType"),
-      },
-    ),
-    requestedAmount: z.string().refine((val) => !isNaN(parseFloat(val)) && parseFloat(val) > 0, {
-      message: t("requestedAmount"),
-    }),
-    firstName: z.string().min(1, {
-      message: t("firstName"),
-    }),
-    lastName: z.string().min(1, {
-      message: t("lastName"),
-    }),
-    phoneNumber: z.string().regex(/^\d{10}$/, {
-      message: t("phoneNumber"),
-    }),
-    email: z.string().email({
-      message: t("email"),
-    }),
-    bankId: z.string().uuid(),
-  });
-};
+export const loanFormSchema = z.object({
+  loanType: z.enum(["PERSONAL", "VEHICLE", "HOUSE_CONSTRUCTION", "PLOT_PURCHASE", "MORTGAGE"], {
+    required_error: "Please select a loan type",
+  }),
+  requestedAmount: z.string().refine((val) => !isNaN(parseFloat(val)) && parseFloat(val) > 0, {
+    message: "Please enter a valid amount greater than zero",
+  }),
+  firstName: z.string().min(1, "First name is required"),
+  lastName: z.string().min(1, "Last name is required"),
+  phoneNumber: z.string().regex(/^\d{10}$/, "Phone number must be 10 digits"),
+  email: z.string().email("Please enter a valid email address"),
+});
 
-// Base schema type
-export const loanSchema = createLoanSchema(identity); // dummy t for inference
-export type LoanFormData = z.infer<typeof loanSchema>;
-
-// Interface variations
-export interface CreateLoanInput extends LoanFormData {}
-
-export interface UpdateLoanInput extends Partial<LoanFormData> {
-  id: string;
-}
-
-export interface LoanListItem {
-  id: string;
-  fullName: string;
-  phoneNumber: string;
-  email: string;
-  loanType: string;
-  requestedAmount: string;
-}
+// Infer TypeScript type from the schema
+export type LoanFormValues = z.infer<typeof loanFormSchema>;

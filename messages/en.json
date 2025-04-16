@@ -271,45 +271,6 @@
       }
     }
   },
-  "LoanForm": {
-    "page": {
-      "title": "New Loan Application",
-      "description": "Fill in the customer's basic information to begin the application process",
-      "loanTypeLabel": "Type of Loan",
-      "loanTypePlaceholder": "Select loan type",
-      "requestedAmountLabel": "Requested Amount",
-      "requestedAmountPlaceholder": "Enter desired loan amount",
-      "firstNameLabel": "First Name",
-      "firstNamePlaceholder": "Enter first name",
-      "lastNameLabel": "Last Name",
-      "lastNamePlaceholder": "Enter last name",
-      "phoneNumberLabel": "Phone Number",
-      "phoneNumberPlaceholder": "Enter phone number",
-      "emailLabel": "Email Address",
-      "emailPlaceholder": "Enter email address"
-    },
-    "validation": {
-      "loanType": "Please select a loan type",
-      "requestedAmount": "Please enter a valid amount greater than zero",
-      "firstName": "First name is required",
-      "lastName": "Last name is required",
-      "phoneNumber": "Phone number must be 10 digits",
-      "email": "Please enter a valid email address"
-    },
-    "errors": {
-      "fetchFailed": "Failed to fetch loan data",
-      "unexpected": "An unexpected error occurred"
-    },
-    "toast": {
-      "successTitle": "Success",
-      "successDescription": "Loan application submitted successfully"
-    },
-    "buttons": {
-      "sendLink": "Send Link",
-      "submit": "Continue",
-      "submitting": "Processing..."
-    }
-  },
   "validation": {
     "firstName": {
       "required": "First name is required"

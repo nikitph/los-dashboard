@@ -3,15 +3,17 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
-import { LoanApplicationSchema } from "@/schemas/zodSchemas";
+import { InitialLoanApplicationSchema, LoanApplicationSchema } from "@/schemas/zodSchemas";
 import { createClient } from "@supabase/supabase-js";
 import { RoleType } from "@prisma/client";
 import { ActionResponse } from "@/types/globalTypes";
 import { handleActionError } from "@/lib/actionErrorHelpers";
-import { LoanFormData, loanSchema } from "@/app/[locale]/saas/(private)/loan-applications/schema";
 
 // Type for loan application input data
 export type LoanApplicationFormData = z.infer<typeof LoanApplicationSchema>;
+export type InitialLoanApplicationData = z.infer<typeof InitialLoanApplicationSchema> & {
+  authId?: string;
+};
 
 /**
  * TODO: This will need to be redone after phone number verification is implemented
@@ -22,14 +24,9 @@ export type LoanApplicationFormData = z.infer<typeof LoanApplicationSchema>;
  * - Create applicant if needed
  * - Create loan application
  */
-export async function createInitialLoanApplication(
-  formData: LoanFormData & {
-    authId?: string;
-  },
-): Promise<ActionResponse> {
-  console.log("server actions");
+export async function createInitialLoanApplication(formData: InitialLoanApplicationData): Promise<ActionResponse> {
   try {
-    const validatedData = loanSchema.parse(formData);
+    const validatedData = InitialLoanApplicationSchema.parse(formData);
 
     /* Find all the roles for the user */
     const userRoles = await prisma.userRoles.findMany({
@@ -44,6 +41,8 @@ export async function createInitialLoanApplication(
         user: true,
       },
     });
+
+    console.log("userRoles", userRoles);
 
     if (userRoles.length > 0) {
       /* Check if the user has already an applicant role */
@@ -107,11 +106,20 @@ export async function createInitialLoanApplication(
         },
       });
 
+      // const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+      //
+      // // Usage
+      // await sleep(5000);
+      //
+      // console.log("userRoles 6");
+
       const newUserRoles = await prisma.userProfile.findFirst({
         where: {
           id: data.user?.id,
         },
       });
+
+      console.log("userRoles 7", newUserRoles);
 
       /* Create an applicant role for the user */
       if (!error && newUserRoles) {
@@ -130,6 +138,8 @@ export async function createInitialLoanApplication(
             userId: newUserRoles.id,
           },
         });
+
+        console.log("applicant", applicant);
 
         /* Create loan application */
         const loanApplication = await prisma.loanApplication.create({
