@@ -4,6 +4,7 @@ import { createContext, ReactNode, useContext, useEffect, useState } from "react
 import { AppAbility } from "@/lib/casl/types";
 import { defineAbilityFor } from "@/lib/casl/ability";
 import { User } from "@/types/globalTypes";
+import { useUser } from "@/contexts/userContext";
 
 const AbilityContext = createContext<AppAbility | undefined>(undefined);
 
@@ -20,7 +21,8 @@ type AbilityProviderProps = {
   children: ReactNode;
 };
 
-export function AbilityProvider({ user, children }: AbilityProviderProps) {
+export function AbilityProvider({ children }: AbilityProviderProps) {
+  const { user } = useUser();
   const [ability, setAbility] = useState<AppAbility>(() => defineAbilityFor(user));
 
   useEffect(() => {
