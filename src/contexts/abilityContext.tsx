@@ -1,8 +1,9 @@
 "use client";
 
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
-import { AppAbility, User } from "@/lib/casl/types";
+import { AppAbility } from "@/lib/casl/types";
 import { defineAbilityFor } from "@/lib/casl/ability";
+import { User } from "@/types/globalTypes";
 
 const AbilityContext = createContext<AppAbility | undefined>(undefined);
 
