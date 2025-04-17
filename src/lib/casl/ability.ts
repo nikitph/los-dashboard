@@ -1,48 +1,90 @@
 import { AbilityBuilder, createMongoAbility } from "@casl/ability";
-import { AppAbility, Applicant, Bank, Document, LoanApplication, User, UserProfile, Verification } from "./types";
+import type { AppAbility } from "./types";
+import { User } from "@/types/globalTypes";
 
-export function defineAbilityFor(user: User | undefined): AppAbility {
+export function defineAbilityFor(user: User | null | undefined): AppAbility {
   const { can, cannot, build } = new AbilityBuilder<AppAbility>(createMongoAbility);
 
-  if (!user) {
-    // If user is not logged in, no permissions
-    return build();
-  }
+  const manageableSubjects = [
+    "UserProfile",
+    "LoanApplication",
+    "Document",
+    "Verification",
+    "Applicant",
+    "Guarantor",
+    "CoApplicant",
+    "PendingAction",
+    "BankConfiguration",
+    "Subscription",
+  ] as const;
 
-  // Check if user has SAAS_ADMIN role
-  if (user.roles.some((role) => role.role === "SAAS_ADMIN")) {
-    // SaaS Admin can do everything
+  if (!user) return build();
+
+  // SAAS_ADMIN – Full access
+  if (user.roles.some((r) => r.role === "SAAS_ADMIN")) {
     can("manage", "all");
     return build();
   }
 
-  // Check if user has BANK_ADMIN role
-  const bankAdminRoles = user.roles.filter((role) => role.role === "BANK_ADMIN");
-  if (bankAdminRoles.length > 0) {
-    // Bank Admin permissions for their banks
-    bankAdminRoles.forEach((role) => {
-      if (role.bankId) {
-        can(["read", "update"], Bank, { id: role.bankId });
-        can(["read", "create", "update"], UserProfile);
-        can("manage", LoanApplication, { bankId: role.bankId });
-        can("manage", Document, { bankId: role.bankId });
-        can("manage", Verification, { bankId: role.bankId });
-        can("manage", Applicant, { bankId: role.bankId });
-      }
-    });
-  }
+  for (const role of user.roles) {
+    const { role: roleType, bankId } = role;
 
-  // Loan Officer permissions
-  const loanOfficerRoles = user.roles.filter((role) => role.role === "LOAN_OFFICER");
-  if (loanOfficerRoles.length > 0) {
-    loanOfficerRoles.forEach((role) => {
-      if (role.bankId) {
-        can("read", Bank, { id: role.bankId });
-        can(["read", "create"], LoanApplication, { bankId: role.bankId });
-        can(["read", "create"], Applicant, { bankId: role.bankId });
-        can(["read", "create", "update"], Document, { bankId: role.bankId });
+    switch (roleType) {
+      case "BANK_ADMIN": {
+        if (!bankId) break;
+        can("read", "Bank", { id: bankId } as any);
+        manageableSubjects.forEach((subject) => {
+          can("manage", subject);
+        });
+        break;
       }
-    });
+
+      case "LOAN_OFFICER": {
+        if (!bankId) break;
+        can("read", "Bank", { id: bankId } as any);
+        can(["read", "create", "update"], ["LoanApplication", "Applicant", "Document", "Guarantor", "CoApplicant"], {
+          id: bankId,
+        } as any);
+        can("read", "UserProfile");
+        break;
+      }
+
+      case "CLERK": {
+        if (!bankId) break;
+        can("read", "Bank", { id: bankId } as any);
+        can("create", ["LoanApplication", "Applicant", "Document", "Guarantor", "CoApplicant"], { id: bankId } as any);
+        can("read", "UserProfile");
+        break;
+      }
+
+      case "INSPECTOR": {
+        if (!bankId) break;
+        can("read", ["LoanApplication", "Verification", "Document", "Applicant"], { id: bankId } as any);
+        can("update", "Verification", { id: bankId } as any);
+        break;
+      }
+
+      case "CEO":
+      case "LOAN_COMMITTEE":
+      case "BOARD": {
+        if (!bankId) break;
+        can("read", ["LoanApplication", "Applicant", "Guarantor", "Document", "Verification"], { id: bankId } as any);
+        can("update", "LoanApplication", { id: bankId } as any);
+        break;
+      }
+
+      case "APPLICANT": {
+        can("read", ["LoanApplication", "Document", "UserProfile", "Verification"], { userId: user.id } as any);
+        can("update", "UserProfile", { id: user.id } as any);
+        break;
+      }
+
+      case "USER": {
+        // Default fallback role for authenticated but unassigned users
+        can("read", "UserProfile", { id: user.id } as any);
+        break;
+      }
+    }
   }
 
   return build();
