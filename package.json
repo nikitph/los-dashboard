@@ -10,7 +10,8 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "scaffold": "tsx scripts/scaffolding/scaffolding-script.ts"
+    "scaffold": "tsx scripts/scaffolding/scaffolding-script.ts",
+    "gen": "tsx scripts/scaffolding/gen-files.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.758.0",
