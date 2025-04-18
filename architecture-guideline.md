@@ -462,6 +462,7 @@ export function isSuccess<T>(res: ActionResponse<T>): res is SuccessResponse<T> 
   return res.success === true;
 }
 ```
+This file is located under `/src/types/globalTypes.ts`
 
 #### Use `meta` for:
 - Pagination details (`page`, `totalCount`)
