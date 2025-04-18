@@ -1,1 +1,0 @@
-// Tests for Verification list page
