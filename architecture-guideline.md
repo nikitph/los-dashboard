@@ -430,6 +430,48 @@ Server actions. Always `async`, `use server`.
 - Use `getTranslations()` and validate with schema
 - Can use CASL ability checks
 - Must use the shared Prisma instance:
+- If you need to identify the user on the server use `import { getServerSessionUser } from "@/lib/getServerUser";`
+```ts
+"use server";
+
+import { createClient } from "@/utils/supabase/server";
+import { cookies } from "next/headers";
+import { getUserRoles } from "@/contexts/actions/user-actions";
+
+export async function getServerSessionUser() {
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
+
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
+
+  if (user) {
+    const { success, data: roles } = await getUserRoles(user.id);
+
+    if (success && roles && roles.length > 0) {
+      // Filter out roles with null bankId and exclude "APPLICANT" role. What remains should be the employee role
+      // TODO this needs to be worked out when we have Applicant logins
+      let currentRole = roles.filter((r) => r.bankId !== null && r.role !== "APPLICANT")[0];
+
+      console.log("Current Role:", currentRole, roles);
+
+      return {
+        firstName: user.user_metadata?.first_name,
+        lastName: user.user_metadata?.last_name,
+        email: user.email,
+        phoneNumber: user.phone,
+        id: user.id,
+        roles: roles,
+        currentRole: currentRole,
+      };
+    }
+  }
+
+  if (error || !user) return null;
+}
+```
 
 ```ts
 import { prisma } from "@/lib/prisma";
@@ -488,7 +530,7 @@ This enables:
 
 #### CASL-backed Field Visibility
 ```ts
-import { AppAbility } from "@/lib/ability";
+import { AppAbility } from "@/lib/casl/ability";
 
 export function defineGuarantorFieldVisibility(ability: AppAbility) {
   return {
@@ -1707,26 +1749,23 @@ I need complete code for all files in the following structure, with no placehold
 4. All components must use internationalization with both English and Hindi translations
 5. Table views must include filtering, sorting, and pagination functionality
 
-## Example Usage
+For the model, generate and apply all code, tests, translation keys, and documentation needed to fully comply with the CreditIQ Architecture Guidelines (as previously provided).
 
-This is just an example. do not start generating code wildly assuming this is the input model. Assume I provide this Prisma model:
+This includes:
 
-```prisma
-model Guarantor {
-  id              String   @id @default(cuid())
-  firstName       String
-  lastName        String
-  email           String   @unique
-  mobileNumber    String?
-  documents       Json?
-  loanApplication LoanApplication @relation(fields: [loanApplicationId], references: [id])
-  loanApplicationId String
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-}
-```
+All Zod schemas (with JSDoc)
+All server actions (with JSDoc and usage examples)
+All hooks (with JSDoc)
+All components (with translation keys, no hardcoded text)
+All required test files (with realistic test cases, using translation keys)
+All i18n keys for both en.json and hi.json
+A model README.md following the template
+Any missing utility/lib files (e.g., field visibility)
+All code applied directly to my codebase, not just as output
+Do not omit any section.
+Before outputting, verify that every file complies fully with the guidelines, and that all UI text uses translation keys.
+At the end, provide a summary table showing which guideline sections are satisfied by which files
 
-Then I need you to generate complete code for all the files in the structure above, specifically for the model, including full implementations of each component, action, schema, and hook, tests everything.
 
 In your implementation:
 - Ensure all server actions properly validate input and return typed responses
