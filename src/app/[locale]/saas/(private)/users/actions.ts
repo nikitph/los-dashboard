@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 
 import { createClient } from "@supabase/supabase-js";
 import { createUserSchema, UserData, UserRecord } from "@/app/[locale]/saas/(private)/users/schema";
-import { getFormTranslation } from "@/utils/serverTranslationUtil";
+import { getFormTranslation } from "@/lib/serverTranslationUtil";
 import { revalidatePath } from "next/cache";
 import { handleActionError } from "@/lib/actionErrorHelpers";
 import { ActionResponse } from "@/types/globalTypes";

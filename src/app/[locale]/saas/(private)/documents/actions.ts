@@ -8,7 +8,7 @@ import {
   determineStorageType,
   getPresignedDownloadUrl,
   getPresignedUploadUrl,
-} from "@/utils/backblaze/backblazeUtils";
+} from "@/lib/backblaze/backblazeUtils";
 
 // Response type for actions
 type ActionResponse = {

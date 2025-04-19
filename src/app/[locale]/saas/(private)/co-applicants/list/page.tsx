@@ -17,7 +17,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 import { ArrowLeft, ArrowUpDown, MoreHorizontal, Plus, Search } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { deleteCoApplicant, getCoApplicants, getLoanApplications, getStates } from "../actions";
-import { formatDate } from "@/utils/displayUtils";
+import { formatDate } from "@/lib/displayUtils";
 
 interface CoApplicant {
   id: string;

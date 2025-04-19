@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { validateFile } from "@/utils/backblaze/backblazeUtils";
+import { validateFile } from "@/lib/backblaze/backblazeUtils";
 
 interface SimpleBackblazeUploaderProps {
   onUploadComplete?: (fileInfo: { fileName: string; fileUrl: string; fileSize: number }) => void;

@@ -1,7 +1,7 @@
 import { ReactElement, ReactNode } from "react";
 import { render, RenderOptions } from "@testing-library/react";
 import { User } from "@/types/globalTypes";
-import { AbilityProvider } from "@/contexts/abilityContext";
+import { AbilityProvider } from "@/lib/casl/abilityContext";
 import { AppAbility } from "@/lib/casl/types";
 // Import after mocking
 import { useUser } from "@/contexts/userContext";

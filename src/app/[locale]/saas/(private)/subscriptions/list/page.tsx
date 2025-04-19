@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input";
 import { ArrowLeft, ArrowUpDown, MoreHorizontal, Plus, Search } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { deleteSubscription, getSubscriptions } from "../actions";
-import { formatDate } from "@/utils/displayUtils";
+import { formatDate } from "@/lib/displayUtils";
 
 interface Subscription {
   id: string;

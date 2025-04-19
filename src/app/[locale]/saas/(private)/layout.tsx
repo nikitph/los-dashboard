@@ -13,7 +13,7 @@ import { routing } from "@/i18n/routing";
 import { notFound } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
 import { Toaster } from "@/components/ui/toaster";
-import { AbilityProvider } from "@/contexts/abilityContext";
+import { AbilityProvider } from "@/lib/casl/abilityContext";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",

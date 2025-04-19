@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, Edit, Mail, MapPin, Phone, Trash, User } from "lucide-react";
 import { deleteCoApplicant, getCoApplicantById } from "@/app/[locale]/saas/(private)/co-applicants/actions";
 import { toast } from "@/hooks/use-toast";
-import { formatDate } from "@/utils/displayUtils";
+import { formatDate } from "@/lib/displayUtils";
 import CoApplicantDocuments from "@/app/[locale]/saas/(private)/documents/CoApplicantDocument";
 import SimpleBackblazeUploader from "@/app/[locale]/saas/(private)/documents/SimpleUploader";
 

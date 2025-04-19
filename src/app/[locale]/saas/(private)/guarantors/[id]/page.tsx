@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, Edit, Mail, MapPin, Phone, Trash, User } from "lucide-react";
 import { deleteGuarantor, getGuarantorById } from "@/app/[locale]/saas/(private)/guarantors/actions";
 import { toast } from "@/hooks/use-toast";
-import { formatDate } from "@/utils/displayUtils";
+import { formatDate } from "@/lib/displayUtils";
 
 interface Guarantor {
   id: string;

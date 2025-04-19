@@ -1,7 +1,7 @@
 "use client";
 
 import { ReactNode } from "react";
-import { useAbility } from "@/contexts/abilityContext";
+import { useAbility } from "@/lib/casl/abilityContext";
 import { Actions, Subjects } from "@/lib/casl/types";
 
 type CanProps = {

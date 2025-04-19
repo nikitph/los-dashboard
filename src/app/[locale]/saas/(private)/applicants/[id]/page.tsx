@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, Edit, Trash } from "lucide-react";
 import { deleteApplicant, getApplicantById } from "@/app/[locale]/saas/(private)/applicants/actions";
 import { toast } from "@/hooks/use-toast";
-import { formatDate } from "@/utils/displayUtils";
+import { formatDate } from "@/lib/displayUtils";
 
 interface Applicant {
   id: string;

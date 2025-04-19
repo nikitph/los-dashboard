@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, Calendar, Edit, Files, FileText, Landmark, Trash, UserCircle } from "lucide-react";
 import { deleteLoanApplication, getLoanApplicationById } from "@/app/[locale]/saas/(private)/loan-applications/actions";
 import { toast } from "@/hooks/use-toast";
-import { formatDate } from "@/utils/displayUtils";
+import { formatDate } from "@/lib/displayUtils";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";

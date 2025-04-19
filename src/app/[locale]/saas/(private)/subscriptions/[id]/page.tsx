@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, Edit, Trash } from "lucide-react";
 import { deleteSubscription, getSubscriptionById } from "../actions";
 import { toast } from "@/hooks/use-toast";
-import { formatDate } from "@/utils/displayUtils";
+import { formatDate } from "@/lib/displayUtils";
 
 interface Subscription {
   id: string;

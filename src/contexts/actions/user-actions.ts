@@ -4,6 +4,9 @@
 import { prisma } from "@/lib/prisma";
 
 export async function getUserRoles(userId: string) {
+  if (!userId) {
+    return { success: false, error: "Invalid user ID" };
+  }
   try {
     const roles = await prisma.userRoles.findMany({
       where: {

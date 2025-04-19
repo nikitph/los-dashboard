@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@/utils/supabase/middleware";
+import { createClient } from "@/lib/supabase/middleware";
 
 // Your supported locales
 const PUBLIC_LOCALES = ["en", "hi"];
