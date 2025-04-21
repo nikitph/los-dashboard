@@ -17,8 +17,8 @@ import {
   getLoanApplications,
   updateCoApplicant,
 } from "@/app/[locale]/saas/(private)/co-applicants/actions";
-import { indianStates } from "@/lib/utils";
 import { CoApplicantSchema as coApplicantSchema } from "@/schemas/zodSchemas";
+import { indianStates } from "@/lib/constants";
 
 type CoApplicantFormValues = z.infer<typeof coApplicantSchema>;
 

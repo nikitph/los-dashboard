@@ -6,8 +6,8 @@ import { ConditionalBarChart } from "@/components/ConditionalBarChart";
 import { CustomTooltip, CustomTooltip2, CustomTooltip3, CustomTooltip4 } from "@/components/CustomTooltips";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/Select";
 import { dataChart, dataChart2, dataChart3, dataChart4 } from "@/data/data";
-import { formatters } from "@/lib/utils";
 import { SlidersHorizontal } from "lucide-react";
+import { formatters } from "@/lib/displayUtils";
 
 export default function Monitoring() {
   return (

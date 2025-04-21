@@ -11,7 +11,6 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { toast } from "@/hooks/use-toast";
-import { indianStates } from "@/lib/utils";
 
 import {
   createGuarantor,
@@ -19,6 +18,7 @@ import {
   updateGuarantor,
 } from "@/app/[locale]/saas/(private)/guarantors/actions";
 import { GuarantorSchema as guarantorSchema } from "@/schemas/zodSchemas";
+import { indianStates } from "@/lib/constants";
 
 type GuarantorFormValues = z.infer<typeof guarantorSchema>;
 
