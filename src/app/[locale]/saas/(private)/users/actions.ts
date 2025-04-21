@@ -1,6 +1,6 @@
 "use server";
 
-import { prisma } from "@/lib/prisma";
+import { prisma } from "@/lib/prisma/prisma";
 
 import { createClient } from "@supabase/supabase-js";
 import { createUserSchema, UserData, UserRecord } from "@/app/[locale]/saas/(private)/users/schema";

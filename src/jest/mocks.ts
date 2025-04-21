@@ -11,7 +11,7 @@ beforeEach(() => {
 });
 
 // Mock the Prisma import in all tests
-jest.mock("@/lib/prisma", () => ({
+jest.mock("@/lib/prisma/prisma", () => ({
   prisma: prisma,
 }));
 

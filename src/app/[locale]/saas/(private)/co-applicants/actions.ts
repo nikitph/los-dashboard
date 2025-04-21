@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { prisma } from "@/lib/prisma";
+import { prisma } from "@/lib/prisma/prisma";
 import { CoApplicantSchema as coApplicantSchema } from "@/schemas/zodSchemas";
 
 // Type for co-applicant input data

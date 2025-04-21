@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { undefined, z } from "zod";
-import { prisma } from "@/lib/prisma";
+import { prisma } from "@/lib/prisma/prisma";
 import { InitialLoanApplicationSchema, LoanApplicationSchema } from "@/schemas/zodSchemas";
 import { createClient } from "@supabase/supabase-js";
 

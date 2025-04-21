@@ -1,6 +1,6 @@
 "use server";
 
-import { createBank, deleteBank, getBankById, listBanks, updateBank } from "@/lib/prismaUtils";
+import { createBank, deleteBank, getBankById, listBanks, updateBank } from "@/lib/prisma/prismaUtils";
 import { revalidatePath } from "next/cache";
 import { BankSchema } from "@/schemas/zodSchemas";
 import { z } from "zod";

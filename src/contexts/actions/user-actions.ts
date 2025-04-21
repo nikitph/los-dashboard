@@ -1,7 +1,7 @@
 // app/actions/user-actions.ts
 "use server";
 
-import { prisma } from "@/lib/prisma";
+import { prisma } from "@/lib/prisma/prisma";
 
 export async function getUserRoles(userId: string) {
   if (!userId) {
