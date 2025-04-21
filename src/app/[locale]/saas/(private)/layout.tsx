@@ -76,9 +76,9 @@ export default async function RootLayout({
     <html lang="en" className="h-full" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} bg-white-50 h-full antialiased dark:bg-gray-950`}>
         <NextIntlClientProvider>
-          <AbilityProvider>
-            <ThemeProvider defaultTheme="system" disableTransitionOnChange attribute="class">
-              <UserProvider>
+          <ThemeProvider defaultTheme="system" disableTransitionOnChange attribute="class">
+            <UserProvider>
+              <AbilityProvider>
                 <SidebarProvider defaultOpen={defaultOpen}>
                   <AppSidebar />
                   <div className="w-full">
@@ -90,9 +90,9 @@ export default async function RootLayout({
                     <main>{children}</main>
                   </div>
                 </SidebarProvider>
-              </UserProvider>
-            </ThemeProvider>
-          </AbilityProvider>
+              </AbilityProvider>
+            </UserProvider>
+          </ThemeProvider>
         </NextIntlClientProvider>
         <Toaster />
       </body>

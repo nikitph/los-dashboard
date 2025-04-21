@@ -24,7 +24,7 @@ export function AbilityProvider({ children }: AbilityProviderProps) {
   const [ability, setAbility] = useState<AppAbility>(() => defineAbilityFor(user));
 
   useEffect(() => {
-    setAbility(defineAbilityFor(user));
+    if (user) setAbility(defineAbilityFor(user));
   }, [user]);
 
   return <AbilityContext.Provider value={ability}>{children}</AbilityContext.Provider>;
