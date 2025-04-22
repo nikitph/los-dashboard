@@ -1,12 +1,12 @@
 import { useTranslations } from "next-intl";
-import { useUpdateGuarantorForm } from "../../hooks/useUpdateGuarantorForm";
+import { useUpdateGuarantorForm } from "../hooks/useUpdateGuarantorForm";
 import { GuarantorFormFields } from "./GuarantorFormFields";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, Loader2, Save } from "lucide-react";
 import Link from "next/link";
-import { GuarantorView } from "../../schemas/guarantorSchema";
+import { GuarantorView } from "../schemas/guarantorSchema";
 
 /**
  * Props for the UpdateGuarantorForm component

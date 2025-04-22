@@ -6,7 +6,7 @@ import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import { getGuarantor } from "../../actions/getGuarantor";
-import { UpdateGuarantorForm } from "@/app/[locale]/saas/(private)/guarantor/components/GuarantorForm/UpdateGuarantorForm";
+import { UpdateGuarantorForm } from "@/app/[locale]/saas/(private)/guarantor/components/UpdateGuarantorForm";
 
 interface GuarantorEditPageProps {
   params: {

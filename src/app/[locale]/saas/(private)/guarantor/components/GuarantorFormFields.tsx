@@ -2,7 +2,7 @@ import { useTranslations } from "next-intl";
 import { Control } from "react-hook-form";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { GuarantorFieldVisibility } from "../../lib/defineGuarantorFieldVisibility";
+import { GuarantorFieldVisibility } from "../lib/defineGuarantorFieldVisibility";
 
 /**
  * Props for the GuarantorFormFields component

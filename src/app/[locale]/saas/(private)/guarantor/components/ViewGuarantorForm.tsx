@@ -1,10 +1,10 @@
 import { useTranslations } from "next-intl";
-import { useViewGuarantorForm } from "../../hooks/useViewGuarantorForm";
+import { useViewGuarantorForm } from "../hooks/useViewGuarantorForm";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { AlertTriangle, ArrowLeft, Pencil, Trash2 } from "lucide-react";
 import Link from "next/link";
-import { GuarantorView } from "../../schemas/guarantorSchema";
+import { GuarantorView } from "../schemas/guarantorSchema";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { deleteGuarantor } from "../../actions/deleteGuarantor";
+import { deleteGuarantor } from "../actions/deleteGuarantor";
 import { toast } from "sonner";
 
 /**

@@ -1,5 +1,5 @@
 import { useTranslations } from "next-intl";
-import { useCreateGuarantorForm } from "../../hooks/useCreateGuarantorForm";
+import { useCreateGuarantorForm } from "../hooks/useCreateGuarantorForm";
 import { GuarantorFormFields } from "./GuarantorFormFields";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
