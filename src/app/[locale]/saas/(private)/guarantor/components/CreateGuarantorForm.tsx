@@ -37,7 +37,7 @@ export function CreateGuarantorForm({ loanApplicationId }: CreateGuarantorFormPr
         <CardDescription>{t("form.create.description")}</CardDescription>
       </CardHeader>
 
-      <Form {...form}>
+      <Form {...form} namespace={"Guarantor"}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <CardContent>
             <FormFields control={form.control} visibility={visibility} />

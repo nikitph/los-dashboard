@@ -14,8 +14,27 @@ import {
 
 import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
+import { useTranslations } from "next-intl";
 
-const Form = FormProvider;
+// Create a context for the form namespace
+const FormNamespaceContext = React.createContext<string | undefined>(undefined);
+
+// Modified Form component that accepts namespace
+const Form = React.forwardRef<
+  React.ElementRef<typeof FormProvider>,
+  React.ComponentPropsWithoutRef<typeof FormProvider> & { namespace?: string }
+>(({ namespace, ...props }, ref) => {
+  return (
+    <FormNamespaceContext.Provider value={namespace}>
+      <FormProvider {...props} />
+    </FormNamespaceContext.Provider>
+  );
+});
+Form.displayName = "Form";
+
+const useFormNamespace = () => {
+  return React.useContext(FormNamespaceContext);
+};
 
 type FormFieldContextValue<
   TFieldValues extends FieldValues = FieldValues,
@@ -122,7 +141,14 @@ FormDescription.displayName = "FormDescription";
 const FormMessage = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLParagraphElement>>(
   ({ className, children, ...props }, ref) => {
     const { error, formMessageId } = useFormField();
-    const body = error ? String(error?.message ?? "") : children;
+    const namespace = useFormNamespace();
+    const translator = useTranslations(namespace);
+
+    const body = error
+      ? namespace && translator
+        ? translator(String(error?.message ?? ""))
+        : String(error?.message ?? "")
+      : children;
 
     if (!body) {
       return null;
@@ -142,4 +168,14 @@ const FormMessage = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<
 );
 FormMessage.displayName = "FormMessage";
 
-export { useFormField, Form, FormItem, FormLabel, FormControl, FormDescription, FormMessage, FormField };
+export {
+  useFormField,
+  useFormNamespace,
+  Form,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormDescription,
+  FormMessage,
+  FormField,
+};

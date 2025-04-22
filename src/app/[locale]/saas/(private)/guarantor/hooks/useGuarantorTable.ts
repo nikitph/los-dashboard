@@ -54,7 +54,7 @@ export interface UseGuarantorTableReturn {
 export function useGuarantorTable({ initialData, loanApplicationId }: UseGuarantorTableProps): UseGuarantorTableReturn {
   const ability = useAbility();
   const visibility = useMemo(() => defineGuarantorFieldVisibility(ability), [ability]);
-  const t = useTranslations("guarantor");
+  const t = useTranslations("Guarantor");
 
   // Transform the raw data to include computed fields
   const data = useMemo(() => {

@@ -52,7 +52,7 @@ export async function getGuarantors(
     }
 
     // Get translations
-    const t = await getTranslations({ locale: "en", namespace: "guarantor" });
+    const t = await getTranslations({ locale: "en", namespace: "Guarantor" });
 
     // Validate and parse input params
     const validation = getGuarantorsSchema.safeParse(params);

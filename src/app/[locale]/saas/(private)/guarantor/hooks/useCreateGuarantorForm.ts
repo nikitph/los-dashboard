@@ -99,7 +99,7 @@ export function useCreateGuarantorForm({
         router.push(`/saas/guarantor/list`);
       } else {
         // Handle form errors
-        handleFormErrors(response, form.setError);
+        handleFormErrors(response, form.setError, t);
       }
     } catch (error) {
       console.error("Error creating guarantor:", error);

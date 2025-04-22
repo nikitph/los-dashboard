@@ -44,7 +44,7 @@ export async function createGuarantor(data: CreateGuarantorInput): Promise<Actio
     }
 
     // Get translations
-    const t = await getTranslations({ locale: "en", namespace: "guarantor" });
+    const t = await getTranslations({ locale: "en", namespace: "Guarantor" });
 
     // Validate the data
     const validation = createGuarantorSchema.safeParse(data);

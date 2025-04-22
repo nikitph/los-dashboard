@@ -32,7 +32,7 @@ interface FormFieldsProps {
  * @returns {JSX.Element} Form fields component
  */
 export function FormFields({ control, visibility, readOnly = false }: FormFieldsProps): React.ReactNode {
-  const t = useTranslations("guarantor");
+  const t = useTranslations("Guarantor");
 
   return (
     <div className="space-y-6">

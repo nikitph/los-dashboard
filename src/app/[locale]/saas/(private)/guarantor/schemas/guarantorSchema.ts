@@ -5,16 +5,16 @@ import { z } from "zod";
  * Contains validation with translation keys for error messages
  */
 export const createGuarantorSchema = z.object({
-  firstName: z.string().min(1, { message: "guarantor.validation.firstName.required" }),
-  lastName: z.string().min(1, { message: "guarantor.validation.lastName.required" }),
-  email: z.string().email({ message: "guarantor.validation.email.invalid" }),
-  addressState: z.string().min(1, { message: "guarantor.validation.addressState.required" }),
-  addressCity: z.string().min(1, { message: "guarantor.validation.addressCity.required" }),
-  addressZipCode: z.string().min(1, { message: "guarantor.validation.addressZipCode.required" }),
-  addressLine1: z.string().min(1, { message: "guarantor.validation.addressLine1.required" }),
+  firstName: z.string().min(1, { message: "validation.firstName.required" }),
+  lastName: z.string().min(1, { message: "validation.lastName.required" }),
+  email: z.string().email({ message: "validation.email.invalid" }),
+  addressState: z.string().min(1, { message: "validation.addressState.required" }),
+  addressCity: z.string().min(1, { message: "validation.addressCity.required" }),
+  addressZipCode: z.string().min(1, { message: "validation.addressZipCode.required" }),
+  addressLine1: z.string().min(1, { message: "validation.addressLine1.required" }),
   addressLine2: z.string().optional(),
-  mobileNumber: z.string().min(10, { message: "guarantor.validation.mobileNumber.invalid" }),
-  loanApplicationId: z.string().min(1, { message: "guarantor.validation.loanApplicationId.required" }),
+  mobileNumber: z.string().min(10, { message: "validation.mobileNumber.invalid" }),
+  loanApplicationId: z.string().min(1, { message: "validation.loanApplicationId.required" }),
 });
 
 /**
@@ -23,7 +23,7 @@ export const createGuarantorSchema = z.object({
  */
 export const updateGuarantorSchema = createGuarantorSchema
   .extend({
-    id: z.string().min(1, { message: "guarantor.validation.id.required" }),
+    id: z.string().min(1, { message: "validation.id.required" }),
   })
   .partial();
 
