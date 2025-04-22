@@ -43,26 +43,29 @@ Each **Prisma model** (e.g., `User`, `LoanApplication`, `Bank`) should have its 
 ├── list/
 │   └── page.tsx
 ├── new/
-│   └── page.tsx
+│   └── page.tsx //identical to create/page.tsx
 ├── schemas/
 │   ├── guarantorSchema.ts
 ├── hooks/
-│   ├── useGuarantorForm.ts
+│   ├── useCreateGuarantorForm.ts
+│   ├── useUpdateGuarantorForm.ts
+│   ├── useViewGuarantorForm.ts
 │   └── useGuarantorTable.ts
 ├── components/
-│   ├── GuarantorForm/
-│   │   ├── FormFields.tsx
+│   ├── CreateGuarantorForm.tsx
+│   ├── UpdateGuarantorForm.tsx
+│   ├── FormFields.tsx
 │   ├── GuarantorTable.tsx
-│   └── GuarantorView.tsx
+│   └── ViewGuarantorForm.tsx
 ├── actions/
 │   ├── createGuarantor.ts
 │   ├── updateGuarantor.ts
 │   ├── deleteGuarantor.ts
+│   ├── getGuarantor.ts   //getGuarantor is a special case, it is used to fetch a single guarantor by id
 │   └── getGuarantors.ts
 ├── lib/
-│   ├── ability.ts             # Model-specific CASL subjects/actions, imports from @/lib/casl
 │   ├── helpers.ts             # General model-specific helpers
-│   └── defineGuarantorFieldVisibility.ts # Uses CASL ability from @/lib/casl
+│   └── defineGuarantorFieldVisibility.ts # Uses CASL ability from @/lib/casl/types
 └── tests/
     ├── components/
     │   ├── GuarantorForm.test.tsx
@@ -1949,52 +1952,74 @@ model YourModel {
 I need complete code for all files in the following structure, with no placeholders or "to be implemented" sections:
 
 ```
-/src/app/[locale]/saas/(private)/{modelName}/
+/src/app/[locale]/saas/(private)/modelname/
 ├── [id]/
 │   ├── view/
-│   │   └── page.tsx           # Detailed view page
+│   │   └── page.tsx
 │   └── edit/
-│       └── page.tsx           # Edit form page
+│       └── page.tsx
 ├── create/
-│   └── page.tsx               # Creation form page
+│   └── page.tsx
 ├── list/
-│   └── page.tsx               # List page with table
+│   └── page.tsx
+├── new/
+│   └── page.tsx //identical to create/page.tsx
 ├── schemas/
-│   ├── {modelName}Schema.ts   # Zod validation schemas
+│   ├── modelNameSchema.ts
 ├── hooks/
-│   ├── use{ModelName}Form.ts  # Form logic hook
-│   └── use{ModelName}Table.ts # Table logic hook
+│   ├── useCreateModelNameForm.ts
+│   ├── useUpdateModelNameForm.ts
+│   ├── useViewModelNameForm.ts
+│   └── useModelNameTable.ts
 ├── components/
-│   ├── {ModelName}Form/
-│   │   ├── FormFields.tsx     # Form fields component
-│   ├── {ModelName}Table.tsx   # Table component
-│   └── {ModelName}View.tsx    # View component
+│   ├── CreateModelNameForm.tsx
+│   ├── UpdateModelNameForm.tsx
+│   ├── FormFields.tsx
+│   ├── ModelNameTable.tsx
+│   └── ViewModelNameForm.tsx
 ├── actions/
-│   ├── create{ModelName}.ts   # Create server action
-│   ├── update{ModelName}.ts   # Update server action
-│   ├── delete{ModelName}.ts   # Delete server action
-│   └── get{ModelName}s.ts     # Get list server action
+│   ├── createModelName.ts
+│   ├── updateModelName.ts
+│   ├── deleteModelName.ts
+│   ├── getModelName.ts   //getModelName is a special case, it is used to fetch a single modelname by id
+│   └── getModelNames.ts
 ├── lib/
-│   ├── ability.ts             # Model-specific CASL subjects/actions
-│   ├── helpers.ts             # Helper functions
-│   └── define{ModelName}FieldVisibility.ts # Field visibility logic
-└── tests/                     # Tests folder within the model directory
-    ├── components/
-    │   ├── {ModelName}Form.test.tsx
-    │   ├── {ModelName}Table.test.tsx
-    │   └── {ModelName}View.test.tsx
-    ├── hooks/
-    │   ├── use{ModelName}Form.test.ts
-    │   └── use{ModelName}Table.test.ts
+│   ├── helpers.ts             # General model-specific helpers
+│   └── defineModelNameFieldVisibility.ts # Uses CASL ability from @/lib/casl/types
+└── tests/
+    ├── [id]/
+    │   ├── view/
+    │   │   └── page.test.tsx
+    │   └── edit/
+    │       └── page.test.tsx
+    ├── create/
+    │   └── page.test.tsx
+    ├── list/
+    │   └── page.test.tsx
+    ├── new/
+    │   └── page.test.tsx
     ├── schemas/
-    │   └── {modelName}Schema.test.ts
+    │   └── modelNameSchema.test.ts
+    ├── hooks/
+    │   ├── useCreateModelNameForm.test.ts
+    │   ├── useUpdateModelNameForm.test.ts
+    │   ├── useViewModelNameForm.test.ts
+    │   └── useModelNameTable.test.ts
+    ├── components/
+    │   ├── CreateModelNameForm.test.tsx
+    │   ├── UpdateModelNameForm.test.tsx
+    │   ├── FormFields.test.tsx
+    │   ├── ModelNameTable.test.tsx
+    │   └── ViewModelNameForm.test.tsx
     ├── actions/
-    │   ├── create{ModelName}.test.ts
-    │   ├── update{ModelName}.test.ts
-    │   ├── delete{ModelName}.test.ts
-    │   └── get{ModelName}s.test.ts
+    │   ├── createModelName.test.ts
+    │   ├── updateModelName.test.ts
+    │   ├── deleteModelName.test.ts
+    │   ├── getModelName.test.ts
+    │   └── getModelNames.test.ts
     └── lib/
-        └── defineGuarantorFieldVisibility.test.ts
+        ├── helpers.test.ts
+        └── defineModelNameFieldVisibility.test.ts
 ```
 
 ## Additional requirements
