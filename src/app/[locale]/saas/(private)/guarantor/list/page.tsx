@@ -12,7 +12,7 @@ import { GuarantorView } from "../schemas/guarantorSchema";
  * Displays a table of guarantors with filtering and pagination
  */
 export default function GuarantorListPage() {
-  const t = useTranslations("guarantor");
+  const t = useTranslations("Guarantor");
   const [guarantors, setGuarantors] = useState<GuarantorView[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
