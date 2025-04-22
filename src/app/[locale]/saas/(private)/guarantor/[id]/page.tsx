@@ -6,7 +6,7 @@ import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import { getGuarantor } from "../actions/getGuarantor";
-import { GuarantorForm } from "../components/GuarantorForm/GuarantorForm";
+import { UpdateGuarantorForm } from "@/app/[locale]/saas/(private)/guarantor/components/GuarantorForm/UpdateGuarantorForm";
 
 interface GuarantorEditPageProps {
   params: {
@@ -19,7 +19,7 @@ interface GuarantorEditPageProps {
  */
 export default function GuarantorEditPage({ params }: GuarantorEditPageProps) {
   const router = useRouter();
-  const t = useTranslations("guarantor");
+  const t = useTranslations("Guarantor");
   const [guarantor, setGuarantor] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -79,12 +79,7 @@ export default function GuarantorEditPage({ params }: GuarantorEditPageProps) {
       <PageHeader title={t("page.editTitle")} description={t("page.editDescription")} />
 
       <Suspense fallback={<Skeleton className="h-[500px] w-full" />}>
-        <GuarantorForm
-          initialData={guarantor}
-          loanApplicationId={guarantor.loanApplicationId}
-          onSuccess={handleSuccess}
-          onCancel={handleCancel}
-        />
+        <UpdateGuarantorForm guarantor={guarantor} />
       </Suspense>
     </div>
   );

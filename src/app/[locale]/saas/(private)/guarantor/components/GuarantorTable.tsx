@@ -41,7 +41,7 @@ export function GuarantorTable({
   allowActions = true,
   onDataChange,
 }: GuarantorTableProps) {
-  const t = useTranslations("guarantor");
+  const t = useTranslations("Guarantor");
   const [confirmDelete, setConfirmDelete] = React.useState<string | null>(null);
 
   // Initialize table state using the hook

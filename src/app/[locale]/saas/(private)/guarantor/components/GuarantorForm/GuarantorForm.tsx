@@ -31,7 +31,7 @@ export function UpdateGuarantorForm({
   onCancel,
 }: GuarantorFormProps & { initialData: any }) {
   // Make initialData required
-  const t = useTranslations("guarantor");
+  const t = useTranslations("Guarantor");
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
   // Initialize form using the update hook
@@ -87,7 +87,7 @@ export function UpdateGuarantorForm({
 
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <CardContent>
-            <FormFields form={form} visibility={visibility} isEditMode={true} />
+            <FormFields form={form as any} visibility={visibility} isEditMode={true} />
           </CardContent>
 
           <CardFooter className="flex justify-between">

@@ -25,7 +25,7 @@ interface UpdateGuarantorFormProps {
  * @param {UpdateGuarantorFormProps} props - Component props
  * @returns {JSX.Element} Update guarantor form component
  */
-export function UpdateGuarantorForm({ guarantor }: UpdateGuarantorFormProps): JSX.Element {
+export function UpdateGuarantorForm({ guarantor }: UpdateGuarantorFormProps): React.ReactNode {
   const t = useTranslations("Guarantor");
   const { form, visibility, isSubmitting, onSubmit } = useUpdateGuarantorForm({
     initialData: guarantor,

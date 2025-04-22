@@ -297,138 +297,198 @@
       }
     }
   },
-
-    "guarantor": {
-      "page": {
-        "title": "गारंटर",
-        "description": "ऋण आवेदनों के लिए गारंटर प्रबंधित करें",
-        "createTitle": "गारंटर जोड़ें",
-        "createDescription": "सिस्टम में एक नया गारंटर जोड़ें",
-        "editTitle": "गारंटर संपादित करें",
-        "editDescription": "गारंटर की जानकारी अपडेट करें",
-        "error": "त्रुटि"
+  "Guarantor": {
+    "form": {
+      "create": {
+        "title": "नया गारंटर जोड़ें",
+        "description": "नए गारंटर के लिए जानकारी दर्ज करें"
       },
-      "list": {
-        "title": "गारंटर सूची",
-        "search": "गारंटर खोजें...",
-        "createNew": "गारंटर जोड़ें",
-        "loading": "गारंटर लोड हो रहे हैं...",
-        "noResults": "कोई गारंटर नहीं मिला",
-        "actions": "कार्रवाइयां",
-        "edit": "संपादित करें",
-        "delete": "हटाएं",
-        "confirmDelete": "पुष्टि करें",
-        "cancel": "रद्द करें",
-        "pageInfo": "पृष्ठ {page} / {total}",
-        "columns": {
-          "firstName": "प्रथम नाम",
-          "lastName": "अंतिम नाम",
-          "fullName": "पूरा नाम",
-          "email": "ईमेल",
-          "mobileNumber": "मोबाइल नंबर",
-          "addressCity": "शहर",
-          "addressState": "राज्य",
-          "actions": "कार्रवाइयां"
-        }
+      "edit": {
+        "title": "गारंटर संपादित करें",
+        "description": "{name} की जानकारी संपादित करें"
       },
-      "form": {
-        "createTitle": "नया गारंटर जोड़ें",
-        "createDescription": "गारंटर जोड़ने के लिए फॉर्म भरें",
-        "editTitle": "गारंटर संपादित करें",
-        "editDescription": "गारंटर की जानकारी अपडेट करें",
-        "firstName": {
-          "label": "प्रथम नाम",
-          "placeholder": "प्रथम नाम दर्ज करें"
-        },
-        "lastName": {
-          "label": "अंतिम नाम",
-          "placeholder": "अंतिम नाम दर्ज करें"
-        },
-        "email": {
-          "label": "ईमेल",
-          "placeholder": "ईमेल पता दर्ज करें"
-        },
-        "mobileNumber": {
-          "label": "मोबाइल नंबर",
-          "placeholder": "मोबाइल नंबर दर्ज करें",
-          "description": "प्रारूप: (XXX) XXX-XXXX"
-        },
-        "addressLine1": {
-          "label": "पता पंक्ति 1",
-          "placeholder": "सड़क का पता दर्ज करें"
-        },
-        "addressLine2": {
-          "label": "पता पंक्ति 2",
-          "placeholder": "अपार्टमेंट, सूट, आदि दर्ज करें",
-          "description": "वैकल्पिक"
-        },
-        "addressCity": {
-          "label": "शहर",
-          "placeholder": "शहर दर्ज करें"
-        },
-        "addressState": {
-          "label": "राज्य",
-          "placeholder": "राज्य दर्ज करें"
-        },
-        "addressZipCode": {
-          "label": "पिन कोड",
-          "placeholder": "पिन कोड दर्ज करें"
-        },
-        "cancel": "रद्द करें",
-        "create": "बनाएं",
-        "update": "अपडेट करें",
-        "creating": "बना रहा है...",
-        "updating": "अपडेट कर रहा है..."
+      "createTitle": "नया गारंटर जोड़ें",
+      "createDescription": "गारंटर जोड़ने के लिए फॉर्म भरें",
+      "editTitle": "गारंटर संपादित करें",
+      "editDescription": "गारंटर की जानकारी अपडेट करें",
+      "firstName": {
+        "label": "प्रथम नाम",
+        "placeholder": "प्रथम नाम दर्ज करें"
       },
-      "validation": {
-        "firstName": {
-          "required": "पहला नाम आवश्यक है"
-        },
-        "lastName": {
-          "required": "अंतिम नाम आवश्यक है"
-        },
-        "email": {
-          "required": "ईमेल आवश्यक है",
-          "invalid": "कृपया एक वैध ईमेल पता दर्ज करें"
-        },
-        "addressState": {
-          "required": "राज्य आवश्यक है"
-        },
-        "addressCity": {
-          "required": "शहर आवश्यक है"
-        },
-        "addressZipCode": {
-          "required": "पिन कोड आवश्यक है"
-        },
-        "addressLine1": {
-          "required": "पता आवश्यक है"
-        },
-        "mobileNumber": {
-          "invalid": "कृपया एक वैध मोबाइल नंबर दर्ज करें"
-        },
-        "loanApplicationId": {
-          "required": "ऋण आवेदन आईडी आवश्यक है",
-          "notFound": "ऋण आवेदन नहीं मिला"
-        },
-        "id": {
-          "required": "गारंटर आईडी आवश्यक है",
-          "notFound": "गारंटर नहीं मिला"
-        }
+      "lastName": {
+        "label": "अंतिम नाम",
+        "placeholder": "अंतिम नाम दर्ज करें"
       },
-      "toast": {
-        "success": "सफलता",
-        "error": "त्रुटि",
-        "created": "गारंटर सफलतापूर्वक बनाया गया",
-        "updated": "गारंटर सफलतापूर्वक अपडेट किया गया",
-        "deleted": "गारंटर सफलतापूर्वक हटा दिया गया",
-        "fetched": "गारंटर सफलतापूर्वक लोड किए गए",
-        "unexpectedError": "एक अप्रत्याशित त्रुटि हुई"
+      "email": {
+        "label": "ईमेल पता",
+        "placeholder": "ईमेल पता दर्ज करें"
       },
-      "errors": {
-        "notFound": "गारंटर नहीं मिला",
-        "unauthorized": "आपके पास यह क्रिया करने की अनुमति नहीं है",
-        "unexpected": "एक अप्रत्याशित त्रुटि हुई"
+      "mobileNumber": {
+        "label": "मोबाइल नंबर",
+        "placeholder": "मोबाइल नंबर दर्ज करें",
+        "description": "प्रारूप: (XXX) XXX-XXXX"
+      },
+      "address": {
+        "heading": "पता जानकारी"
+      },
+      "addressLine1": {
+        "label": "पता पंक्ति 1",
+        "placeholder": "सड़क का पता दर्ज करें"
+      },
+      "addressLine2": {
+        "label": "पता पंक्ति 2 (वैकल्पिक)",
+        "placeholder": "अपार्टमेंट, सूट, यूनिट आदि दर्ज करें",
+        "description": "वैकल्पिक"
+      },
+      "addressCity": {
+        "label": "शहर",
+        "placeholder": "शहर दर्ज करें"
+      },
+      "addressState": {
+        "label": "राज्य",
+        "placeholder": "राज्य दर्ज करें"
+      },
+      "addressZipCode": {
+        "label": "पिन कोड",
+        "placeholder": "पिन कोड दर्ज करें"
+      },
+      "loanApplicationId": {
+        "label": "ऋण आवेदन आईडी",
+        "placeholder": "ऋण आवेदन आईडी दर्ज करें"
+      },
+      "buttons": {
+        "create": "गारंटर बनाएं",
+        "creating": "बना रहे हैं...",
+        "save": "परिवर्तन सहेजें",
+        "saving": "सहेज रहे हैं...",
+        "cancel": "रद्द करें"
       }
+    },
+    "validation": {
+      "firstName": {
+        "required": "प्रथम नाम आवश्यक है"
+      },
+      "lastName": {
+        "required": "अंतिम नाम आवश्यक है"
+      },
+      "email": {
+        "required": "ईमेल आवश्यक है",
+        "invalid": "कृपया एक वैध ईमेल पता दर्ज करें"
+      },
+      "mobileNumber": {
+        "required": "मोबाइल नंबर आवश्यक है",
+        "invalid": "कृपया एक वैध मोबाइल नंबर दर्ज करें"
+      },
+      "addressLine1": {
+        "required": "पता पंक्ति 1 आवश्यक है"
+      },
+      "addressCity": {
+        "required": "शहर आवश्यक है"
+      },
+      "addressState": {
+        "required": "राज्य आवश्यक है"
+      },
+      "addressZipCode": {
+        "required": "पिन कोड आवश्यक है"
+      },
+      "loanApplicationId": {
+        "required": "ऋण आवेदन आईडी आवश्यक है",
+        "notFound": "ऋण आवेदन नहीं मिला"
+      },
+      "id": {
+        "required": "गारंटर आईडी आवश्यक है",
+        "notFound": "गारंटर नहीं मिला"
+      }
+    },
+    "errors": {
+      "notFound": "गारंटर नहीं मिला",
+      "alreadyExists": "इस ईमेल के साथ एक गारंटर पहले से मौजूद है",
+      "unauthorized": "आपको यह क्रिया करने की अनुमति नहीं है",
+      "validationFailed": "कृपया सत्यापन त्रुटियों को ठीक करें",
+      "createFailed": "गारंटर बनाने में विफल",
+      "updateFailed": "गारंटर अपडेट करने में विफल",
+      "deleteFailed": "गारंटर हटाने में विफल",
+      "missingPermission": "आपके पास इस संसाधन तक पहुंचने की अनुमति नहीं है"
+    },
+    "toast": {
+      "success": "सफलता",
+      "error": "त्रुटि",
+      "createSuccess": "गारंटर बनाया गया",
+      "createSuccessDescription": "गारंटर सफलतापूर्वक बनाया गया है",
+      "createError": "निर्माण विफल रहा",
+      "updateSuccess": "गारंटर अपडेट किया गया",
+      "updateSuccessDescription": "गारंटर सफलतापूर्वक अपडेट किया गया है",
+      "updateError": "अपडेट विफल रहा",
+      "deleteSuccess": "गारंटर हटाया गया",
+      "deleteSuccessDescription": "गारंटर सफलतापूर्वक हटा दिया गया है",
+      "deleteError": "हटाना विफल रहा",
+      "fetchError": "गारंटर लाने में विफल",
+      "fetched": "गारंटर सफलतापूर्वक लोड किए गए",
+      "unexpectedError": "एक अप्रत्याशित त्रुटि हुई"
+    },
+    "list": {
+      "title": "गारंटर",
+      "description": "ऋण आवेदनों के लिए गारंटर प्रबंधित करें",
+      "empty": "कोई गारंटर नहीं मिला",
+      "addNew": "नया गारंटर जोड़ें",
+      "search": "गारंटर खोजें...",
+      "loading": "गारंटर लोड हो रहे हैं...",
+      "noResults": "कोई गारंटर नहीं मिला",
+      "actions": "कार्यवाई",
+      "edit": "संपादित करें",
+      "delete": "हटाएं",
+      "confirmDelete": "पुष्टि करें",
+      "cancel": "रद्द करें",
+      "success": "कार्य सफल",
+      "pageInfo": "पृष्ठ {page} कुल {total} का",
+      "createNew": "गारंटर जोड़ें",
+      "columns": {
+        "name": "नाम",
+        "fullName": "पूरा नाम",
+        "firstName": "प्रथम नाम",
+        "lastName": "अंतिम नाम",
+        "email": "ईमेल",
+        "phone": "फोन",
+        "mobileNumber": "मोबाइल नंबर",
+        "address": "पता",
+        "addressCity": "शहर",
+        "addressState": "राज्य",
+        "actions": "कार्यवाई"
+      },
+      "filters": {
+        "state": "राज्य द्वारा फ़िल्टर करें",
+        "clear": "फ़िल्टर साफ़ करें"
+      }
+    },
+    "view": {
+      "guarantorDetails": "इस गारंटर का विवरण",
+      "personalInfo": "व्यक्तिगत जानकारी",
+      "addressInfo": "पता जानकारी",
+      "systemInfo": "सिस्टम जानकारी",
+      "fullAddress": "पूरा पता",
+      "createdAt": "बनाया गया",
+      "updatedAt": "अंतिम अपडेट",
+      "buttons": {
+        "back": "सूची पर वापस जाएं",
+        "edit": "संपादित करें",
+        "delete": "हटाएं"
+      }
+    },
+    "delete": {
+      "confirmTitle": "गारंटर हटाएं",
+      "confirmDescription": "क्या आप वाकई {name} को हटाना चाहते हैं? यह क्रिया पूर्ववत नहीं की जा सकती।",
+      "confirm": "हां, हटाएं",
+      "deleting": "हटा रहे हैं...",
+      "cancel": "रद्द करें"
+    },
+    "page": {
+      "title": "गारंटर",
+      "description": "ऋण आवेदनों के लिए गारंटर प्रबंधित करें",
+      "createTitle": "गारंटर जोड़ें",
+      "createDescription": "सिस्टम में एक नया गारंटर जोड़ें",
+      "editTitle": "गारंटर संपादित करें",
+      "editDescription": "गारंटर की जानकारी अपडेट करें",
+      "error": "त्रुटि"
     }
-
+  }
 }
