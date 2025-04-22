@@ -48,7 +48,6 @@ export default function GuarantorListPage() {
   return (
     <div className="container mx-auto space-y-6 py-6">
       <PageHeader title={t("page.title")} description={t("page.description")} />
-
       <GuarantorTable initialData={guarantors} allowActions={true} onDataChange={handleDataChange} />
     </div>
   );
