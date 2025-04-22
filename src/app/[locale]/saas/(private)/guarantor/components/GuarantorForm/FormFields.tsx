@@ -33,7 +33,7 @@ interface FormFieldsProps {
  * @returns {JSX.Element} Rendered form fields
  */
 export function FormFields({ form, visibility, isEditMode }: FormFieldsProps) {
-  const t = useTranslations("guarantor");
+  const t = useTranslations("Guarantor");
 
   return (
     <div className="space-y-6">

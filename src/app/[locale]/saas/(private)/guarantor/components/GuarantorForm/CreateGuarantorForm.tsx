@@ -24,7 +24,7 @@ interface CreateGuarantorFormProps {
  * @param {CreateGuarantorFormProps} props - Component props
  * @returns {JSX.Element} Create guarantor form component
  */
-export function CreateGuarantorForm({ loanApplicationId }: CreateGuarantorFormProps): JSX.Element {
+export function CreateGuarantorForm({ loanApplicationId }: CreateGuarantorFormProps): React.ReactNode {
   const t = useTranslations("Guarantor");
   const { form, visibility, isSubmitting, onSubmit } = useCreateGuarantorForm({
     loanApplicationId,

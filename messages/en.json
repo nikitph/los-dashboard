@@ -298,137 +298,198 @@
     }
   }
   ,
-    "guarantor": {
-      "page": {
-        "title": "Guarantors",
-        "description": "Manage guarantors for loan applications",
-        "createTitle": "Add Guarantor",
-        "createDescription": "Add a new guarantor to the system",
-        "editTitle": "Edit Guarantor",
-        "editDescription": "Update guarantor information",
-        "error": "Error"
+  "Guarantor": {
+    "form": {
+      "create": {
+        "title": "Add New Guarantor",
+        "description": "Enter information for the new guarantor"
       },
-      "list": {
-        "title": "Guarantors List",
-        "search": "Search guarantors...",
-        "createNew": "Add Guarantor",
-        "loading": "Loading guarantors...",
-        "noResults": "No guarantors found",
-        "actions": "Actions",
-        "edit": "Edit",
-        "delete": "Delete",
-        "confirmDelete": "Confirm",
-        "cancel": "Cancel",
-        "pageInfo": "Page {page} of {total}",
-        "columns": {
-          "firstName": "First Name",
-          "lastName": "Last Name",
-          "fullName": "Full Name",
-          "email": "Email",
-          "mobileNumber": "Mobile Number",
-          "addressCity": "City",
-          "addressState": "State",
-          "actions": "Actions"
-        }
+      "edit": {
+        "title": "Edit Guarantor",
+        "description": "Edit information for {name}"
       },
-      "form": {
-        "createTitle": "Add New Guarantor",
-        "createDescription": "Fill out the form to add a guarantor",
-        "editTitle": "Edit Guarantor",
-        "editDescription": "Update guarantor information",
-        "firstName": {
-          "label": "First Name",
-          "placeholder": "Enter first name"
-        },
-        "lastName": {
-          "label": "Last Name",
-          "placeholder": "Enter last name"
-        },
-        "email": {
-          "label": "Email",
-          "placeholder": "Enter email address"
-        },
-        "mobileNumber": {
-          "label": "Mobile Number",
-          "placeholder": "Enter mobile number",
-          "description": "Format: (XXX) XXX-XXXX"
-        },
-        "addressLine1": {
-          "label": "Address Line 1",
-          "placeholder": "Enter street address"
-        },
-        "addressLine2": {
-          "label": "Address Line 2",
-          "placeholder": "Enter apartment, suite, etc.",
-          "description": "Optional"
-        },
-        "addressCity": {
-          "label": "City",
-          "placeholder": "Enter city"
-        },
-        "addressState": {
-          "label": "State",
-          "placeholder": "Enter state"
-        },
-        "addressZipCode": {
-          "label": "ZIP Code",
-          "placeholder": "Enter ZIP code"
-        },
-        "cancel": "Cancel",
-        "create": "Create",
-        "update": "Update",
+      "createTitle": "Add New Guarantor",
+      "createDescription": "Fill out the form to add a guarantor",
+      "editTitle": "Edit Guarantor",
+      "editDescription": "Update guarantor information",
+      "firstName": {
+        "label": "First Name",
+        "placeholder": "Enter first name"
+      },
+      "lastName": {
+        "label": "Last Name",
+        "placeholder": "Enter last name"
+      },
+      "email": {
+        "label": "Email Address",
+        "placeholder": "Enter email address"
+      },
+      "mobileNumber": {
+        "label": "Mobile Number",
+        "placeholder": "Enter mobile number",
+        "description": "Format: (XXX) XXX-XXXX"
+      },
+      "address": {
+        "heading": "Address Information"
+      },
+      "addressLine1": {
+        "label": "Address Line 1",
+        "placeholder": "Enter street address"
+      },
+      "addressLine2": {
+        "label": "Address Line 2 (Optional)",
+        "placeholder": "Enter apartment, suite, unit, etc.",
+        "description": "Optional"
+      },
+      "addressCity": {
+        "label": "City",
+        "placeholder": "Enter city"
+      },
+      "addressState": {
+        "label": "State",
+        "placeholder": "Enter state"
+      },
+      "addressZipCode": {
+        "label": "PIN Code",
+        "placeholder": "Enter PIN code"
+      },
+      "loanApplicationId": {
+        "label": "Loan Application ID",
+        "placeholder": "Enter loan application ID"
+      },
+      "buttons": {
+        "create": "Create Guarantor",
         "creating": "Creating...",
-        "updating": "Updating..."
-      },
-      "validation": {
-        "firstName": {
-          "required": "First name is required"
-        },
-        "lastName": {
-          "required": "Last name is required"
-        },
-        "email": {
-          "required": "Email is required",
-          "invalid": "Please enter a valid email address"
-        },
-        "addressState": {
-          "required": "State is required"
-        },
-        "addressCity": {
-          "required": "City is required"
-        },
-        "addressZipCode": {
-          "required": "ZIP code is required"
-        },
-        "addressLine1": {
-          "required": "Address is required"
-        },
-        "mobileNumber": {
-          "invalid": "Please enter a valid mobile number"
-        },
-        "loanApplicationId": {
-          "required": "Loan application ID is required",
-          "notFound": "Loan application not found"
-        },
-        "id": {
-          "required": "Guarantor ID is required",
-          "notFound": "Guarantor not found"
-        }
-      },
-      "toast": {
-        "success": "Success",
-        "error": "Error",
-        "created": "Guarantor created successfully",
-        "updated": "Guarantor updated successfully",
-        "deleted": "Guarantor deleted successfully",
-        "fetched": "Guarantors loaded successfully",
-        "unexpectedError": "An unexpected error occurred"
-      },
-      "errors": {
-        "notFound": "Guarantor not found",
-        "unauthorized": "You don't have permission to perform this action",
-        "unexpected": "An unexpected error occurred"
+        "save": "Save Changes",
+        "saving": "Saving...",
+        "cancel": "Cancel"
       }
+    },
+    "validation": {
+      "firstName": {
+        "required": "First name is required"
+      },
+      "lastName": {
+        "required": "Last name is required"
+      },
+      "email": {
+        "required": "Email is required",
+        "invalid": "Please enter a valid email address"
+      },
+      "mobileNumber": {
+        "required": "Mobile number is required",
+        "invalid": "Please enter a valid mobile number"
+      },
+      "addressLine1": {
+        "required": "Address line 1 is required"
+      },
+      "addressCity": {
+        "required": "City is required"
+      },
+      "addressState": {
+        "required": "State is required"
+      },
+      "addressZipCode": {
+        "required": "PIN code is required"
+      },
+      "loanApplicationId": {
+        "required": "Loan application ID is required",
+        "notFound": "Loan application not found"
+      },
+      "id": {
+        "required": "Guarantor ID is required",
+        "notFound": "Guarantor not found"
+      }
+    },
+    "errors": {
+      "notFound": "Guarantor not found",
+      "alreadyExists": "A guarantor with this email already exists",
+      "unauthorized": "You do not have permission to perform this action",
+      "validationFailed": "Please correct the validation errors",
+      "createFailed": "Failed to create guarantor",
+      "updateFailed": "Failed to update guarantor",
+      "deleteFailed": "Failed to delete guarantor",
+      "missingPermission": "You don't have permission to access this resource"
+    },
+    "toast": {
+      "success": "Success",
+      "error": "Error",
+      "createSuccess": "Guarantor Created",
+      "createSuccessDescription": "The guarantor has been successfully created",
+      "createError": "Creation Failed",
+      "updateSuccess": "Guarantor Updated",
+      "updateSuccessDescription": "The guarantor has been successfully updated",
+      "updateError": "Update Failed",
+      "deleteSuccess": "Guarantor Deleted",
+      "deleteSuccessDescription": "The guarantor has been successfully deleted",
+      "deleteError": "Deletion Failed",
+      "fetchError": "Failed to fetch guarantors",
+      "fetched": "Guarantors loaded successfully",
+      "unexpectedError": "An unexpected error occurred"
+    },
+    "list": {
+      "title": "Guarantors",
+      "description": "Manage guarantors for loan applications",
+      "empty": "No guarantors found",
+      "addNew": "Add New Guarantor",
+      "search": "Search guarantors...",
+      "loading": "Loading guarantors...",
+      "noResults": "No guarantors found",
+      "actions": "Actions",
+      "edit": "Edit",
+      "delete": "Delete",
+      "confirmDelete": "Confirm",
+      "cancel": "Cancel",
+      "success": "Operation successful",
+      "pageInfo": "Page {page} of {total}",
+      "createNew": "Add Guarantor",
+      "columns": {
+        "name": "Name",
+        "fullName": "Full Name",
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "email": "Email",
+        "phone": "Phone",
+        "mobileNumber": "Mobile Number",
+        "address": "Address",
+        "addressCity": "City",
+        "addressState": "State",
+        "actions": "Actions"
+      },
+      "filters": {
+        "state": "Filter by State",
+        "clear": "Clear Filters"
+      }
+    },
+    "view": {
+      "guarantorDetails": "Details for this guarantor",
+      "personalInfo": "Personal Information",
+      "addressInfo": "Address Information",
+      "systemInfo": "System Information",
+      "fullAddress": "Full Address",
+      "createdAt": "Created At",
+      "updatedAt": "Last Updated",
+      "buttons": {
+        "back": "Back to List",
+        "edit": "Edit",
+        "delete": "Delete"
+      }
+    },
+    "delete": {
+      "confirmTitle": "Delete Guarantor",
+      "confirmDescription": "Are you sure you want to delete {name}? This action cannot be undone.",
+      "confirm": "Yes, Delete",
+      "deleting": "Deleting...",
+      "cancel": "Cancel"
+    },
+    "page": {
+      "title": "Guarantors",
+      "description": "Manage guarantors for loan applications",
+      "createTitle": "Add Guarantor",
+      "createDescription": "Add a new guarantor to the system",
+      "editTitle": "Edit Guarantor",
+      "editDescription": "Update guarantor information",
+      "error": "Error"
     }
-
+  }
 }

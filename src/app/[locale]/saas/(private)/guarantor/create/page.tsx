@@ -5,7 +5,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useTranslations } from "next-intl";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
-import { GuarantorForm } from "../components/GuarantorForm/GuarantorForm";
+import {
+  CreateGuarantorForm
+} from "@/app/[locale]/saas/(private)/guarantor/components/GuarantorForm/CreateGuarantorForm";
 
 /**
  * Page component for creating a new guarantor
@@ -13,7 +15,7 @@ import { GuarantorForm } from "../components/GuarantorForm/GuarantorForm";
 export default function GuarantorCreatePage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const t = useTranslations("guarantor");
+  const t = useTranslations("Guarantor");
 
   // Get loanApplicationId from query params if it exists
   const loanApplicationId = searchParams.get("loanApplicationId") || "";
@@ -33,7 +35,7 @@ export default function GuarantorCreatePage() {
       <PageHeader title={t("page.createTitle")} description={t("page.createDescription")} />
 
       <Suspense fallback={<Skeleton className="h-[500px] w-full" />}>
-        <GuarantorForm loanApplicationId={loanApplicationId} onSuccess={handleSuccess} onCancel={handleCancel} />
+        <CreateGuarantorForm loanApplicationId={loanApplicationId} />
       </Suspense>
     </div>
   );
