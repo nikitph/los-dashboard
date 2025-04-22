@@ -3,9 +3,9 @@
 import { PageHeader } from "@/components/ui/page-header";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
-import { getGuarantors } from "./actions/getGuarantors";
-import { GuarantorTable } from "./components/GuarantorTable";
-import { GuarantorView } from "./schemas/guarantorSchema";
+import { getGuarantors } from "../actions/getGuarantors";
+import { GuarantorTable } from "../components/GuarantorTable";
+import { GuarantorView } from "../schemas/guarantorSchema";
 
 /**
  * Main guarantor list page component

@@ -16,7 +16,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger
 } from "@/components/ui/alert-dialog";
-import { useState } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { deleteGuarantor } from "../../actions/deleteGuarantor";
 import { toast } from "sonner";
@@ -38,7 +38,7 @@ interface ViewGuarantorFormProps {
  * @param {ViewGuarantorFormProps} props - Component props
  * @returns {JSX.Element} View guarantor component
  */
-export function ViewGuarantorForm({ guarantor }: ViewGuarantorFormProps): JSX.Element {
+export function ViewGuarantorForm({ guarantor }: ViewGuarantorFormProps): React.ReactNode {
   const t = useTranslations("Guarantor");
   const router = useRouter();
   const [isDeleting, setIsDeleting] = useState(false);
