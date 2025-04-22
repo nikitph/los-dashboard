@@ -58,3 +58,53 @@ export function transformToGuarantorView(guarantor: any): GuarantorView {
     }),
   };
 }
+
+/**
+ * Validates a phone number format
+ *
+ * @param {string} phone - Phone number to validate
+ * @returns {boolean} Whether the phone number is valid
+ */
+export function isValidPhoneNumber(phone: string): boolean {
+  // Basic US phone number validation (10 digits, with optional formatting)
+  const phoneRegex = /^(\+\d{1,2}\s?)?(\()?\d{3}(\))?[-.\s]?\d{3}[-.\s]?\d{4}$/;
+  return phoneRegex.test(phone);
+}
+
+/**
+ * Formats a phone number to a consistent format
+ *
+ * @param {string} phone - Phone number to format
+ * @returns {string} Formatted phone number
+ */
+export function formatPhoneNumber(phone: string): string {
+  // Remove all non-digit characters
+  const digitsOnly = phone.replace(/\D/g, "");
+
+  // Check if it's a valid US number (10 digits)
+  if (digitsOnly.length === 10) {
+    return `(${digitsOnly.substring(0, 3)}) ${digitsOnly.substring(3, 6)}-${digitsOnly.substring(6)}`;
+  }
+
+  // Return original if not a standard format
+  return phone;
+}
+
+/**
+ * Validates if a guarantor record has all required fields
+ *
+ * @param {Partial<GuarantorView>} guarantor - The guarantor data to validate
+ * @returns {boolean} Whether the guarantor has all required fields
+ */
+export function isGuarantorComplete(guarantor: Partial<GuarantorView>): boolean {
+  return !!(
+    guarantor.firstName &&
+    guarantor.lastName &&
+    guarantor.email &&
+    guarantor.mobileNumber &&
+    guarantor.addressLine1 &&
+    guarantor.addressCity &&
+    guarantor.addressState &&
+    guarantor.addressZipCode
+  );
+}
