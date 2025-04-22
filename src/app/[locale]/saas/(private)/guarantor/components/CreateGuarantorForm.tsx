@@ -1,6 +1,6 @@
 import { useTranslations } from "next-intl";
 import { useCreateGuarantorForm } from "../hooks/useCreateGuarantorForm";
-import { GuarantorFormFields } from "./GuarantorFormFields";
+import { FormFields } from "./FormFields";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -40,7 +40,7 @@ export function CreateGuarantorForm({ loanApplicationId }: CreateGuarantorFormPr
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <CardContent>
-            <GuarantorFormFields control={form.control} visibility={visibility} />
+            <FormFields control={form.control} visibility={visibility} />
           </CardContent>
 
           <CardFooter className="flex justify-between">

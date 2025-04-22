@@ -7,7 +7,7 @@ import { GuarantorFieldVisibility } from "../lib/defineGuarantorFieldVisibility"
 /**
  * Props for the GuarantorFormFields component
  */
-interface GuarantorFormFieldsProps {
+interface FormFieldsProps {
   /**
    * React Hook Form control for form handling
    */
@@ -28,14 +28,10 @@ interface GuarantorFormFieldsProps {
  * Reusable component for rendering guarantor form fields
  * Conditionally displays fields based on user permissions via visibility map
  *
- * @param {GuarantorFormFieldsProps} props - Component props
+ * @param {FormFieldsProps} props - Component props
  * @returns {JSX.Element} Form fields component
  */
-export function GuarantorFormFields({
-  control,
-  visibility,
-  readOnly = false,
-}: GuarantorFormFieldsProps): React.ReactNode {
+export function FormFields({ control, visibility, readOnly = false }: FormFieldsProps): React.ReactNode {
   const t = useTranslations("guarantor");
 
   return (

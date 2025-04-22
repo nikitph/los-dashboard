@@ -1912,9 +1912,9 @@ Following these testing guidelines ensures that the CreditIQ application maintai
 
 Generate a complete set of files for a Next.js CreditIQ application based on the provided Prisma model. Follow the CreditIQ Architecture Guidelines to create a fully functional, permission-aware, internationalized feature set that includes:
 
-1.  Server actions for CRUD operations (using `@/lib/prisma`, `@/lib/casl`, `@/lib/actionErrorHelpers`)
-2.  Form components with field-level permissions (using visibility map derived from `@/lib/casl`)
-3.  List views with filtering, sorting, and pagination (using visibility map from `@/lib/casl`)
+1.  Server actions for CRUD operations (using `@/lib/prisma/prisma`, `@/lib/casl/getAbility.ts`, `@/lib/actionErrorHelpers`)
+2.  Form components with field-level permissions (using visibility map derived from `@/lib/casl/ability.ts`)
+3.  List views with filtering, sorting, and pagination (using visibility map from `@/lib/casl/ability.ts`)
 4.  Zod schemas for validation (potentially using helpers from `@/lib/utils`)
 5.  React Hook Form integrations
 6.  CASL-based permission controls
