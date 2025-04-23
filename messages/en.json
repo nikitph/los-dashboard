@@ -637,12 +637,9 @@
       },
       "actions": {
         "label": "Actions",
-        "openMenu": "Open menu",
-        "edit": "Edit",
+        "menu": "Open menu",
         "view": "View",
-        "resetPassword": "Reset Password",
-        "lock": "Lock Account",
-        "unlock": "Unlock Account",
+        "edit": "Edit",
         "delete": "Delete"
       },
       "filters": {
@@ -673,6 +670,182 @@
       "rejectReasonPlaceholder": "Enter reason for rejection",
       "confirmReject": "Are you sure you want to reject this request?",
       "confirmApprove": "Are you sure you want to approve this request?"
+    }
+  },
+  "LoanApplication": {
+    "meta": {
+      "list": {
+        "title": "Loan Applications",
+        "description": "List of all loan applications"
+      },
+      "create": {
+        "title": "Create Loan Application",
+        "description": "Create a new loan application"
+      },
+      "edit": {
+        "title": "Edit Loan Application",
+        "description": "Update an existing loan application"
+      },
+      "view": {
+        "title": "View Loan Application",
+        "description": "View loan application details"
+      }
+    },
+    "form": {
+      "create": {
+        "title": "Create Loan Application",
+        "description": "Fill in the details to create a new loan application"
+      },
+      "update": {
+        "title": "Edit Loan Application",
+        "description": "Update the details of this loan application"
+      },
+      "applicantId": {
+        "label": "Applicant ID",
+        "placeholder": "Select an applicant"
+      },
+      "bankId": {
+        "label": "Bank ID",
+        "placeholder": "Select a bank"
+      },
+      "loanType": {
+        "label": "Loan Type",
+        "placeholder": "Select loan type"
+      },
+      "amountRequested": {
+        "label": "Amount Requested",
+        "placeholder": "Enter amount"
+      },
+      "status": {
+        "label": "Status",
+        "placeholder": "Select status"
+      },
+      "cancel": "Cancel",
+      "submit": "Submit",
+      "submitting": "Submitting..."
+    },
+    "list": {
+      "title": "Loan Applications",
+      "description": "Manage and view loan applications",
+      "empty": "No loan applications found",
+      "search": "Search loan applications",
+      "addNew": "Create New Application",
+      "column": "Columns",
+      "exportSelected": "Export Selected",
+      "deleteSelected": "Delete Selected",
+      "toggleColumns": "Toggle Columns",
+      "loading": "Loading loan applications...",
+      "actions": {
+        "label": "Actions",
+        "menu": "Open menu",
+        "view": "View",
+        "edit": "Edit",
+        "delete": "Delete"
+      },
+      "columns": {
+        "id": "ID",
+        "applicant": "Applicant",
+        "applicantName": "Applicant Name",
+        "loanType": "Loan Type",
+        "amount": "Amount",
+        "amountRequested": "Amount Requested",
+        "status": "Status",
+        "createdAt": "Created",
+        "actions": "Actions"
+      },
+      "pagination": {
+        "previous": "Previous",
+        "next": "Next",
+        "pageInfo": "Page {page} of {total}",
+        "rowsPerPage": "Rows per page"
+      }
+    },
+    "view": {
+      "title": "Loan Application Details",
+      "description": "View the details of this loan application",
+      "id": "ID",
+      "applicant": "Applicant",
+      "loanType": "Loan Type",
+      "amountRequested": "Amount Requested",
+      "status": "Status",
+      "createdAt": "Created At",
+      "updatedAt": "Last Updated",
+      "back": "Back",
+      "edit": "Edit",
+      "delete": "Delete",
+      "deleting": "Deleting...",
+      "notAvailable": "Not available",
+      "guarantors": "Guarantors",
+      "guarantorsDescription": "People who have guaranteed this loan",
+      "documents": "Documents",
+      "documentsDescription": "Documents related to this loan application"
+    },
+    "filter": {
+      "search": "Search loan applications",
+      "reset": "Reset",
+      "loanType": {
+        "all": "All Loan Types",
+        "personal": "Personal",
+        "vehicle": "Vehicle",
+        "houseConstruction": "House Construction",
+        "plotPurchase": "Plot Purchase",
+        "mortgage": "Mortgage"
+      },
+      "status": {
+        "all": "All Statuses",
+        "pending": "Pending",
+        "underReview": "Under Review",
+        "approved": "Approved",
+        "rejected": "Rejected"
+      }
+    },
+    "toast": {
+      "created": "Loan application created successfully",
+      "createdDescription": "The loan application has been created",
+      "updated": "Loan application updated successfully",
+      "updatedDescription": "The loan application has been updated",
+      "deleted": "Loan application deleted successfully",
+      "deletedDescription": "The loan application has been deleted",
+      "fetched": "Loan application loaded",
+      "error": "Error",
+      "errorDescription": "An unexpected error occurred"
+    },
+    "errors": {
+      "notFound": "Loan application not found",
+      "unauthorized": "You don't have permission to access this loan application",
+      "invalidData": "The provided information is invalid"
+    },
+    "confirm": {
+      "delete": "Are you sure you want to delete this loan application?",
+      "deleteMultiple": {
+        "title": "Delete Selected Applications",
+        "description": "Are you sure you want to delete {count} selected loan applications?"
+      },
+      "cancel": "Cancel",
+      "continue": "Continue"
+    },
+    "validation": {
+      "id": {
+        "required": "ID is required"
+      },
+      "applicantId": {
+        "required": "Applicant is required"
+      },
+      "bankId": {
+        "required": "Bank is required"
+      },
+      "loanType": {
+        "required": "Loan type is required",
+        "invalid": "Invalid loan type"
+      },
+      "amountRequested": {
+        "required": "Amount is required",
+        "positive": "Amount must be greater than 0"
+      },
+      "status": {
+        "required": "Status is required",
+        "invalid": "Invalid status"
+      }
     }
   }
 }

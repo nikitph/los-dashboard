@@ -453,7 +453,7 @@
         "address": "पता",
         "addressCity": "शहर",
         "addressState": "राज्य",
-        "actions": "कार्यवाई"
+        "actions": "कार्रवाई"
       },
       "filters": {
         "state": "राज्य द्वारा फ़िल्टर करें",
@@ -637,12 +637,9 @@
       },
       "actions": {
         "label": "कार्रवाई",
-        "openMenu": "मेनू खोलें",
-        "edit": "संपादित करें",
+        "menu": "मेन्यू खोलें",
         "view": "देखें",
-        "resetPassword": "पासवर्ड रीसेट करें",
-        "lock": "खाता लॉक करें",
-        "unlock": "खाता अनलॉक करें",
+        "edit": "संपादित करें",
         "delete": "हटाएं"
       },
       "filters": {
@@ -673,6 +670,182 @@
       "rejectReasonPlaceholder": "अस्वीकृति का कारण दर्ज करें",
       "confirmReject": "क्या आप वाकई इस अनुरोध को अस्वीकार करना चाहते हैं?",
       "confirmApprove": "क्या आप वाकई इस अनुरोध को स्वीकृत करना चाहते हैं?"
+    }
+  },
+  "LoanApplication": {
+    "meta": {
+      "list": {
+        "title": "ऋण आवेदन",
+        "description": "सभी ऋण आवेदनों की सूची"
+      },
+      "create": {
+        "title": "ऋण आवेदन बनाएं",
+        "description": "नया ऋण आवेदन बनाएं"
+      },
+      "edit": {
+        "title": "ऋण आवेदन संपादित करें",
+        "description": "मौजूदा ऋण आवेदन अपडेट करें"
+      },
+      "view": {
+        "title": "ऋण आवेदन देखें",
+        "description": "ऋण आवेदन विवरण देखें"
+      }
+    },
+    "form": {
+      "create": {
+        "title": "ऋण आवेदन बनाएं",
+        "description": "नया ऋण आवेदन बनाने के लिए विवरण भरें"
+      },
+      "update": {
+        "title": "ऋण आवेदन संपादित करें",
+        "description": "इस ऋण आवेदन के विवरण अपडेट करें"
+      },
+      "applicantId": {
+        "label": "आवेदक आईडी",
+        "placeholder": "आवेदक चुनें"
+      },
+      "bankId": {
+        "label": "बैंक आईडी",
+        "placeholder": "बैंक चुनें"
+      },
+      "loanType": {
+        "label": "ऋण प्रकार",
+        "placeholder": "ऋण प्रकार चुनें"
+      },
+      "amountRequested": {
+        "label": "अनुरोधित राशि",
+        "placeholder": "राशि दर्ज करें"
+      },
+      "status": {
+        "label": "स्थिति",
+        "placeholder": "स्थिति चुनें"
+      },
+      "cancel": "रद्द करें",
+      "submit": "जमा करें",
+      "submitting": "जमा किया जा रहा है..."
+    },
+    "list": {
+      "title": "ऋण आवेदन",
+      "description": "ऋण आवेदनों का प्रबंधन और देखें",
+      "empty": "कोई ऋण आवेदन नहीं मिला",
+      "search": "ऋण आवेदन खोजें",
+      "addNew": "नया आवेदन बनाएं",
+      "column": "कॉलम",
+      "exportSelected": "चयनित निर्यात करें",
+      "deleteSelected": "चयनित हटाएं",
+      "toggleColumns": "कॉलम टॉगल करें",
+      "loading": "ऋण आवेदन लोड हो रहे हैं...",
+      "actions": {
+        "label": "कार्रवाई",
+        "menu": "मेनू खोलें",
+        "view": "देखें",
+        "edit": "संपादित करें",
+        "delete": "हटाएं"
+      },
+      "columns": {
+        "id": "आईडी",
+        "applicant": "आवेदक",
+        "applicantName": "आवेदक का नाम",
+        "loanType": "ऋण प्रकार",
+        "amount": "राशि",
+        "amountRequested": "अनुरोधित राशि",
+        "status": "स्थिति",
+        "createdAt": "बनाया गया",
+        "actions": "कार्रवाई"
+      },
+      "pagination": {
+        "previous": "पिछला",
+        "next": "अगला",
+        "pageInfo": "पृष्ठ {page} का {total}",
+        "rowsPerPage": "प्रति पृष्ठ पंक्तियां"
+      }
+    },
+    "view": {
+      "title": "ऋण आवेदन विवरण",
+      "description": "इस ऋण आवेदन का विवरण देखें",
+      "id": "आईडी",
+      "applicant": "आवेदक",
+      "loanType": "ऋण प्रकार",
+      "amountRequested": "अनुरोधित राशि",
+      "status": "स्थिति",
+      "createdAt": "बनाया गया",
+      "updatedAt": "अंतिम अपडेट",
+      "back": "वापस",
+      "edit": "संपादित करें",
+      "delete": "हटाएं",
+      "deleting": "हटा रहा है...",
+      "notAvailable": "उपलब्ध नहीं",
+      "guarantors": "गारंटर",
+      "guarantorsDescription": "इस ऋण की गारंटी देने वाले लोग",
+      "documents": "दस्तावेज़",
+      "documentsDescription": "इस ऋण आवेदन से संबंधित दस्तावेज़"
+    },
+    "filter": {
+      "search": "ऋण आवेदन खोजें",
+      "reset": "रीसेट",
+      "loanType": {
+        "all": "सभी ऋण प्रकार",
+        "personal": "व्यक्तिगत",
+        "vehicle": "वाहन",
+        "houseConstruction": "घर निर्माण",
+        "plotPurchase": "प्लॉट खरीद",
+        "mortgage": "बंधक"
+      },
+      "status": {
+        "all": "सभी स्थितियां",
+        "pending": "लंबित",
+        "underReview": "समीक्षा के अधीन",
+        "approved": "स्वीकृत",
+        "rejected": "अस्वीकृत"
+      }
+    },
+    "toast": {
+      "created": "ऋण आवेदन सफलतापूर्वक बनाया गया",
+      "createdDescription": "ऋण आवेदन बना दिया गया है",
+      "updated": "ऋण आवेदन सफलतापूर्वक अपडेट किया गया",
+      "updatedDescription": "ऋण आवेदन अपडेट कर दिया गया है",
+      "deleted": "ऋण आवेदन सफलतापूर्वक हटा दिया गया",
+      "deletedDescription": "ऋण आवेदन हटा दिया गया है",
+      "fetched": "ऋण आवेदन लोड किया गया",
+      "error": "त्रुटि",
+      "errorDescription": "एक अनपेक्षित त्रुटि हुई"
+    },
+    "errors": {
+      "notFound": "ऋण आवेदन नहीं मिला",
+      "unauthorized": "आपके पास इस ऋण आवेदन तक पहुंचने की अनुमति नहीं है",
+      "invalidData": "प्रदान की गई जानकारी अमान्य है"
+    },
+    "confirm": {
+      "delete": "क्या आप वाकई इस ऋण आवेदन को हटाना चाहते हैं?",
+      "deleteMultiple": {
+        "title": "चयनित आवेदन हटाएं",
+        "description": "क्या आप वाकई {count} चयनित ऋण आवेदनों को हटाना चाहते हैं?"
+      },
+      "cancel": "रद्द करें",
+      "continue": "जारी रखें"
+    },
+    "validation": {
+      "id": {
+        "required": "आईडी आवश्यक है"
+      },
+      "applicantId": {
+        "required": "आवेदक आवश्यक है"
+      },
+      "bankId": {
+        "required": "बैंक आवश्यक है"
+      },
+      "loanType": {
+        "required": "ऋण प्रकार आवश्यक है",
+        "invalid": "अमान्य ऋण प्रकार"
+      },
+      "amountRequested": {
+        "required": "राशि आवश्यक है",
+        "positive": "राशि 0 से अधिक होनी चाहिए"
+      },
+      "status": {
+        "required": "स्थिति आवश्यक है",
+        "invalid": "अमान्य स्थिति"
+      }
     }
   }
 }
