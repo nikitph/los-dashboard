@@ -491,6 +491,363 @@
       "error": "Error"
     }
   },
+  "Users": {
+    "form": {
+      "title": "Create User",
+      "description": "Add a new user to the bank",
+      "editTitle": "Edit User",
+      "editDescription": "Update user details",
+      "viewTitle": "View User",
+      "viewDescription": "User details",
+      "firstName": {
+        "label": "First Name",
+        "placeholder": "Enter first name"
+      },
+      "lastName": {
+        "label": "Last Name",
+        "placeholder": "Enter last name"
+      },
+      "email": {
+        "label": "Email",
+        "placeholder": "Enter email address"
+      },
+      "phoneNumber": {
+        "label": "Phone Number",
+        "placeholder": "Enter 10-digit phone number"
+      },
+      "role": {
+        "label": "Role",
+        "placeholder": "Select a role"
+      },
+      "status": {
+        "label": "Status"
+      },
+      "lastLogin": {
+        "label": "Last Login"
+      },
+      "branch": {
+        "label": "Branch"
+      },
+      "submit": {
+        "label": "Create User",
+        "loading": "Creating User...",
+        "edit": "Update User",
+        "editLoading": "Updating User..."
+      },
+      "cancel": "Cancel",
+      "buttons": {
+        "approve": "Approve",
+        "reject": "Reject",
+        "processing": "Processing...",
+        "submitting": "Submitting...",
+        "submit": "Submit",
+        "cancel": "Cancel"
+      },
+      "rejectDialog": {
+        "title": "Reject User Application",
+        "description": "Please provide a reason for rejecting this user.",
+        "remarks": {
+          "label": "Remarks",
+          "placeholder": "Enter your reason for rejection..."
+        }
+      }
+    },
+    "validation": {
+      "firstName": {
+        "required": "First name is required"
+      },
+      "lastName": {
+        "required": "Last name is required"
+      },
+      "email": {
+        "required": "Email is required",
+        "invalid": "Please enter a valid email address",
+        "alreadyExists": "A user with this email already exists"
+      },
+      "phoneNumber": {
+        "required": "Phone number is required",
+        "invalid": "Please enter a valid 10-digit phone number",
+        "alreadyExists": "A user with this phone number already exists"
+      },
+      "role": {
+        "required": "Role is required"
+      },
+      "bankId": {
+        "required": "Bank ID is required",
+        "notFound": "Bank not found"
+      },
+      "id": {
+        "required": "User ID is required"
+      },
+      "remarks": {
+        "required": "Remarks are required"
+      }
+    },
+    "errors": {
+      "createFailed": "Failed to create user",
+      "updateFailed": "Failed to update user",
+      "fetchFailed": "Failed to fetch user data",
+      "userNotFound": "User not found",
+      "unexpected": "An unexpected error occurred",
+      "validationFailed": "Please check the form for errors",
+      "pendingRequestExists": "A pending request for this user already exists",
+      "pendingRequestNotFound": "Pending request not found",
+      "approveFailed": "Failed to approve user. Please try again.",
+      "rejectFailed": "Failed to reject user. Please try again."
+    },
+    "toast": {
+      "created": "User created successfully",
+      "updated": "User updated successfully",
+      "deleted": "User deleted successfully",
+      "passwordReset": "Password reset email sent to user",
+      "userLocked": "User account locked",
+      "userUnlocked": "User account unlocked",
+      "pendingRequestSubmitted": "User creation request submitted for approval",
+      "pendingRequestApproved": "User creation request approved",
+      "pendingRequestRejected": "User creation request rejected",
+      "pendingRequestCancelled": "User creation request cancelled",
+      "approve": {
+        "success": "The user has been successfully approved",
+        "error": "Failed to approve user. Please try again."
+      },
+      "reject": {
+        "success": "The user has been successfully rejected",
+        "error": "Failed to reject user. Please try again."
+      }
+    },
+    "list": {
+      "title": "Users",
+      "description": "Manage bank staff and system users",
+      "emptyState": "No users found",
+      "addUser": "Add User",
+      "search": "Search users...",
+      "roles": "Filter by role",
+      "status": "Filter by status",
+      "export": "Export Selected",
+      "columns": {
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "email": "Email",
+        "role": "Role",
+        "status": "Status",
+        "lastLogin": "Last Login",
+        "branch": "Branch",
+        "user": "User",
+        "actions": "Actions"
+      },
+      "actions": {
+        "label": "Actions",
+        "menu": "Open menu",
+        "view": "View",
+        "edit": "Edit",
+        "delete": "Delete"
+      },
+      "filters": {
+        "all": "All",
+        "reset": "Reset Filters",
+        "allRoles": "All Roles",
+        "allStatuses": "All Statuses",
+        "searchPlaceholder": "Search users..."
+      },
+      "pendingRequests": "Pending Requests",
+      "confirmDelete": "Are you sure you want to delete this user?",
+      "confirmDeleteSelected": "Are you sure you want to delete the selected users?",
+      "stats": {
+        "activeUsers": "Active Users",
+        "pendingApproval": "Pending Approval",
+        "lockedAccounts": "Locked Accounts"
+      }
+    },
+    "pendingRequests": {
+      "title": "Pending User Requests",
+      "description": "Review and approve user creation requests",
+      "approveButton": "Approve",
+      "rejectButton": "Reject",
+      "cancelButton": "Cancel",
+      "requestedBy": "Requested by",
+      "requestedAt": "Requested at",
+      "rejectReasonLabel": "Rejection Reason",
+      "rejectReasonPlaceholder": "Enter reason for rejection",
+      "confirmReject": "Are you sure you want to reject this request?",
+      "confirmApprove": "Are you sure you want to approve this request?"
+    }
+  },
+  "LoanApplication": {
+    "meta": {
+      "list": {
+        "title": "Loan Applications",
+        "description": "List of all loan applications"
+      },
+      "create": {
+        "title": "Create Loan Application",
+        "description": "Create a new loan application"
+      },
+      "edit": {
+        "title": "Edit Loan Application",
+        "description": "Update an existing loan application"
+      },
+      "view": {
+        "title": "View Loan Application",
+        "description": "View loan application details"
+      }
+    },
+    "form": {
+      "create": {
+        "title": "Create Loan Application",
+        "description": "Fill in the details to create a new loan application"
+      },
+      "update": {
+        "title": "Edit Loan Application",
+        "description": "Update the details of this loan application"
+      },
+      "applicantId": {
+        "label": "Applicant ID",
+        "placeholder": "Select an applicant"
+      },
+      "bankId": {
+        "label": "Bank ID",
+        "placeholder": "Select a bank"
+      },
+      "loanType": {
+        "label": "Loan Type",
+        "placeholder": "Select loan type"
+      },
+      "amountRequested": {
+        "label": "Amount Requested",
+        "placeholder": "Enter amount"
+      },
+      "status": {
+        "label": "Status",
+        "placeholder": "Select status"
+      },
+      "cancel": "Cancel",
+      "submit": "Submit",
+      "submitting": "Submitting..."
+    },
+    "list": {
+      "title": "Loan Applications",
+      "description": "Manage and view loan applications",
+      "empty": "No loan applications found",
+      "search": "Search loan applications",
+      "addNew": "Create New Application",
+      "column": "Columns",
+      "exportSelected": "Export Selected",
+      "deleteSelected": "Delete Selected",
+      "toggleColumns": "Toggle Columns",
+      "loading": "Loading loan applications...",
+      "actions": {
+        "label": "Actions",
+        "menu": "Open menu",
+        "view": "View",
+        "edit": "Edit",
+        "delete": "Delete"
+      },
+      "columns": {
+        "id": "ID",
+        "applicant": "Applicant",
+        "applicantName": "Applicant Name",
+        "loanType": "Loan Type",
+        "amount": "Amount",
+        "amountRequested": "Amount Requested",
+        "status": "Status",
+        "createdAt": "Created",
+        "actions": "Actions"
+      },
+      "pagination": {
+        "previous": "Previous",
+        "next": "Next",
+        "pageInfo": "Page {page} of {total}",
+        "rowsPerPage": "Rows per page"
+      }
+    },
+    "view": {
+      "title": "Loan Application Details",
+      "description": "View the details of this loan application",
+      "id": "ID",
+      "applicant": "Applicant",
+      "loanType": "Loan Type",
+      "amountRequested": "Amount Requested",
+      "status": "Status",
+      "createdAt": "Created At",
+      "updatedAt": "Last Updated",
+      "back": "Back",
+      "edit": "Edit",
+      "delete": "Delete",
+      "deleting": "Deleting...",
+      "notAvailable": "Not available",
+      "guarantors": "Guarantors",
+      "guarantorsDescription": "People who have guaranteed this loan",
+      "documents": "Documents",
+      "documentsDescription": "Documents related to this loan application"
+    },
+    "filter": {
+      "search": "Search loan applications",
+      "reset": "Reset",
+      "loanType": {
+        "all": "All Loan Types",
+        "personal": "Personal",
+        "vehicle": "Vehicle",
+        "houseConstruction": "House Construction",
+        "plotPurchase": "Plot Purchase",
+        "mortgage": "Mortgage"
+      },
+      "status": {
+        "all": "All Statuses",
+        "pending": "Pending",
+        "underReview": "Under Review",
+        "approved": "Approved",
+        "rejected": "Rejected"
+      }
+    },
+    "toast": {
+      "created": "Loan application created successfully",
+      "createdDescription": "The loan application has been created",
+      "updated": "Loan application updated successfully",
+      "updatedDescription": "The loan application has been updated",
+      "deleted": "Loan application deleted successfully",
+      "deletedDescription": "The loan application has been deleted",
+      "fetched": "Loan application loaded",
+      "error": "Error",
+      "errorDescription": "An unexpected error occurred"
+    },
+    "errors": {
+      "notFound": "Loan application not found",
+      "unauthorized": "You don't have permission to access this loan application",
+      "invalidData": "The provided information is invalid"
+    },
+    "confirm": {
+      "delete": "Are you sure you want to delete this loan application?",
+      "deleteMultiple": {
+        "title": "Delete Selected Applications",
+        "description": "Are you sure you want to delete {count} selected loan applications?"
+      },
+      "cancel": "Cancel",
+      "continue": "Continue"
+    },
+    "validation": {
+      "id": {
+        "required": "ID is required"
+      },
+      "applicantId": {
+        "required": "Applicant is required"
+      },
+      "bankId": {
+        "required": "Bank is required"
+      },
+      "loanType": {
+        "required": "Loan type is required",
+        "invalid": "Invalid loan type"
+      },
+      "amountRequested": {
+        "required": "Amount is required",
+        "positive": "Amount must be greater than 0"
+      },
+      "status": {
+        "required": "Status is required",
+        "invalid": "Invalid status"
+      }
+    }
+  },
   "CoApplicant": {
     "form": {
       "firstName": "First Name",
