@@ -143,8 +143,7 @@ export async function submitPendingUserRequest(
         bankId: validated.bankId,
         actionType: PendingActionType.REQUEST_BANK_USER_CREATION,
         status: ApprovalStatus.PENDING,
-        // @ts-ignore
-        payload: { email: validated.email },
+        payload: { path: ["email"], equals: validated.email },
       },
     });
 
