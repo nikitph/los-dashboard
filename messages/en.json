@@ -850,25 +850,43 @@
   },
   "CoApplicant": {
     "form": {
-      "firstName": "First Name",
-      "firstName.placeholder": "Enter first name",
-      "lastName": "Last Name",
-      "lastName.placeholder": "Enter last name",
-      "email": "Email",
-      "email.placeholder": "Enter email address",
-      "mobileNumber": "Mobile Number",
-      "mobileNumber.placeholder": "Enter mobile number",
-      "mobileNumber.description": "Include country code if applicable",
-      "addressLine1": "Address Line 1",
-      "addressLine1.placeholder": "Enter street address",
-      "addressLine2": "Address Line 2 (Optional)",
-      "addressLine2.placeholder": "Enter apartment, suite, etc.",
-      "addressCity": "City",
-      "addressCity.placeholder": "Enter city",
-      "addressState": "State",
-      "addressState.placeholder": "Enter state",
-      "addressZipCode": "ZIP Code",
-      "addressZipCode.placeholder": "Enter ZIP code",
+      "firstName": {
+        "label": "First Name",
+        "placeholder": "Enter first name"
+      },
+      "lastName": {
+        "label": "Last Name",
+        "placeholder": "Enter last name"
+      },
+      "email": {
+        "label": "Email",
+        "placeholder": "Enter email address"
+      },
+      "mobileNumber": {
+        "label": "Mobile Number",
+        "placeholder": "Enter mobile number",
+        "description": "Include country code if applicable"
+      },
+      "addressLine1": {
+        "label": "Address Line 1",
+        "placeholder": "Enter street address"
+      },
+      "addressLine2": {
+        "label": "Address Line 2 (Optional)",
+        "placeholder": "Enter apartment, suite, etc."
+      },
+      "addressCity": {
+        "label": "City",
+        "placeholder": "Enter city"
+      },
+      "addressState": {
+        "label": "State",
+        "placeholder": "Enter state"
+      },
+      "addressZipCode": {
+        "label": "ZIP Code",
+        "placeholder": "Enter ZIP code"
+      },
       "loanApplicationId": "Loan Application ID",
       "fullName": "Full Name",
       "fullAddress": "Full Address",
@@ -898,16 +916,36 @@
       "edit": "Edit"
     },
     "validation": {
-      "firstName.required": "First name is required",
-      "lastName.required": "Last name is required",
-      "email.invalid": "Please enter a valid email address",
-      "addressState.required": "State is required",
-      "addressCity.required": "City is required",
-      "addressZipCode.required": "ZIP code is required",
-      "addressLine1.required": "Address is required",
-      "mobileNumber.invalid": "Please enter a valid mobile number",
-      "loanApplicationId.required": "Loan Application ID is required",
-      "id.required": "Co-Applicant ID is required"
+      "firstName": {
+        "required": "First name is required"
+      },
+      "lastName": {
+        "required": "Last name is required"
+      },
+      "email": {
+        "invalid": "Please enter a valid email address"
+      },
+      "addressState": {
+        "required": "State is required"
+      },
+      "addressCity": {
+        "required": "City is required"
+      },
+      "addressZipCode": {
+        "required": "ZIP code is required"
+      },
+      "addressLine1": {
+        "required": "Address is required"
+      },
+      "mobileNumber": {
+        "invalid": "Please enter a valid mobile number"
+      },
+      "loanApplicationId": {
+        "required": "Loan Application ID is required"
+      },
+      "id": {
+        "required": "Co-Applicant ID is required"
+      }
     },
     "errors": {
       "unauthorized": "You are not authorized to perform this action",

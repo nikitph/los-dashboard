@@ -850,25 +850,43 @@
   },
   "CoApplicant": {
     "form": {
-      "firstName": "पहला नाम",
-      "firstName.placeholder": "पहला नाम दर्ज करें",
-      "lastName": "अंतिम नाम",
-      "lastName.placeholder": "अंतिम नाम दर्ज करें",
-      "email": "ईमेल",
-      "email.placeholder": "ईमेल पता दर्ज करें",
-      "mobileNumber": "मोबाइल नंबर",
-      "mobileNumber.placeholder": "मोबाइल नंबर दर्ज करें",
-      "mobileNumber.description": "देश कोड शामिल करें यदि लागू हो",
-      "addressLine1": "पता पंक्ति 1",
-      "addressLine1.placeholder": "स्ट्रीट एड्रेस दर्ज करें",
-      "addressLine2": "पता पंक्ति 2 (वैकल्पिक)",
-      "addressLine2.placeholder": "अपार्टमेंट, सूट, आदि दर्ज करें",
-      "addressCity": "शहर",
-      "addressCity.placeholder": "शहर दर्ज करें",
-      "addressState": "राज्य",
-      "addressState.placeholder": "राज्य दर्ज करें",
-      "addressZipCode": "पिन कोड",
-      "addressZipCode.placeholder": "पिन कोड दर्ज करें",
+      "firstName": {
+        "label": "पहला नाम",
+        "placeholder": "पहला नाम दर्ज करें"
+      },
+      "lastName": {
+        "label": "अंतिम नाम",
+        "placeholder": "अंतिम नाम दर्ज करें"
+      },
+      "email": {
+        "label": "ईमेल",
+        "placeholder": "ईमेल पता दर्ज करें"
+      },
+      "mobileNumber": {
+        "label": "मोबाइल नंबर",
+        "placeholder": "मोबाइल नंबर दर्ज करें",
+        "description": "देश कोड शामिल करें यदि लागू हो"
+      },
+      "addressLine1": {
+        "label": "पता पंक्ति 1",
+        "placeholder": "स्ट्रीट एड्रेस दर्ज करें"
+      },
+      "addressLine2": {
+        "label": "पता पंक्ति 2 (वैकल्पिक)",
+        "placeholder": "अपार्टमेंट, सूट, आदि दर्ज करें"
+      },
+      "addressCity": {
+        "label": "शहर",
+        "placeholder": "शहर दर्ज करें"
+      },
+      "addressState": {
+        "label": "राज्य",
+        "placeholder": "राज्य दर्ज करें"
+      },
+      "addressZipCode": {
+        "label": "पिन कोड",
+        "placeholder": "पिन कोड दर्ज करें"
+      },
       "loanApplicationId": "ऋण आवेदन आईडी",
       "fullName": "पूरा नाम",
       "fullAddress": "पूरा पता",
@@ -898,16 +916,36 @@
       "edit": "संपादित करें"
     },
     "validation": {
-      "firstName.required": "पहला नाम आवश्यक है",
-      "lastName.required": "अंतिम नाम आवश्यक है",
-      "email.invalid": "कृपया एक वैध ईमेल पता दर्ज करें",
-      "addressState.required": "राज्य आवश्यक है",
-      "addressCity.required": "शहर आवश्यक है",
-      "addressZipCode.required": "पिन कोड आवश्यक है",
-      "addressLine1.required": "पता आवश्यक है",
-      "mobileNumber.invalid": "कृपया एक वैध मोबाइल नंबर दर्ज करें",
-      "loanApplicationId.required": "ऋण आवेदन आईडी आवश्यक है",
-      "id.required": "सह-आवेदक आईडी आवश्यक है"
+      "firstName": {
+        "required": "पहला नाम आवश्यक है"
+      },
+      "lastName": {
+        "required": "अंतिम नाम आवश्यक है"
+      },
+      "email": {
+        "invalid": "कृपया एक वैध ईमेल पता दर्ज करें"
+      },
+      "addressState": {
+        "required": "राज्य आवश्यक है"
+      },
+      "addressCity": {
+        "required": "शहर आवश्यक है"
+      },
+      "addressZipCode": {
+        "required": "पिन कोड आवश्यक है"
+      },
+      "addressLine1": {
+        "required": "पता आवश्यक है"
+      },
+      "mobileNumber": {
+        "invalid": "कृपया एक वैध मोबाइल नंबर दर्ज करें"
+      },
+      "loanApplicationId": {
+        "required": "ऋण आवेदन आईडी आवश्यक है"
+      },
+      "id": {
+        "required": "सह-आवेदक आईडी आवश्यक है"
+      }
     },
     "errors": {
       "unauthorized": "आपको यह कार्रवाई करने के लिए अधिकृत नहीं किया गया है",
