@@ -847,5 +847,139 @@
         "invalid": "Invalid status"
       }
     }
+  },
+  "CoApplicant": {
+    "form": {
+      "firstName": "First Name",
+      "firstName.placeholder": "Enter first name",
+      "lastName": "Last Name",
+      "lastName.placeholder": "Enter last name",
+      "email": "Email",
+      "email.placeholder": "Enter email address",
+      "mobileNumber": "Mobile Number",
+      "mobileNumber.placeholder": "Enter mobile number",
+      "mobileNumber.description": "Include country code if applicable",
+      "addressLine1": "Address Line 1",
+      "addressLine1.placeholder": "Enter street address",
+      "addressLine2": "Address Line 2 (Optional)",
+      "addressLine2.placeholder": "Enter apartment, suite, etc.",
+      "addressCity": "City",
+      "addressCity.placeholder": "Enter city",
+      "addressState": "State",
+      "addressState.placeholder": "Enter state",
+      "addressZipCode": "ZIP Code",
+      "addressZipCode.placeholder": "Enter ZIP code",
+      "loanApplicationId": "Loan Application ID",
+      "fullName": "Full Name",
+      "fullAddress": "Full Address",
+      "createdAt": "Created At",
+      "updatedAt": "Updated At",
+      "sections": {
+        "basic": "Basic Information",
+        "address": "Address Information",
+        "metadata": "Additional Information"
+      },
+      "create": {
+        "title": "Create Co-Applicant",
+        "description": "Add a new co-applicant to the loan application"
+      },
+      "update": {
+        "title": "Update Co-Applicant",
+        "description": "Edit co-applicant information"
+      },
+      "actions": {
+        "title": "Actions",
+        "description": "Available actions for this co-applicant"
+      },
+      "submit": "Submit",
+      "cancel": "Cancel",
+      "back": "Back",
+      "delete": "Delete",
+      "edit": "Edit"
+    },
+    "validation": {
+      "firstName.required": "First name is required",
+      "lastName.required": "Last name is required",
+      "email.invalid": "Please enter a valid email address",
+      "addressState.required": "State is required",
+      "addressCity.required": "City is required",
+      "addressZipCode.required": "ZIP code is required",
+      "addressLine1.required": "Address is required",
+      "mobileNumber.invalid": "Please enter a valid mobile number",
+      "loanApplicationId.required": "Loan Application ID is required",
+      "id.required": "Co-Applicant ID is required"
+    },
+    "errors": {
+      "unauthorized": "You are not authorized to perform this action",
+      "forbidden": "You don't have permission to access this resource",
+      "unexpected": "An unexpected error occurred. Please try again later",
+      "notFound": "Co-Applicant not found",
+      "validationFailed": "Please check your input and try again",
+      "loadFailed": "Failed to load co-applicant data",
+      "deleteFailed": "Failed to delete co-applicant"
+    },
+    "toast": {
+      "created": "Co-Applicant created successfully",
+      "updated": "Co-Applicant updated successfully",
+      "deleted": "Co-Applicant deleted successfully",
+      "fetched": "Co-Applicant retrieved successfully",
+      "listed": "Co-Applicants retrieved successfully"
+    },
+    "list": {
+      "title": "Co-Applicants",
+      "titleForLoan": "Co-Applicants for Loan Application",
+      "description": "Manage co-applicants for loan applications",
+      "add": "Add Co-Applicant",
+      "empty": "No co-applicants found",
+      "search": {
+        "placeholder": "Search co-applicants..."
+      },
+      "columns": {
+        "title": "Columns",
+        "fullName": "Full Name",
+        "email": "Email",
+        "mobileNumber": "Mobile Number",
+        "location": "Location",
+        "createdAt": "Created At",
+        "actions": "Actions"
+      },
+      "actions": {
+        "view": "View Details",
+        "edit": "Edit",
+        "delete": "Delete"
+      }
+    },
+    "page": {
+      "create": {
+        "title": "Create Co-Applicant",
+        "description": "Add a new co-applicant to a loan application",
+        "noLoanApplicationId": "A loan application ID is required. Please go back and select a loan application."
+      },
+      "edit": {
+        "title": "Edit Co-Applicant",
+        "description": "Update co-applicant information"
+      },
+      "view": {
+        "title": "Co-Applicant Details",
+        "description": "View co-applicant information"
+      },
+      "list": {
+        "title": "All Co-Applicants",
+        "titleForLoan": "Co-Applicants for Loan",
+        "description": "View and manage co-applicants",
+        "add": "Add Co-Applicant"
+      }
+    },
+    "dialog": {
+      "delete": {
+        "title": "Delete Co-Applicant",
+        "description": "Are you sure you want to delete this co-applicant? This action cannot be undone.",
+        "cancel": "Cancel",
+        "confirm": "Delete"
+      }
+    },
+    "common": {
+      "notSpecified": "Not specified"
+    }
   }
 }
