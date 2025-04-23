@@ -1,7 +1,30 @@
 "use client";
+
 import { usePathname } from "next/navigation";
 import { Divider } from "@/components/Divider";
 import { Input } from "@/components/Input";
+import { File, Files, Folder } from "@/components/animate-ui/files";
+import { cx } from "@/lib/utils";
+import {
+  Building,
+  Building2,
+  CarFront,
+  Check,
+  CreditCard,
+  CreditCard as Card,
+  DollarSign,
+  DollarSign as Dollar,
+  FileCheck,
+  FileText,
+  Home,
+  HomeIcon,
+  Users,
+} from "lucide-react";
+import * as React from "react";
+import { useEffect, useState } from "react";
+import { Logo } from "../../../../public/Logo";
+import { UserProfile } from "./UserProfile";
+import { MotionHighlight } from "@/components/animate-ui/motion-highlight";
 import {
   Sidebar,
   SidebarContent,
@@ -9,19 +32,7 @@ import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarHeader,
-  SidebarLink,
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuSub,
-  SidebarSubLink,
 } from "@/components/Sidebar";
-import { cx, focusRing } from "@/lib/utils";
-import { RiArrowDownSFill } from "@remixicon/react";
-import { Building, CarFront, CreditCard, DollarSign, FileCheck, FileText, Home, Users } from "lucide-react";
-import * as React from "react";
-import { useEffect, useState } from "react";
-import { Logo } from "../../../../public/Logo";
-import { UserProfile } from "./UserProfile";
 
 const mainNavigation = [
   {
@@ -37,6 +48,7 @@ const applicantSections = [
     name: "Applicants",
     href: "/saas/applicants/list",
     icon: Users,
+    openIcon: Users,
     children: [
       {
         name: "List",
@@ -52,6 +64,7 @@ const applicantSections = [
     name: "Loan Applications",
     href: "/saas/loan-applications/list",
     icon: FileText,
+    openIcon: FileText,
     children: [
       {
         name: "List",
@@ -63,6 +76,7 @@ const applicantSections = [
     name: "Income",
     href: "/saas/income/list",
     icon: DollarSign,
+    openIcon: Dollar,
     children: [
       {
         name: "List",
@@ -74,6 +88,7 @@ const applicantSections = [
     name: "Loan Eligibility",
     href: "/saas/loaneligibility/list",
     icon: FileCheck,
+    openIcon: Check,
     children: [
       {
         name: "List",
@@ -88,6 +103,7 @@ const verificationSections = [
     name: "Business Verification",
     href: "/saas/businessverification/list",
     icon: Building,
+    openIcon: Building2,
     children: [
       {
         name: "List",
@@ -99,10 +115,11 @@ const verificationSections = [
     name: "Residence Verification",
     href: "/saas/residenceverification/list",
     icon: Home,
+    openIcon: HomeIcon,
     children: [
       {
         name: "List",
-        href: "/saas/residencverificaion/lit",
+        href: "/saas/residenceverification/list",
       },
     ],
   },
@@ -110,10 +127,11 @@ const verificationSections = [
     name: "Physical Verification",
     href: "/saas/physicalverification/list",
     icon: FileCheck,
+    openIcon: Check,
     children: [
       {
         name: "List",
-        href: "/saas/physicaverificaion/lit",
+        href: "/saas/physicalverification/list",
       },
     ],
   },
@@ -124,6 +142,7 @@ const eligibilitySections = [
     name: "Mortgage Eligibility",
     href: "/saas/mortgageeligibility/list",
     icon: Building,
+    openIcon: Building2,
     children: [
       {
         name: "List",
@@ -135,6 +154,7 @@ const eligibilitySections = [
     name: "Property Eligibility",
     href: "/saas/propertyeligibility/list",
     icon: Home,
+    openIcon: HomeIcon,
     children: [
       {
         name: "List",
@@ -146,10 +166,11 @@ const eligibilitySections = [
     name: "Plot Eligibility",
     href: "/saas/ploteligibility/list",
     icon: Home,
+    openIcon: HomeIcon,
     children: [
       {
         name: "List",
-        href: "/saas/ploteligibilitylist",
+        href: "/saas/ploteligibility/list",
       },
     ],
   },
@@ -157,10 +178,11 @@ const eligibilitySections = [
     name: "Vehicle Eligibility",
     href: "/saas/vehicleeligibility/list",
     icon: CarFront,
+    openIcon: CarFront,
     children: [
       {
         name: "List",
-        href: "/saas/vehicleeligibility/lis",
+        href: "/saas/vehicleeligibility/list",
       },
     ],
   },
@@ -171,6 +193,7 @@ const otherSections = [
     name: "Banks",
     href: "/saas/banks/list",
     icon: Building,
+    openIcon: Building2,
     children: [
       {
         name: "List",
@@ -182,6 +205,7 @@ const otherSections = [
     name: "Quotes",
     href: "/saas/quotes/list",
     icon: CreditCard,
+    openIcon: Card,
     children: [
       {
         name: "List",
@@ -199,51 +223,28 @@ const allNavigationSections = [
   { title: "Other", sections: otherSections },
 ];
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({ ...props }) {
   const pathname = usePathname();
-  const [openMenus, setOpenMenus] = React.useState<string[]>([]);
-  const [currentStep, setCurrentStep] = useState(0);
+  const [openFolders, setOpenFolders] = useState<string[]>([]);
 
-  // Determine the current model/section from the URL path
   useEffect(() => {
+    // Determine which folders should be open based on current path
     const segments = pathname.split("/");
     if (segments.length >= 3) {
-      const currentModel = segments[2]; // Now the model is the third segment after /saas/
+      const currentModel = segments[2];
 
-      // Open the menu containing the current model
+      const newOpenFolders: string[] = [];
       allNavigationSections.forEach((group) => {
         group.sections.forEach((section) => {
           if (section.href.includes(currentModel)) {
-            if (!openMenus.includes(section.name)) {
-              setOpenMenus((prev) => [...prev, section.name]);
-            }
+            newOpenFolders.push(section.name);
           }
         });
       });
+
+      setOpenFolders(newOpenFolders);
     }
   }, [pathname]);
-
-  const toggleMenu = (name: string) => {
-    setOpenMenus((prev: string[]) =>
-      prev.includes(name) ? prev.filter((item: string) => item !== name) : [...prev, name],
-    );
-  };
-
-  const steps: Step[] = [
-    { label: "Personal Details", status: "current" },
-    { label: "Income Details", status: "upcoming" },
-    { label: "Loan Verification", status: "upcoming" },
-    { label: "Eligibility", status: "upcoming" },
-    { label: "Offer", status: "upcoming" },
-    { label: "Verification", status: "upcoming" },
-  ];
-
-  const updateSteps = (stepIndex: number) => {
-    return steps.map((step, index) => ({
-      ...step,
-      status: index === stepIndex ? "current" : index < stepIndex ? "completed" : "upcoming",
-    })) as Step[];
-  };
 
   // Check if a link is active based on the current pathname
   const isLinkActive = (href: string) => {
@@ -263,86 +264,88 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </div>
         </div>
       </SidebarHeader>
-      <SidebarContent className={"[scrollbar-width:none] [&::-webkit-scrollbar]:hidden"}>
+      <SidebarContent className={"px-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"}>
         <SidebarGroup>
           <SidebarGroupContent>
             <Input type="search" placeholder="Search items..." className="[&>input]:sm:py-1.5" />
           </SidebarGroupContent>
         </SidebarGroup>
-        <SidebarGroup className="pt-0">
-          <SidebarGroupContent>
-            <SidebarMenu className="space-y-1">
-              {mainNavigation.map((item) => (
-                <SidebarMenuItem key={item.name}>
-                  <SidebarLink
-                    href={item.href}
-                    isActive={isLinkActive(item.href)}
-                    icon={item.icon}
-                    notifications={item.notifications}
-                  >
-                    {item.name}
-                  </SidebarLink>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-        <div className="px-3">
-          <Divider className="my-0 py-0" />
+
+        {/* Main Navigation */}
+        <div className="">
+          <MotionHighlight mode="parent" controlledItems hover className="bg-gray-100 dark:bg-gray-800">
+            {mainNavigation.map((item) => (
+              <div key={item.name} className="mb-1 last:mb-0">
+                <File
+                  name={item.name}
+                  sideComponent={<item.icon className="ml-auto size-4 text-gray-500" />}
+                  className={cx(
+                    "text-gray-900 dark:text-gray-400",
+                    isLinkActive(item.href) && "font-medium text-blue-600 dark:text-blue-400",
+                  )}
+                />
+              </div>
+            ))}
+          </MotionHighlight>
         </div>
 
-        {allNavigationSections.map((group, index) => (
-          <SidebarGroup key={group.title}>
-            {index > 0 && (
-              <div className="px-3 py-1">
-                <Divider className="my-0 py-0" />
-              </div>
-            )}
-            <div className="px-3 py-2">
+        <Divider className="my-3" />
+
+        {/* Section Groups */}
+        {allNavigationSections.map((group, groupIndex) => (
+          <div key={group.title} className="mb-4">
+            <div className="px-2 py-2">
               <h3 className="text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">{group.title}</h3>
             </div>
-            <SidebarGroupContent>
-              <SidebarMenu className="space-y-1">
-                {group.sections.map((section) => (
-                  <SidebarMenuItem key={section.name}>
-                    <button
-                      onClick={() => toggleMenu(section.name)}
+
+            <MotionHighlight mode="parent" controlledItems hover className="bg-gray-100 dark:bg-gray-800">
+              <Files
+                className="border-0 bg-transparent shadow-none"
+                activeClassName="bg-transparent"
+                open={openFolders}
+                onOpenChange={setOpenFolders}
+              >
+                {group.sections.map((section) => {
+                  const OpenIcon = section.openIcon;
+                  const CloseIcon = section.icon;
+
+                  // Define custom icons for the folder
+                  const customIcons = {
+                    open: <OpenIcon className="size-4 text-blue-500" />,
+                    close: <CloseIcon className="size-4" />,
+                  };
+
+                  return (
+                    <Folder
+                      key={section.name}
+                      name={section.name}
+                      sideComponent={<span className="ml-auto text-gray-500" />}
                       className={cx(
-                        "flex w-full items-center justify-between gap-x-2.5 rounded-md p-2 text-base text-gray-900 transition hover:bg-gray-200/50 sm:text-sm dark:text-gray-400 hover:dark:bg-gray-900 hover:dark:text-gray-50",
-                        isLinkActive(section.href) &&
-                          "bg-gray-200/50 text-blue-600 dark:bg-gray-800 dark:text-blue-400",
-                        focusRing,
+                        "text-gray-900 dark:text-gray-400",
+                        isLinkActive(section.href) && "font-medium text-blue-600 dark:text-blue-400",
                       )}
+                      icons={customIcons}
                     >
-                      <div className="flex items-center gap-2.5">
-                        <section.icon className="size-[18px] shrink-0" aria-hidden="true" />
-                        {section.name}
-                      </div>
-                      <RiArrowDownSFill
-                        className={cx(
-                          openMenus.includes(section.name) ? "rotate-0" : "-rotate-90",
-                          "size-5 shrink-0 transform text-gray-400 transition-transform duration-150 ease-in-out dark:text-gray-600",
-                        )}
-                        aria-hidden="true"
-                      />
-                    </button>
-                    {section.children && openMenus.includes(section.name) && (
-                      <SidebarMenuSub>
-                        <div className="absolute inset-y-0 left-4 w-px bg-gray-300 dark:bg-gray-800" />
-                        {section.children.map((child) => (
-                          <SidebarMenuItem key={child.name}>
-                            <SidebarSubLink href={child.href} isActive={isLinkActive(child.href)}>
-                              {child.name}
-                            </SidebarSubLink>
-                          </SidebarMenuItem>
-                        ))}
-                      </SidebarMenuSub>
-                    )}
-                  </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
+                      {section.children?.map((child) => (
+                        <File
+                          key={child.name}
+                          name={child.name}
+                          className={cx(
+                            "text-gray-700 dark:text-gray-400",
+                            isLinkActive(child.href) && "font-medium text-blue-600 dark:text-blue-400",
+                          )}
+                          href={child.href}
+                          isActive={isLinkActive(child.href)}
+                        />
+                      ))}
+                    </Folder>
+                  );
+                })}
+              </Files>
+            </MotionHighlight>
+
+            {groupIndex < allNavigationSections.length - 1 && <Divider className="my-3" />}
+          </div>
         ))}
 
         {/*<LoanSteps steps={updateSteps(currentStep)} currentStep={currentStep} />*/}
