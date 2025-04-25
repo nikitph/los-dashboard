@@ -12,7 +12,7 @@ import {
   newLoanApplicationSchema,
 } from "@/app/[locale]/saas/(private)/loanapplication/schemas/loanApplicationSchema";
 import { handleFormErrors } from "@/lib/formErrorHelper";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 export function useNewLoanApplicationForm() {
   const [isLoading, setIsLoading] = useState(false);
@@ -20,6 +20,7 @@ export function useNewLoanApplicationForm() {
   const router = useRouter();
   const { user: currentUser, loading } = useUser();
   const { toast } = useToast();
+  const locale = useLocale();
 
   console.log("currentUser", currentUser);
 
@@ -64,6 +65,7 @@ export function useNewLoanApplicationForm() {
         description: "Successfully created loan application",
         variant: "default",
       });
+      router.push(`/${locale}/saas/personal?lid=${result.data.id}`);
     } catch (error) {
       toast({
         title: "Error",

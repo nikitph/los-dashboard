@@ -1,7 +1,7 @@
 "use server";
 
 import PersonalInformationForm from "@/app/[locale]/saas/(private)/personal/components/PersonalInformationForm";
-import { prisma } from "@/lib/prisma";
+import { prisma } from "@/lib/prisma/prisma";
 
 export default async function CreateApplicantPage({ searchParams }: any) {
   const { lid } = searchParams;

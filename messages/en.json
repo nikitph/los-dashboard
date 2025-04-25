@@ -1019,5 +1019,247 @@
     "common": {
       "notSpecified": "Not specified"
     }
+  },
+  "Applicant": {
+    "form": {
+      "create": {
+        "title": "Create New Applicant",
+        "description": "Enter applicant details to create a new profile"
+      },
+      "edit": {
+        "title": "Edit Applicant",
+        "description": "Update applicant information"
+      },
+      "view": {
+        "title": "View Applicant",
+        "description": "Applicant profile information"
+      },
+      
+        "userId": {
+          "label": "User ID",
+          "placeholder": "Select a user"
+        },
+        "dateOfBirth": {
+          "label": "Date of Birth",
+          "placeholder": "Select date of birth"
+        },
+        "addressState": {
+          "label": "State",
+          "placeholder": "Enter state"
+        },
+        "addressCity": {
+          "label": "City",
+          "placeholder": "Enter city"
+        },
+        "addressFull": {
+          "label": "Full Address",
+          "placeholder": "Enter full address"
+        },
+        "addressPinCode": {
+          "label": "PIN Code",
+          "placeholder": "Enter PIN code"
+        },
+        "aadharNumber": {
+          "label": "Aadhar Number",
+          "placeholder": "Enter 12-digit Aadhar number"
+        },
+        "panNumber": {
+          "label": "PAN Number",
+          "placeholder": "Enter PAN number"
+        },
+        "aadharVerificationStatus": {
+          "label": "Aadhar Verified"
+        },
+        "panVerificationStatus": {
+          "label": "PAN Verified"
+        },
+        "photoUrl": {
+          "label": "Photo URL",
+          "placeholder": "Enter photo URL"
+        },
+        "bankId": {
+          "label": "Bank",
+          "placeholder": "Select bank"
+        },
+      
+      "sections": {
+        "personal": "Personal Information",
+        "address": "Address Information",
+        "verification": "Identity Verification",
+        "system": "System Information"
+      },
+      "actions": {
+        "create": "Create Applicant",
+        "update": "Update Applicant",
+        "cancel": "Cancel",
+        "back": "Back",
+        "delete": "Delete"
+      },
+      "alert": {
+        "deleted": {
+          "title": "Applicant Deleted",
+          "description": "This applicant has been deleted and cannot be modified"
+        }
+      }
+    },
+    "validation": {
+      "userId": {
+        "required": "User ID is required"
+      },
+      "bankId": {
+        "required": "Bank ID is required"
+      },
+      "id": {
+        "required": "Applicant ID is required"
+      },
+      "aadharNumber": {
+        "format": "Aadhar number must be exactly 12 digits"
+      },
+      "panNumber": {
+        "format": "PAN number must be in format AAAAA9999A"
+      },
+      "addressPinCode": {
+        "format": "PIN code must be 6 digits"
+      }
+    },
+    "errors": {
+      "notFound": "Applicant not found",
+      "alreadyExists": "An applicant already exists for this user",
+      "hasActiveLoans": "Cannot delete applicant with active loan applications",
+      "cannotVerify": "You don't have permission to verify this document"
+    },
+    "toast": {
+      "createSuccess": "Applicant Created",
+      "createSuccessDescription": "The applicant was successfully created",
+      "createError": "Creation Failed",
+      "createErrorDescription": "Failed to create the applicant",
+      "updateSuccess": "Applicant Updated",
+      "updateSuccessDescription": "The applicant was successfully updated",
+      "updateError": "Update Failed",
+      "updateErrorDescription": "Failed to update the applicant",
+      "deleteSuccess": "Applicant Deleted",
+      "deleteSuccessDescription": "The applicant was successfully deleted",
+      "deleteError": "Deletion Failed",
+      "deleteErrorDescription": "Failed to delete the applicant",
+      "retrieved": "Applicant retrieved successfully",
+      "listRetrieved": "Applicant list retrieved successfully"
+    },
+    "list": {
+      "pageTitle": "Applicants",
+      "pageDescription": "Manage loan applicants and their details",
+      "title": "Applicant List",
+      "description": "View and manage all applicants",
+      "noResults": "No applicants found",
+      "search": {
+        "placeholder": "Search applicants..."
+      },
+      "filters": {
+        "verification": {
+          "placeholder": "Verification Status",
+          "all": "All Statuses",
+          "verified": "Fully Verified",
+          "partiallyVerified": "Partially Verified",
+          "unverified": "Unverified"
+        }
+      },
+      "columns": {
+        "id": "ID",
+        "fullName": "Full Name",
+        "dateOfBirth": "Date of Birth",
+        "verificationStatus": "Verification",
+        "aadharNumber": "Aadhar",
+        "panNumber": "PAN",
+        "createdAt": "Created",
+        "address": "Address",
+        "loanCount": "Loans",
+        "actions": "Actions",
+        "view": "Columns"
+      },
+      "actions": {
+        "createNew": "New Applicant",
+        "view": "View",
+        "edit": "Edit",
+        "delete": "Delete"
+      },
+      "pagination": {
+        "showing": "Showing {from} to {to} of {total} applicants",
+        "previous": "Previous",
+        "next": "Next"
+      }
+    },
+    "view": {
+      "pageTitle": "Applicant Details",
+      "pageDescription": "View detailed applicant information",
+      "title": "Applicant Information",
+      "description": "View applicant details and verification status",
+      "applicant": "Applicant",
+      "fullName": "Full Name",
+      "dateOfBirth": "Date of Birth",
+      "fullAddress": "Address",
+      "addressState": "State",
+      "addressCity": "City",
+      "addressPinCode": "PIN Code",
+      "aadharNumber": "Aadhar Number",
+      "panNumber": "PAN Number",
+      "verified": "Verified",
+      "unverified": "Unverified",
+      "notProvided": "Not provided",
+      "createdAt": "Created At",
+      "bankId": "Bank ID",
+      "photoUrl": "Photo",
+      "verificationStatus": {
+        "fully_verified": "Fully Verified",
+        "partially_verified": "Partially Verified",
+        "unverified": "Unverified"
+      },
+      "notFound": {
+        "title": "Applicant Not Found",
+        "description": "The requested applicant could not be found",
+        "cardTitle": "Not Found",
+        "cardDescription": "The applicant may have been deleted or you may not have permission to view it"
+      },
+      "alert": {
+        "deleted": {
+          "title": "Applicant Deleted",
+          "description": "This applicant has been deleted and cannot be modified"
+        }
+      },
+      "sections": {
+        "personal": "Personal Information",
+        "address": "Address",
+        "verification": "Identity Verification",
+        "system": "System Information"
+      },
+      "actions": {
+        "back": "Back",
+        "backToList": "Back to List",
+        "edit": "Edit",
+        "delete": "Delete"
+      }
+    },
+    "edit": {
+      "pageTitle": "Edit Applicant: {name}",
+      "pageDescription": "Update applicant information and verification status",
+      "notFound": {
+        "title": "Applicant Not Found",
+        "description": "The requested applicant could not be found",
+        "cardTitle": "Not Found",
+        "cardDescription": "The applicant may have been deleted or you may not have permission to edit it"
+      },
+      "actions": {
+        "backToList": "Back to List",
+        "backToView": "Back to View"
+      }
+    },
+    "create": {
+      "pageTitle": "Create New Applicant",
+      "pageDescription": "Add a new loan applicant to the system"
+    },
+    "delete": {
+      "confirmTitle": "Delete Applicant",
+      "confirmDescription": "Are you sure you want to delete this applicant? This action cannot be undone.",
+      "confirm": "Delete",
+      "cancel": "Cancel"
+    }
   }
 }

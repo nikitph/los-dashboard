@@ -1019,5 +1019,247 @@
     "common": {
       "notSpecified": "निर्दिष्ट नहीं"
     }
+  },
+  "Applicant": {
+    "form": {
+      "create": {
+        "title": "नया आवेदक बनाएं",
+        "description": "नया प्रोफाइल बनाने के लिए आवेदक विवरण दर्ज करें"
+      },
+      "edit": {
+        "title": "आवेदक संपादित करें",
+        "description": "आवेदक जानकारी अपडेट करें"
+      },
+      "view": {
+        "title": "आवेदक देखें",
+        "description": "आवेदक प्रोफाइल जानकारी"
+      },
+      "fields": {
+        "userId": {
+          "label": "उपयोगकर्ता आईडी",
+          "placeholder": "उपयोगकर्ता चुनें"
+        },
+        "dateOfBirth": {
+          "label": "जन्म तिथि",
+          "placeholder": "जन्म तिथि चुनें"
+        },
+        "addressState": {
+          "label": "राज्य",
+          "placeholder": "राज्य दर्ज करें"
+        },
+        "addressCity": {
+          "label": "शहर",
+          "placeholder": "शहर दर्ज करें"
+        },
+        "addressFull": {
+          "label": "पूरा पता",
+          "placeholder": "पूरा पता दर्ज करें"
+        },
+        "addressPinCode": {
+          "label": "पिन कोड",
+          "placeholder": "पिन कोड दर्ज करें"
+        },
+        "aadharNumber": {
+          "label": "आधार संख्या",
+          "placeholder": "12-अंकों का आधार नंबर दर्ज करें"
+        },
+        "panNumber": {
+          "label": "पैन नंबर",
+          "placeholder": "पैन नंबर दर्ज करें"
+        },
+        "aadharVerificationStatus": {
+          "label": "आधार सत्यापित"
+        },
+        "panVerificationStatus": {
+          "label": "पैन सत्यापित"
+        },
+        "photoUrl": {
+          "label": "फोटो URL",
+          "placeholder": "फोटो URL दर्ज करें"
+        },
+        "bankId": {
+          "label": "बैंक",
+          "placeholder": "बैंक चुनें"
+        }
+      },
+      "sections": {
+        "personal": "व्यक्तिगत जानकारी",
+        "address": "पता जानकारी",
+        "verification": "पहचान सत्यापन",
+        "system": "सिस्टम जानकारी"
+      },
+      "actions": {
+        "create": "आवेदक बनाएं",
+        "update": "आवेदक अपडेट करें",
+        "cancel": "रद्द करें",
+        "back": "वापस",
+        "delete": "हटाएं"
+      },
+      "alert": {
+        "deleted": {
+          "title": "आवेदक हटाया गया",
+          "description": "यह आवेदक हटा दिया गया है और इसे संशोधित नहीं किया जा सकता"
+        }
+      }
+    },
+    "validation": {
+      "userId": {
+        "required": "उपयोगकर्ता आईडी आवश्यक है"
+      },
+      "bankId": {
+        "required": "बैंक आईडी आवश्यक है"
+      },
+      "id": {
+        "required": "आवेदक आईडी आवश्यक है"
+      },
+      "aadharNumber": {
+        "format": "आधार नंबर ठीक 12 अंकों का होना चाहिए"
+      },
+      "panNumber": {
+        "format": "पैन नंबर AAAAA9999A प्रारूप में होना चाहिए"
+      },
+      "addressPinCode": {
+        "format": "पिन कोड 6 अंकों का होना चाहिए"
+      }
+    },
+    "errors": {
+      "notFound": "आवेदक नहीं मिला",
+      "alreadyExists": "इस उपयोगकर्ता के लिए एक आवेदक पहले से मौजूद है",
+      "hasActiveLoans": "सक्रिय ऋण आवेदनों वाले आवेदक को हटा नहीं सकते",
+      "cannotVerify": "आपके पास इस दस्तावेज़ को सत्यापित करने की अनुमति नहीं है"
+    },
+    "toast": {
+      "createSuccess": "आवेदक बनाया गया",
+      "createSuccessDescription": "आवेदक सफलतापूर्वक बनाया गया",
+      "createError": "निर्माण विफल",
+      "createErrorDescription": "आवेदक बनाने में विफल",
+      "updateSuccess": "आवेदक अपडेट किया गया",
+      "updateSuccessDescription": "आवेदक सफलतापूर्वक अपडेट किया गया",
+      "updateError": "अपडेट विफल",
+      "updateErrorDescription": "आवेदक अपडेट करने में विफल",
+      "deleteSuccess": "आवेदक हटाया गया",
+      "deleteSuccessDescription": "आवेदक सफलतापूर्वक हटाया गया",
+      "deleteError": "हटाना विफल",
+      "deleteErrorDescription": "आवेदक को हटाने में विफल",
+      "retrieved": "आवेदक सफलतापूर्वक प्राप्त किया गया",
+      "listRetrieved": "आवेदक सूची सफलतापूर्वक प्राप्त की गई"
+    },
+    "list": {
+      "pageTitle": "आवेदक",
+      "pageDescription": "ऋण आवेदकों और उनके विवरण का प्रबंधन करें",
+      "title": "आवेदक सूची",
+      "description": "सभी आवेदकों को देखें और प्रबंधित करें",
+      "noResults": "कोई आवेदक नहीं मिला",
+      "search": {
+        "placeholder": "आवेदक खोजें..."
+      },
+      "filters": {
+        "verification": {
+          "placeholder": "सत्यापन स्थिति",
+          "all": "सभी स्थितियां",
+          "verified": "पूरी तरह सत्यापित",
+          "partiallyVerified": "आंशिक रूप से सत्यापित",
+          "unverified": "असत्यापित"
+        }
+      },
+      "columns": {
+        "id": "आईडी",
+        "fullName": "पूरा नाम",
+        "dateOfBirth": "जन्म तिथि",
+        "verificationStatus": "सत्यापन",
+        "aadharNumber": "आधार",
+        "panNumber": "पैन",
+        "createdAt": "बनाया गया",
+        "address": "पता",
+        "loanCount": "ऋण",
+        "actions": "कार्रवाई",
+        "view": "कॉलम"
+      },
+      "actions": {
+        "createNew": "नया आवेदक",
+        "view": "देखें",
+        "edit": "संपादित करें",
+        "delete": "हटाएं"
+      },
+      "pagination": {
+        "showing": "{total} आवेदकों में से {from} से {to} तक दिखा रहा है",
+        "previous": "पिछला",
+        "next": "अगला"
+      }
+    },
+    "view": {
+      "pageTitle": "आवेदक विवरण",
+      "pageDescription": "विस्तृत आवेदक जानकारी देखें",
+      "title": "आवेदक जानकारी",
+      "description": "आवेदक विवरण और सत्यापन स्थिति देखें",
+      "applicant": "आवेदक",
+      "fullName": "पूरा नाम",
+      "dateOfBirth": "जन्म तिथि",
+      "fullAddress": "पता",
+      "addressState": "राज्य",
+      "addressCity": "शहर",
+      "addressPinCode": "पिन कोड",
+      "aadharNumber": "आधार संख्या",
+      "panNumber": "पैन नंबर",
+      "verified": "सत्यापित",
+      "unverified": "असत्यापित",
+      "notProvided": "प्रदान नहीं किया गया",
+      "createdAt": "बनाया गया",
+      "bankId": "बैंक आईडी",
+      "photoUrl": "फोटो",
+      "verificationStatus": {
+        "fully_verified": "पूरी तरह सत्यापित",
+        "partially_verified": "आंशिक रूप से सत्यापित",
+        "unverified": "असत्यापित"
+      },
+      "notFound": {
+        "title": "आवेदक नहीं मिला",
+        "description": "अनुरोधित आवेदक नहीं मिला",
+        "cardTitle": "नहीं मिला",
+        "cardDescription": "आवेदक को हटा दिया गया हो सकता है या आपके पास इसे देखने की अनुमति नहीं हो सकती है"
+      },
+      "alert": {
+        "deleted": {
+          "title": "आवेदक हटाया गया",
+          "description": "यह आवेदक हटा दिया गया है और इसे संशोधित नहीं किया जा सकता"
+        }
+      },
+      "sections": {
+        "personal": "व्यक्तिगत जानकारी",
+        "address": "पता",
+        "verification": "पहचान सत्यापन",
+        "system": "सिस्टम जानकारी"
+      },
+      "actions": {
+        "back": "वापस",
+        "backToList": "सूची पर वापस जाएं",
+        "edit": "संपादित करें",
+        "delete": "हटाएं"
+      }
+    },
+    "edit": {
+      "pageTitle": "आवेदक संपादित करें: {name}",
+      "pageDescription": "आवेदक जानकारी और सत्यापन स्थिति अपडेट करें",
+      "notFound": {
+        "title": "आवेदक नहीं मिला",
+        "description": "अनुरोधित आवेदक नहीं मिला",
+        "cardTitle": "नहीं मिला",
+        "cardDescription": "आवेदक को हटा दिया गया हो सकता है या आपके पास इसे संपादित करने की अनुमति नहीं हो सकती है"
+      },
+      "actions": {
+        "backToList": "सूची पर वापस जाएं",
+        "backToView": "वापस देखें"
+      }
+    },
+    "create": {
+      "pageTitle": "नया आवेदक बनाएं",
+      "pageDescription": "सिस्टम में एक नया ऋण आवेदक जोड़ें"
+    },
+    "delete": {
+      "confirmTitle": "आवेदक हटाएं",
+      "confirmDescription": "क्या आप वाकई इस आवेदक को हटाना चाहते हैं? यह क्रिया पूर्ववत नहीं की जा सकती।",
+      "confirm": "हटाएं",
+      "cancel": "रद्द करें"
+    }
   }
 }
