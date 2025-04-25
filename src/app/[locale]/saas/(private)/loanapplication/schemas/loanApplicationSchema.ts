@@ -10,7 +10,9 @@ export const createLoanApplicationSchema = z.object({
   loanType: z.enum(["PERSONAL", "VEHICLE", "HOUSE_CONSTRUCTION", "PLOT_PURCHASE", "MORTGAGE"], {
     errorMap: () => ({ message: "validation.loanType.invalid" }),
   }),
-  amountRequested: z.number().positive({ message: "validation.amountRequested.positive" }),
+  amountRequested: z.string().refine((val) => !isNaN(parseFloat(val)) && parseFloat(val) > 0, {
+    message: "validation.amountRequested.positive",
+  }),
   status: z
     .enum(["PENDING", "APPROVED", "REJECTED", "UNDER_REVIEW"], {
       errorMap: () => ({ message: "validation.status.invalid" }),
@@ -27,6 +29,19 @@ export const updateLoanApplicationSchema = createLoanApplicationSchema
     id: z.string().min(1, { message: "validation.id.required" }),
   })
   .partial();
+
+/**
+ * Schema for new loan application form that is part of the wizard
+ * Extends the create schema with name and makes some fields optional for partial updates
+ */
+export const newLoanApplicationSchema = createLoanApplicationSchema
+  .extend({
+    firstName: z.string().min(1, "validation.firstName.required"),
+    lastName: z.string().min(1, "validation.lastName.required"),
+    phoneNumber: z.string().regex(/^\d{10}$/, "validation.phoneNumber.format"),
+    email: z.string().email("validation.email.format"),
+  })
+  .partial({ applicantId: true, status: true });
 
 /**
  * API schema for loan application validation
@@ -56,6 +71,7 @@ export const loanApplicationViewSchema = z.object({
 });
 
 // Inferred types
+export type NewLoanApplicationInput = z.infer<typeof newLoanApplicationSchema>;
 export type CreateLoanApplicationInput = z.infer<typeof createLoanApplicationSchema>;
 export type UpdateLoanApplicationInput = z.infer<typeof updateLoanApplicationSchema>;
 export type LoanApplicationView = z.infer<typeof loanApplicationViewSchema>;

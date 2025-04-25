@@ -1,5 +1,7 @@
+"use server";
+
 import { getTranslations } from "next-intl/server";
-import { CreateLoanApplicationForm } from "../components/CreateLoanApplicationForm";
+import { NewLoanApplicationForm } from "@/app/[locale]/saas/(private)/loanapplication/components/NewLoanApplicationForm";
 
 export async function generateMetadata({ params: { locale } }: { params: { locale: string } }) {
   const t = await getTranslations({ locale, namespace: "LoanApplication" });
@@ -9,14 +11,10 @@ export async function generateMetadata({ params: { locale } }: { params: { local
   };
 }
 
-export default function NewLoanApplicationPage() {
+export default async function NewLoanApplicationPage() {
   return (
-    <div className="container max-w-5xl py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight">Create Loan Application</h1>
-        <p className="text-muted-foreground">Create a new loan application by filling in the details below.</p>
-      </div>
-      <CreateLoanApplicationForm />
+    <div className="mx-auto flex max-w-[600px] flex-col gap-12">
+      <NewLoanApplicationForm />
     </div>
   );
 }

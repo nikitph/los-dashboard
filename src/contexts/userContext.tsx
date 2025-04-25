@@ -2,8 +2,8 @@
 
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { getUserRoles } from "@/contexts/actions/user-actions";
 import { User } from "@/types/globalTypes";
+import { getServerSessionUser } from "@/lib/getServerUser";
 
 type UserContextType = {
   user: User | null;
@@ -17,8 +17,8 @@ const UserContext = createContext<UserContextType>({
   setCurrentRole: () => {},
 });
 
-export const UserProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
+export const UserProvider = ({ children, initialUser = null }: { children: ReactNode; initialUser?: User | null }) => {
+  const [user, setUser] = useState<User | null>(initialUser);
   const [loading, setLoading] = useState(true);
   const supabase = createClient();
 
@@ -32,50 +32,29 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   };
 
   useEffect(() => {
-    const fetchUserData = async (authUser: any) => {
-      const { success, data: roles } = await getUserRoles(authUser.id);
-      console.log("roles", roles, authUser.id);
-
-      if (success && roles && roles.length > 0) {
-        // Filter out roles with null bankId and exclude "APPLICANT" role. What remains should be the employee role
-        // TODO this needs to be worked out when we have Applicant logins
-        let currentRole = roles.filter((r) => r.bankId !== null && r.role !== "APPLICANT")[0];
-
-        console.log("Current Role:", currentRole, roles);
-
-        setUser({
-          firstName: authUser.user_metadata?.first_name,
-          lastName: authUser.user_metadata?.last_name,
-          email: authUser.email,
-          id: authUser.id,
-          roles: roles,
-          currentRole: currentRole,
-        });
-      }
-      setLoading(false);
-    };
-
-    const getUser = async () => {
-      const { data } = await supabase.auth.getUser();
-      const authUser = data?.user;
-
-      if (authUser) {
-        await fetchUserData(authUser);
-      } else {
+    const initializeUser = async () => {
+      try {
+        // Get the initial user server-side - this avoids the "null" flicker
+        const serverUser = await getServerSessionUser();
+        if (serverUser) {
+          setUser(serverUser);
+        }
+      } finally {
         setLoading(false);
       }
     };
 
-    getUser();
+    initializeUser();
 
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (session?.user) {
-        await fetchUserData(session.user);
+        const serverUser = await getServerSessionUser();
+        if (serverUser) setUser(serverUser);
+        else setUser(null);
       } else {
         setUser(null);
-        setLoading(false);
       }
     });
 

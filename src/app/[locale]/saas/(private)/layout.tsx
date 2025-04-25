@@ -14,6 +14,7 @@ import { notFound } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
 import { Toaster } from "@/components/ui/toaster";
 import { AbilityProvider } from "@/lib/casl/abilityContext";
+import { getServerSessionUser } from "@/lib/getServerUser";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -66,6 +67,7 @@ export default async function RootLayout({
 }) {
   const cookieStore = await cookies();
   const defaultOpen = cookieStore.get("sidebar:state")?.value === "true";
+  const serverUser = await getServerSessionUser();
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) {
     notFound();
@@ -77,7 +79,7 @@ export default async function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} bg-white-50 h-full antialiased dark:bg-gray-950`}>
         <NextIntlClientProvider>
           <ThemeProvider defaultTheme="system" disableTransitionOnChange attribute="class">
-            <UserProvider>
+            <UserProvider initialUser={serverUser}>
               <AbilityProvider>
                 <SidebarProvider defaultOpen={defaultOpen}>
                   <AppSidebar />
