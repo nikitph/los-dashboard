@@ -8,7 +8,415 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-// Enums
+model UserProfile {
+  id               String          @id @map("authId")
+  firstName        String?
+  lastName         String?
+  email            String?         @unique
+  phoneNumber      String?         @unique
+  isOnboarded      Boolean         @default(false)
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  deletedAt        DateTime?
+  applicants       Applicant[]
+  auditLogs        AuditLog[]
+  documents        Document[]
+  actionsRequested PendingAction[] @relation("RequestedActions")
+  actionsReviewed  PendingAction[] @relation("ReviewedActions")
+  userRoles        UserRoles[]
+  verifications    Verification[]
+}
+
+model UserRoles {
+  id         String      @id @default(dbgenerated("gen_random_uuid()"))
+  userId     String
+  role       RoleType
+  bankId     String?
+  assignedAt DateTime    @default(now())
+  deletedAt  DateTime?
+  bank       Bank?       @relation(fields: [bankId], references: [id])
+  user       UserProfile @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, role, bankId], name: "unique_role_per_bank")
+  @@index([userId])
+}
+
+model Applicant {
+  id                       String            @id @default(dbgenerated("gen_random_uuid()"))
+  userId                   String
+  createdAt                DateTime          @default(now())
+  updatedAt                DateTime          @updatedAt
+  dateOfBirth              DateTime?
+  addressState             String?
+  addressCity              String?
+  addressFull              String?
+  addressPinCode           String?
+  aadharNumber             String?
+  panNumber                String?
+  aadharVerificationStatus Boolean           @default(false)
+  panVerificationStatus    Boolean           @default(false)
+  photoUrl                 String?
+  deletedAt                DateTime?
+  bankId                   String
+  bank                     Bank              @relation(fields: [bankId], references: [id])
+  user                     UserProfile       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  dependents               Dependent[]
+  documents                Document[]
+  incomes                  Income[]
+  loanApplications         LoanApplication[]
+  loanObligations          LoanObligation[]
+}
+
+model LoanObligation {
+  id          String                 @id @default(dbgenerated("gen_random_uuid()"))
+  applicantId String
+  cibilScore  Float?
+  totalLoan   Float?
+  totalEmi    Float?
+  createdAt   DateTime               @default(now())
+  updatedAt   DateTime               @updatedAt
+  deletedAt   DateTime?
+  documents   Document[]
+  applicant   Applicant              @relation(fields: [applicantId], references: [id])
+  loanDetails LoanObligationDetail[]
+}
+
+model LoanObligationDetail {
+  id               String         @id @default(dbgenerated("gen_random_uuid()"))
+  loanObligationId String
+  outstandingLoan  Float
+  emiAmount        Float
+  loanDate         DateTime
+  loanType         String
+  bankName         String
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  deletedAt        DateTime?
+  documents        Document[]
+  loanObligation   LoanObligation @relation(fields: [loanObligationId], references: [id])
+}
+
+model Income {
+  id                        String         @id @default(dbgenerated("gen_random_uuid()"))
+  applicantId               String
+  type                      String
+  createdAt                 DateTime       @default(now())
+  updatedAt                 DateTime       @updatedAt
+  deletedAt                 DateTime?
+  dependents                Int            @default(0)
+  averageMonthlyExpenditure Float          @default(0.0)
+  averageGrossCashIncome    Float          @default(0.0)
+  documents                 Document[]
+  applicant                 Applicant      @relation(fields: [applicantId], references: [id])
+  incomeDetails             IncomeDetail[]
+}
+
+model IncomeDetail {
+  id                 String     @id @default(dbgenerated("gen_random_uuid()"))
+  incomeId           String
+  year               Int
+  taxableIncome      Float?
+  taxPaid            Float?
+  grossIncome        Float?
+  rentalIncome       Float?
+  incomeFromBusiness Float?
+  depreciation       Float?
+  grossCashIncome    Float?
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
+  deletedAt          DateTime?
+  documents          Document[]
+  income             Income     @relation(fields: [incomeId], references: [id])
+}
+
+model Dependent {
+  id                        String     @id @default(dbgenerated("gen_random_uuid()"))
+  applicantId               String
+  averageMonthlyExpenditure Float
+  createdAt                 DateTime   @default(now())
+  updatedAt                 DateTime   @updatedAt
+  deletedAt                 DateTime?
+  applicant                 Applicant  @relation(fields: [applicantId], references: [id])
+  documents                 Document[]
+}
+
+model Bank {
+  id                 String               @id @default(dbgenerated("gen_random_uuid()"))
+  name               String
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  deletedAt          DateTime?
+  addressLine        String?
+  city               String?
+  contactNumber      String?
+  gstNumber          String?
+  legalEntityName    String?
+  officialEmail      String               @unique
+  panNumber          String?
+  regulatoryLicenses Json?
+  state              String?
+  zipCode            String?
+  onboardingStatus   BankOnboardingStatus @default(BANK_CREATED)
+  applicants         Applicant[]
+  configurations     BankConfiguration[]
+  documents          Document[]
+  loanApplications   LoanApplication[]
+  pendingAction      PendingAction[]
+  subscription       Subscription?
+  UserRoles          UserRoles[]
+}
+
+model Subscription {
+  id        String   @id @default(dbgenerated("gen_random_uuid()"))
+  bankId    String   @unique
+  startDate DateTime
+
+  endDate       DateTime?
+  status        String
+  amount        Float
+  deletedAt     DateTime?
+  billingCycle  BillingCycle
+  paymentMethod Json?
+  planType      PlanType
+  documents     Document[]
+  bank          Bank         @relation(fields: [bankId], references: [id])
+}
+
+model BankConfiguration {
+  id             String     @id @default(dbgenerated("gen_random_uuid()"))
+  bankId         String
+  maxLoanAmount  Float
+  approvalLimits Json
+  interestRates  Json
+  loanDurations  Json
+  currency       String
+  deletedAt      DateTime?
+  bank           Bank       @relation(fields: [bankId], references: [id])
+  documents      Document[]
+}
+
+model LoanApplication {
+  id              String         @id @default(dbgenerated("gen_random_uuid()"))
+  applicantId     String
+  bankId          String
+  loanType        LoanType
+  amountRequested Float
+  status          LoanStatus
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  deletedAt       DateTime?
+  coApplicants    CoApplicant[]
+  documents       Document[]
+  guarantors      Guarantor[]
+  applicant       Applicant      @relation(fields: [applicantId], references: [id])
+  bank            Bank           @relation(fields: [bankId], references: [id])
+  verifications   Verification[]
+}
+
+model Guarantor {
+  id                String          @id @default(dbgenerated("gen_random_uuid()"))
+  loanApplicationId String
+  firstName         String
+  lastName          String
+  email             String
+  addressState      String
+  addressCity       String
+  addressZipCode    String
+  addressLine1      String
+  addressLine2      String?
+  mobileNumber      String
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  deletedAt         DateTime?
+  documents         Document[]
+  loanApplication   LoanApplication @relation(fields: [loanApplicationId], references: [id])
+}
+
+model CoApplicant {
+  id                String          @id @default(dbgenerated("gen_random_uuid()"))
+  loanApplicationId String
+  firstName         String
+  lastName          String
+  email             String
+  addressState      String
+  addressCity       String
+  addressZipCode    String
+  addressLine1      String
+  addressLine2      String?
+  mobileNumber      String
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  deletedAt         DateTime?
+  loanApplication   LoanApplication @relation(fields: [loanApplicationId], references: [id])
+  documents         Document[]
+}
+
+model Document {
+  id                     String             @id @default(dbgenerated("gen_random_uuid()"))
+  loanApplicationId      String?
+  fileUrl                String
+  storageType            String
+  metadata               Json?
+  uploadedAt             DateTime           @default(now())
+  deletedAt              DateTime?
+  applicantId            String?
+  bankConfigurationId    String?
+  bankId                 String?
+  coApplicantId          String?
+  dependentId            String?
+  fileName               String
+  fileSize               Int
+  guarantorId            String?
+  incomeDetailId         String?
+  incomeId               String?
+  loanObligationDetailId String?
+  loanObligationId       String?
+  mimeType               String
+  status                 VerificationStatus @default(PENDING)
+  subscriptionId         String?
+  uploadedById           String
+  verificationId         String?
+  documentType           DocumentType
+  userProfileId          String?
+
+  // Relations
+  applicant            Applicant?            @relation(fields: [applicantId], references: [id])
+  bankConfiguration    BankConfiguration?    @relation(fields: [bankConfigurationId], references: [id])
+  bank                 Bank?                 @relation(fields: [bankId], references: [id])
+  coApplicant          CoApplicant?          @relation(fields: [coApplicantId], references: [id])
+  dependent            Dependent?            @relation(fields: [dependentId], references: [id])
+  guarantor            Guarantor?            @relation(fields: [guarantorId], references: [id])
+  incomeDetail         IncomeDetail?         @relation(fields: [incomeDetailId], references: [id])
+  income               Income?               @relation(fields: [incomeId], references: [id])
+  loanApplication      LoanApplication?      @relation(fields: [loanApplicationId], references: [id])
+  loanObligationDetail LoanObligationDetail? @relation(fields: [loanObligationDetailId], references: [id])
+  loanObligation       LoanObligation?       @relation(fields: [loanObligationId], references: [id])
+  subscription         Subscription?         @relation(fields: [subscriptionId], references: [id])
+  userProfile          UserProfile?          @relation(fields: [userProfileId], references: [id])
+  verification         Verification?         @relation(fields: [verificationId], references: [id])
+}
+
+model Verification {
+  id                    String                 @id @default(dbgenerated("gen_random_uuid()"))
+  loanApplicationId     String
+  type                  VerificationType
+  status                VerificationStatus
+  verifiedById          String?
+  verifiedAt            DateTime?
+  deletedAt             DateTime?
+  addressCity           String?
+  addressLine1          String?
+  addressLine2          String?
+  addressState          String?
+  addressZipCode        String?
+  createdAt             DateTime               @default(now())
+  locationFromMain      String?
+  photographUrl         String?
+  remarks               String?
+  result                Boolean
+  updatedAt             DateTime               @updatedAt
+  verificationDate      DateTime               @default(now())
+  verificationTime      String
+  businessVerification  BusinessVerification?
+  documents             Document[]
+  propertyVerification  PropertyVerification?
+  residenceVerification ResidenceVerification?
+  vehicleVerification   VehicleVerification?
+  loanApplication       LoanApplication        @relation(fields: [loanApplicationId], references: [id])
+  verifiedBy            UserProfile?           @relation(fields: [verifiedById], references: [id])
+}
+
+model ResidenceVerification {
+  id             String       @id @default(dbgenerated("gen_random_uuid()"))
+  verificationId String       @unique
+  ownerFirstName String?
+  ownerLastName  String?
+  residentSince  String?
+  residenceType  String?
+  structureType  String?
+  verification   Verification @relation(fields: [verificationId], references: [id])
+}
+
+model BusinessVerification {
+  id                String       @id @default(dbgenerated("gen_random_uuid()"))
+  verificationId    String       @unique
+  businessName      String?
+  businessType      String?
+  contactDetails    String?
+  businessExistence Boolean?
+  natureOfBusiness  String?
+  salesPerDay       String?
+  verification      Verification @relation(fields: [verificationId], references: [id])
+}
+
+model PropertyVerification {
+  id             String       @id @default(dbgenerated("gen_random_uuid()"))
+  verificationId String       @unique
+  ownerFirstName String?
+  ownerLastName  String?
+  structureType  String?
+  verification   Verification @relation(fields: [verificationId], references: [id])
+}
+
+model VehicleVerification {
+  id                  String       @id @default(dbgenerated("gen_random_uuid()"))
+  verificationId      String       @unique
+  engineNumber        String?
+  chassisNumber       String?
+  registrationNumber  String?
+  make                String?
+  model               String?
+  vehicleType         String?
+  taxInvoiceUrl       String?
+  deliveryChalanUrl   String?
+  stampedReceiptUrl   String?
+  rcUrl               String?
+  inspectionReportUrl String?
+  vehiclePhotoUrl     String?
+  verification        Verification @relation(fields: [verificationId], references: [id])
+}
+
+model PendingAction {
+  id             String            @id @default(dbgenerated("gen_random_uuid()"))
+  bankId         String?
+  actionType     PendingActionType
+  payload        Json
+  status         ApprovalStatus    @default(PENDING)
+  requestedById  String
+  requestedAt    DateTime          @default(now())
+  reviewedById   String?
+  reviewedAt     DateTime?
+  reviewRemarks  String?
+  targetModel    String?
+  targetRecordId String?
+
+  // Date fields
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  deletedAt   DateTime?
+  bank        Bank?        @relation(fields: [bankId], references: [id])
+  requestedBy UserProfile  @relation("RequestedActions", fields: [requestedById], references: [id])
+  reviewedBy  UserProfile? @relation("ReviewedActions", fields: [reviewedById], references: [id])
+
+  @@index([status, bankId])
+  @@index([requestedById])
+  @@index([reviewedById])
+}
+
+model AuditLog {
+  id         String      @id @default(dbgenerated("gen_random_uuid()"))
+  action     String
+  tableName  String
+  userId     String
+  recordId   String?
+  timestamp  DateTime    @default(now())
+  oldData    Json?
+  newData    Json?
+  ipAddress  String?
+  deviceInfo String?
+  user       UserProfile @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
 enum RoleType {
   CLERK
   INSPECTOR
@@ -25,11 +433,11 @@ enum RoleType {
 enum BankOnboardingStatus {
   BANK_CREATED
   BANK_ONBOARDED
-  BANK_DETAILS_ADDED
   ADMIN_CREATED
   SUBSCRIPTION_CREATED
   USERS_CREATED
   CONFIGURATIONS_CREATED
+  BANK_DETAILS_ADDED
 }
 
 enum ApprovalStatus {
@@ -43,6 +451,7 @@ enum LoanType {
   PERSONAL
   VEHICLE
   HOUSE_CONSTRUCTION
+  PLOT_AND_HOUSE_CONSTRUCTION
   PLOT_PURCHASE
   MORTGAGE
 }
@@ -74,16 +483,17 @@ enum VerificationStatus {
 enum DocumentType {
   AADHAAR_CARD
   PAN_CARD
-  IDENTITY_PROOF // Passport, Voter ID, etc.
-  ADDRESS_PROOF // Utility bills, etc.
-  INCOME_PROOF // Salary slips, income tax returns
+  IDENTITY_PROOF
+  ADDRESS_PROOF
+  INCOME_PROOF
   BANK_STATEMENT
-  PROPERTY_DOCUMENT // Property deeds, etc.
-  VEHICLE_DOCUMENT // RC book, insurance
-  LOAN_AGREEMENT // Signed loan agreement
-  VERIFICATION_PHOTO // Photos taken during verification
-  KYC_DOCUMENT // KYC documents
-  APPLICATION_FORM // Completed application forms
+  PROPERTY_DOCUMENT
+  VEHICLE_DOCUMENT
+  LOAN_AGREEMENT
+  VERIFICATION_PHOTO
+  KYC_DOCUMENT
+  APPLICATION_FORM
+  APPLICANT_PHOTO
   OTHER
 }
 
@@ -96,455 +506,4 @@ enum PlanType {
 enum BillingCycle {
   MONTHLY
   ANNUAL
-}
-
-model UserProfile {
-  id          String    @id @default(dbgenerated("gen_random_uuid()")) @map("auth_id") // Matches auth.users.id
-  authId      String    @unique
-  firstName   String?
-  lastName    String?
-  email       String?   @unique
-  phoneNumber String?   @unique
-  isOnboarded Boolean   @default(false)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  deletedAt   DateTime?
-
-  // Relations
-  userRoles        UserRoles[]
-  applicants       Applicant[]
-  verifications    Verification[]
-  auditLogs        AuditLog[]
-  actionsRequested PendingAction[] @relation("RequestedActions") // Actions this user initiated (Maker)
-  actionsReviewed  PendingAction[] @relation("ReviewedActions") // Actions this user reviewed (Checker)
-
-  documents Document[]
-}
-
-model UserRoles {
-  id     String   @id @default(dbgenerated("gen_random_uuid()"))
-  userId String
-  role   RoleType
-  bankId String?
-
-  user UserProfile @relation(fields: [userId], references: [authId])
-  bank Bank?       @relation(fields: [bankId], references: [id])
-
-  assignedAt DateTime  @default(now())
-  deletedAt  DateTime?
-
-  @@unique([userId, role, bankId], name: "unique_role_per_bank")
-  @@index([userId])
-}
-
-model Applicant {
-  id                       String            @id @default(dbgenerated("gen_random_uuid()"))
-  userId                   String
-  user                     UserProfile       @relation(fields: [userId], references: [id])
-  bankId                   String
-  bank                     Bank              @relation(fields: [bankId], references: [id])
-  loanApplications         LoanApplication[]
-  createdAt                DateTime          @default(now())
-  updatedAt                DateTime          @updatedAt
-  deletedAt                DateTime?
-  dateOfBirth              DateTime
-  addressState             String
-  addressCity              String
-  addressFull              String
-  addressPinCode           String
-  aadharNumber             String
-  panNumber                String
-  aadharVerificationStatus Boolean           @default(false)
-  panVerificationStatus    Boolean           @default(false)
-  photoUrl                 String
-  incomes                  Income[]
-  dependents               Dependent[]
-  loanObligations          LoanObligation[]
-  documents                Document[]
-}
-
-model LoanObligation {
-  id          String                 @id @default(dbgenerated("gen_random_uuid()"))
-  applicantId String
-  applicant   Applicant              @relation(fields: [applicantId], references: [id])
-  cibilScore  Float?
-  totalLoan   Float?
-  totalEmi    Float?
-  loanDetails LoanObligationDetail[]
-  createdAt   DateTime               @default(now())
-  updatedAt   DateTime               @updatedAt
-  deletedAt   DateTime?
-  documents   Document[]
-}
-
-model LoanObligationDetail {
-  id               String         @id @default(dbgenerated("gen_random_uuid()"))
-  loanObligationId String
-  loanObligation   LoanObligation @relation(fields: [loanObligationId], references: [id])
-  outstandingLoan  Float
-  emiAmount        Float
-  loanDate         DateTime
-  loanType         String
-  bankName         String
-  createdAt        DateTime       @default(now())
-  updatedAt        DateTime       @updatedAt
-  deletedAt        DateTime?
-
-  documents Document[]
-}
-
-model Income {
-  id            String         @id @default(dbgenerated("gen_random_uuid()"))
-  applicantId   String
-  applicant     Applicant      @relation(fields: [applicantId], references: [id])
-  type          String
-  incomeDetails IncomeDetail[]
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-  deletedAt     DateTime?
-  documents     Document[]
-}
-
-model IncomeDetail {
-  id                 String     @id @default(dbgenerated("gen_random_uuid()"))
-  incomeId           String
-  income             Income     @relation(fields: [incomeId], references: [id])
-  year               Int
-  taxableIncome      Float?
-  taxPaid            Float?
-  grossIncome        Float?
-  rentalIncome       Float?
-  incomeFromBusiness Float?
-  depreciation       Float?
-  grossCashIncome    Float?
-  createdAt          DateTime   @default(now())
-  updatedAt          DateTime   @updatedAt
-  deletedAt          DateTime?
-  documents          Document[]
-}
-
-model Dependent {
-  id                        String     @id @default(dbgenerated("gen_random_uuid()"))
-  applicantId               String
-  applicant                 Applicant  @relation(fields: [applicantId], references: [id])
-  averageMonthlyExpenditure Float
-  createdAt                 DateTime   @default(now())
-  updatedAt                 DateTime   @updatedAt
-  deletedAt                 DateTime?
-  documents                 Document[]
-}
-
-model Bank {
-  id                 String               @id @default(dbgenerated("gen_random_uuid()"))
-  name               String
-  officialEmail      String               @unique
-  contactNumber      String?
-  addressLine        String?
-  city               String?
-  state              String?
-  zipCode            String?
-  legalEntityName    String?
-  gstNumber          String?
-  panNumber          String?
-  regulatoryLicenses Json?
-  onboardingStatus   BankOnboardingStatus @default(BANK_CREATED)
-
-  subscription Subscription?
-
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deletedAt DateTime?
-
-  UserRoles        UserRoles[]
-  documents        Document[]
-  loanApplications LoanApplication[]
-  configurations   BankConfiguration[]
-  applicants       Applicant[]
-  pendingAction    PendingAction[]
-}
-
-model Subscription {
-  id            String       @id @default(dbgenerated("gen_random_uuid()"))
-  bankId        String       @unique
-  planType      PlanType
-  billingCycle  BillingCycle
-  startDate     DateTime
-  endDate       DateTime?
-  status        String
-  amount        Float
-  paymentMethod Json?
-  deletedAt     DateTime?
-
-  bank Bank @relation(fields: [bankId], references: [id])
-
-  documents Document[]
-}
-
-model BankConfiguration {
-  id             String    @id @default(dbgenerated("gen_random_uuid()"))
-  bankId         String
-  maxLoanAmount  Float
-  approvalLimits Json
-  interestRates  Json
-  loanDurations  Json
-  currency       String
-  deletedAt      DateTime?
-
-  bank Bank @relation(fields: [bankId], references: [id])
-
-  documents Document[]
-}
-
-model LoanApplication {
-  id              String         @id @default(dbgenerated("gen_random_uuid()"))
-  applicantId     String
-  bankId          String
-  loanType        LoanType
-  amountRequested Float
-  status          LoanStatus
-  documents       Document[]
-  verifications   Verification[]
-  guarantors      Guarantor[]
-  coApplicants    CoApplicant[]
-  createdAt       DateTime       @default(now())
-  updatedAt       DateTime       @updatedAt
-  deletedAt       DateTime?
-
-  applicant Applicant @relation(fields: [applicantId], references: [id])
-  bank      Bank      @relation(fields: [bankId], references: [id])
-}
-
-model Guarantor {
-  id             String     @id @default(dbgenerated("gen_random_uuid()"))
-  firstName      String
-  lastName       String
-  email          String
-  addressState   String
-  addressCity    String
-  addressZipCode String
-  addressLine1   String
-  addressLine2   String?
-  mobileNumber   String
-  createdAt      DateTime   @default(now())
-  updatedAt      DateTime   @updatedAt
-  deletedAt      DateTime?
-  documents      Document[]
-
-  loanApplicationId String
-  loanApplication   LoanApplication @relation(fields: [loanApplicationId], references: [id])
-}
-
-model CoApplicant {
-  id             String     @id @default(dbgenerated("gen_random_uuid()"))
-  firstName      String
-  lastName       String
-  email          String
-  addressState   String
-  addressCity    String
-  addressZipCode String
-  addressLine1   String
-  addressLine2   String?
-  mobileNumber   String
-  createdAt      DateTime   @default(now())
-  updatedAt      DateTime   @updatedAt
-  deletedAt      DateTime?
-  documents      Document[]
-
-  // Relationships
-
-  loanApplicationId String
-  loanApplication   LoanApplication @relation(fields: [loanApplicationId], references: [id])
-}
-
-model Document {
-  id           String             @id @default(dbgenerated("gen_random_uuid()"))
-  fileName     String // Original file name
-  fileSize     Int // Size in bytes
-  mimeType     String // File MIME type (application/pdf, image/jpeg, etc.)
-  fileUrl      String // URL to access the file
-  storageType  String // "hot" or "cold" storage
-  documentType DocumentType // Using enum for better type safety
-  status       VerificationStatus @default(PENDING)
-  metadata     Json? // Flexible metadata for search/filtering
-  uploadedById String // User who uploaded the document
-  uploadedAt   DateTime           @default(now())
-  deletedAt    DateTime?
-
-  // Relationships
-
-  loanApplicationId String?
-  loanApplication   LoanApplication? @relation(fields: [loanApplicationId], references: [id])
-
-  applicantId String?
-  applicant   Applicant? @relation(fields: [applicantId], references: [id])
-
-  verificationId String?
-  verification   Verification? @relation(fields: [verificationId], references: [id])
-
-  coApplicantId String?
-  coApplicant   CoApplicant? @relation(fields: [coApplicantId], references: [id])
-
-  guarantorId String?
-  guarantor   Guarantor? @relation(fields: [guarantorId], references: [id])
-
-  incomeId String?
-  income   Income? @relation(fields: [incomeId], references: [id])
-
-  incomeDetailId String?
-  incomeDetail   IncomeDetail? @relation(fields: [incomeDetailId], references: [id])
-
-  dependentId String?
-  dependent   Dependent? @relation(fields: [dependentId], references: [id])
-
-  loanObligationId String?
-  loanObligation   LoanObligation? @relation(fields: [loanObligationId], references: [id])
-
-  loanObligationDetailId String?
-  loanObligationDetail   LoanObligationDetail? @relation(fields: [loanObligationDetailId], references: [id])
-
-  bankId String?
-  bank   Bank?   @relation(fields: [bankId], references: [id])
-
-  subscriptionId String?
-  subscription   Subscription? @relation(fields: [subscriptionId], references: [id])
-
-  bankConfigurationId String?
-  bankConfiguration   BankConfiguration? @relation(fields: [bankConfigurationId], references: [id])
-
-  userProfileId String?
-  userProfile   UserProfile? @relation(fields: [userProfileId], references: [id])
-}
-
-// Core verification model
-model Verification {
-  id                String             @id @default(dbgenerated("gen_random_uuid()"))
-  loanApplicationId String
-  type              VerificationType
-  status            VerificationStatus
-  verificationDate  DateTime           @default(now())
-  verificationTime  String // Storing as String like "12:00 PM"
-  result            Boolean // Yes/No result field
-  remarks           String? // General remarks field
-  verifiedById      String?
-  verifiedAt        DateTime?
-  addressState      String?
-  addressCity       String?
-  addressZipCode    String?
-  addressLine1      String?
-  addressLine2      String?
-  locationFromMain  String? // "Location from Main Road" field
-  photographUrl     String? // URL to the uploaded photograph
-  createdAt         DateTime           @default(now())
-  updatedAt         DateTime           @updatedAt
-  deletedAt         DateTime?
-
-  // Relations
-  loanApplication LoanApplication @relation(fields: [loanApplicationId], references: [id])
-  verifiedBy      UserProfile?    @relation(fields: [verifiedById], references: [id])
-
-  // Type-specific extensions
-  residenceVerification ResidenceVerification?
-  businessVerification  BusinessVerification?
-  propertyVerification  PropertyVerification?
-  vehicleVerification   VehicleVerification?
-
-  documents Document[]
-}
-
-// Residence-specific fields
-model ResidenceVerification {
-  id             String       @id @default(dbgenerated("gen_random_uuid()"))
-  verificationId String       @unique
-  verification   Verification @relation(fields: [verificationId], references: [id])
-  ownerFirstName String?
-  ownerLastName  String?
-  residentSince  String? // Year like "1989"
-  residenceType  String? // "Owned", "Rented", etc.
-  structureType  String? // "Apartment", "House", etc.
-}
-
-// Business-specific fields
-model BusinessVerification {
-  id                String       @id @default(dbgenerated("gen_random_uuid()"))
-  verificationId    String       @unique
-  verification      Verification @relation(fields: [verificationId], references: [id])
-  businessName      String?
-  businessType      String? // "Proprietorship", etc.
-  contactDetails    String?
-  businessExistence Boolean?
-  natureOfBusiness  String? // "Trading", etc.
-  salesPerDay       String? // Income range like "5,000-10,000"
-}
-
-// Property-specific fields
-model PropertyVerification {
-  id             String       @id @default(dbgenerated("gen_random_uuid()"))
-  verificationId String       @unique
-  verification   Verification @relation(fields: [verificationId], references: [id])
-  ownerFirstName String?
-  ownerLastName  String?
-  structureType  String? // "Apartment", etc.
-}
-
-// Vehicle-specific fields
-model VehicleVerification {
-  id                  String       @id @default(dbgenerated("gen_random_uuid()"))
-  verificationId      String       @unique
-  verification        Verification @relation(fields: [verificationId], references: [id])
-  engineNumber        String?
-  chassisNumber       String?
-  registrationNumber  String?
-  make                String? // Vehicle make
-  model               String? // Vehicle model
-  vehicleType         String? // Type of vehicle
-  // Document references
-  taxInvoiceUrl       String?
-  deliveryChalanUrl   String?
-  stampedReceiptUrl   String?
-  rcUrl               String?
-  inspectionReportUrl String?
-  vehiclePhotoUrl     String?
-}
-
-model PendingAction {
-  id             String            @id @default(dbgenerated("gen_random_uuid()"))
-  bankId         String? // Context: Which bank? (Null if global) - Use for bank user creation
-  actionType     PendingActionType // What kind of action? e.g., REQUEST_BANK_USER_CREATION
-  payload        Json // Data needed to execute the action upon approval (e.g., { firstName, lastName, email, phone, role, bankId })
-  status         ApprovalStatus    @default(PENDING)
-  requestedById  String // Maker's User ID (authId)
-  requestedAt    DateTime          @default(now()) // When the request was made
-  reviewedById   String? // Checker's User ID (authId) - Null until reviewed
-  reviewedAt     DateTime? // When the review decision was made
-  reviewRemarks  String? // Checker's comments (especially for rejection)
-  targetModel    String? // Optional refinement: e.g., "UserProfile" or "UserRoles"
-  targetRecordId String? // Optional: If approved, store the ID of the created/modified record (e.g., the new user's authId)
-
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deletedAt DateTime?
-
-  // Relations
-  bank        Bank?        @relation(fields: [bankId], references: [id])
-  requestedBy UserProfile  @relation("RequestedActions", fields: [requestedById], references: [authId])
-  reviewedBy  UserProfile? @relation("ReviewedActions", fields: [reviewedById], references: [authId])
-
-  @@index([status, bankId])
-  @@index([requestedById])
-  @@index([reviewedById])
-}
-
-model AuditLog {
-  id         String   @id @default(dbgenerated("gen_random_uuid()"))
-  action     String
-  tableName  String
-  userId     String
-  recordId   String?
-  timestamp  DateTime @default(now())
-  oldData    Json?
-  newData    Json?
-  ipAddress  String?
-  deviceInfo String?
-
-  user UserProfile @relation(fields: [userId], references: [id])
 }

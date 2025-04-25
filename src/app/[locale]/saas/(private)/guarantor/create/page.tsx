@@ -5,9 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useTranslations } from "next-intl";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
-import {
-  CreateGuarantorForm
-} from "@/app/[locale]/saas/(private)/guarantor/components/CreateGuarantorForm";
+import { CreateGuarantorForm } from "@/app/[locale]/saas/(private)/guarantor/components/CreateGuarantorForm";
 
 /**
  * Page component for creating a new guarantor

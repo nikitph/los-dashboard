@@ -4,12 +4,46 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowLeft, Camera, Eye, RefreshCw, User } from "lucide-react";
+import { ArrowLeft, User } from "lucide-react";
+import ImageUploadButton from "@/components/ImageUploadButton";
+import { useUser } from "@/contexts/userContext";
+import { useLocale } from "next-intl";
 
-export default function PhotoCapturePage() {
+// TypeScript function to convert data URL to File
+function dataURLtoFile(dataUrl: string, filename: string): File {
+  const arr: string[] = dataUrl.split(",");
+  const matches: RegExpMatchArray | null = arr[0].match(/:(.*?);/);
+
+  if (!matches || matches.length < 2) {
+    throw new Error("Invalid data URL format");
+  }
+
+  const mime: string = matches[1];
+  const bstr: string = atob(arr[1]);
+  let n: number = bstr.length;
+  const u8arr: Uint8Array = new Uint8Array(n);
+
+  while (n--) {
+    u8arr[n] = bstr.charCodeAt(n);
+  }
+
+  return new File([u8arr], filename, { type: mime });
+}
+
+export default function PhotoCapturePage({ searchParams }: { searchParams: { aid: string; lid: string } }) {
   const router = useRouter();
+  const { aid, lid } = searchParams;
+  const { user } = useUser();
+  const locale = useLocale();
+
+  // State variables
   const [image, setImage] = useState<string | null>(null);
+  const [capturedFile, setCapturedFile] = useState<File | null>(null);
+  const [capturedPreview, setCapturedPreview] = useState<string | null>(null);
   const [showCamera, setShowCamera] = useState(true);
+  const [isCaptureMode, setIsCaptureMode] = useState(true);
+
+  // Refs
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
@@ -61,6 +95,17 @@ export default function PhotoCapturePage() {
         // Convert canvas to data URL (image)
         const dataUrl = canvas.toDataURL("image/jpeg");
         setImage(dataUrl);
+
+        // Convert data URL to File object
+        try {
+          const file = dataURLtoFile(dataUrl, "profile-photo.jpg");
+          setCapturedFile(file);
+        } catch (error) {
+          console.error("Error converting to file:", error);
+        }
+
+        // Switch from capture mode to upload mode
+        setIsCaptureMode(false);
         setShowCamera(false);
 
         // Stop camera stream
@@ -75,14 +120,9 @@ export default function PhotoCapturePage() {
   // Reset camera for a new photo
   const resetCamera = () => {
     setImage(null);
+    setCapturedFile(null);
+    setIsCaptureMode(true);
     setShowCamera(true);
-  };
-
-  // Show captured image
-  const viewImage = () => {
-    if (image) {
-      setShowCamera(false);
-    }
   };
 
   // Navigation functions
@@ -91,9 +131,7 @@ export default function PhotoCapturePage() {
   };
 
   const handleProceed = () => {
-    // Save image and proceed to income details
-    // You can implement your save logic here
-    router.push("/applicant/income-details");
+    router.push(`/${locale}/saas/loanobligations`);
   };
 
   return (
@@ -130,27 +168,28 @@ export default function PhotoCapturePage() {
           </Card>
 
           {/* Camera controls */}
-          <div className="flex w-full items-center justify-center gap-4">
-            <Button className="flex-1" onClick={captureImage} disabled={!showCamera}>
-              <Camera className="mr-2 h-4 w-4" />
-              Capture
-            </Button>
+          <div className="flex w-full items-start justify-center gap-4">
+            {isCaptureMode ? (
+              <Button className="flex-1" onClick={captureImage} disabled={!showCamera}>
+                Capture Photo
+              </Button>
+            ) : (
+              <ImageUploadButton
+                documentType="APPLICANT_PHOTO"
+                entityType="applicant"
+                entityId={aid}
+                // @ts-ignore
+                uploadedById={user?.id}
+                description="Applicant profile photo"
+                onUploadSuccess={(docId) => console.log(`Image uploaded with ID: ${docId}`)}
+                file={capturedFile}
+                filePreviewUrl={capturedPreview}
+                onRemove={() => {
+                  resetCamera();
+                }}
+              />
+            )}
 
-            <Button variant="outline" size="icon" onClick={resetCamera}>
-              <RefreshCw className="h-4 w-4" />
-            </Button>
-
-            <Button className="flex-1" variant="secondary" onClick={viewImage} disabled={!image}>
-              <Eye className="mr-2 h-4 w-4" />
-              View Image
-            </Button>
-          </div>
-
-          {/* Navigation buttons */}
-          <div className="flex w-full items-center justify-between pt-6">
-            <Button variant="outline" onClick={handleBack}>
-              Back
-            </Button>
             <Button onClick={handleProceed} disabled={!image}>
               Proceed to Income Details
             </Button>

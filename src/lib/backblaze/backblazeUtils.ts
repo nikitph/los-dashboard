@@ -111,6 +111,8 @@ export const getPresignedUploadUrl = async (
 ): Promise<{ uploadUrl: string; fileKey: string }> => {
   const fileKey = fileName ? `${entityType}/${entityId}/${fileName}` : generateFileKey(fileType, entityType, entityId);
 
+  console.log("filekey", fileKey);
+
   const command = new PutObjectCommand({
     Bucket: BACKBLAZE_BUCKET_NAME,
     Key: fileKey,
@@ -119,6 +121,7 @@ export const getPresignedUploadUrl = async (
 
   try {
     const uploadUrl = await getSignedUrl(s3Client, command, { expiresIn });
+    console.log("Generated upload URL:", uploadUrl);
     return { uploadUrl, fileKey };
   } catch (error) {
     console.error("Error generating presigned URL:", error);

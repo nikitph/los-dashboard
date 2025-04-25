@@ -60,7 +60,7 @@ function Dashboard() {
             <h1 className="text-2xl font-bold">Welcome back, Sarah</h1>
             <p className="text-sm font-medium text-slate-500">Monday, March 25, 2024</p>
           </div>
-          <Link href={"/saas/(private)/loan-applications/new"}>
+          <Link href="/saas/loan-applications/new">
             <Button className="flex items-center gap-2">
               <Plus size={16} />
               New Application
