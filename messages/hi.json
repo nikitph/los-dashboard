@@ -1112,14 +1112,33 @@
       "id": {
         "required": "आवेदक आईडी आवश्यक है"
       },
+      "dateOfBirth": {
+        "ageRequirement": "आवेदक की आयु कम से कम 18 वर्ष होनी चाहिए"
+      },
+      "addressState": {
+        "required": "राज्य आवश्यक है"
+      },
+      "addressCity": {
+        "required": "शहर आवश्यक है"
+      },
+      "addressFull": {
+        "required": "पूर्ण पता आवश्यक है"
+      },
       "aadharNumber": {
-        "format": "आधार नंबर ठीक 12 अंकों का होना चाहिए"
+        "format": "आधार संख्या 12 अंकों की होनी चाहिए",
+        "invalid": "अमान्य आधार संख्या"
       },
       "panNumber": {
-        "format": "पैन नंबर AAAAA9999A प्रारूप में होना चाहिए"
+        "format": "पैन संख्या AAAAA9999A प्रारूप में होनी चाहिए"
       },
       "addressPinCode": {
         "format": "पिन कोड 6 अंकों का होना चाहिए"
+      },
+      "aadharVerificationStatus": {
+        "required": "आधार सत्यापित होना चाहिए"
+      },
+      "panVerificationStatus": {
+        "required": "पैन सत्यापित होना चाहिए"
       }
     },
     "errors": {

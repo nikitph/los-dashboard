@@ -1,46 +1,52 @@
 import { z } from "zod";
+import { createApplicantSchema } from "@/app/[locale]/saas/(private)/applicant/schemas/applicantSchema";
 
-export const PersonalInformationSchema = z.object({
+/**
+ * Schema for Applicant Personal Information form
+ * Extends the base createApplicantSchema while maintaining the validation structure
+ */
+export const PersonalInformationSchema = createApplicantSchema.extend({
+  id: z.string().uuid(),
   dateOfBirth: z.coerce.date().refine(
     (date) => {
       const eighteenYearsAgo = new Date();
       eighteenYearsAgo.setFullYear(eighteenYearsAgo.getFullYear() - 18);
       return date <= eighteenYearsAgo;
     },
-    { message: "Applicant must be at least 18 years old" },
+    { message: "validation.dateOfBirth.ageRequirement" },
   ),
-  addressState: z.string().min(1, "State is required"),
-  addressCity: z.string().min(1, "City is required"),
-  addressFull: z.string().min(1, "Address is required"),
-  addressPinCode: z.string().regex(/^\d{6}$/, "Pin code must be 6 digits"),
+  addressState: z.string().min(1, { message: "validation.addressState.required" }),
+  addressCity: z.string().min(1, { message: "validation.addressCity.required" }),
+  addressFull: z.string().min(1, { message: "validation.addressFull.required" }),
+  addressPinCode: z.string().regex(/^\d{6}$/, { message: "validation.addressPinCode.format" }),
   aadharNumber: z
     .string()
-    .regex(/^\d{12}$/, "Aadhar number must be 12 digits")
+    .regex(/^\d{12}$/, { message: "validation.aadharNumber.format" })
     .refine(
       (aadhar) => {
         const digits = aadhar.split("").map(Number);
         return digits.length === 12;
       },
-      { message: "Invalid Aadhar number" },
+      { message: "validation.aadharNumber.invalid" },
     ),
-  panNumber: z.string().regex(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "PAN must be valid format (e.g., ABCDE1234F)"),
+  panNumber: z.string().regex(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, { message: "validation.panNumber.format" }),
   aadharVerificationStatus: z
     .boolean()
     .default(false)
     .refine((data) => data, {
-      message: "Aadhar must be verified",
+      message: "validation.aadharVerificationStatus.required",
     }),
   panVerificationStatus: z
     .boolean()
     .default(false)
     .refine((data) => data, {
-      message: "PAN must be verified",
+      message: "validation.panVerificationStatus.required",
     }),
 });
 
 export type PersonalInformationFormValues = z.infer<typeof PersonalInformationSchema>;
 
 export interface PersonalInformationFormProps {
-  initialData?: Partial<PersonalInformationFormValues> & { id?: string };
+  initialData?: Partial<PersonalInformationFormValues>;
   loanApplication?: any;
 }

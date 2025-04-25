@@ -1034,7 +1034,7 @@
         "title": "View Applicant",
         "description": "Applicant profile information"
       },
-      
+
         "userId": {
           "label": "User ID",
           "placeholder": "Select a user"
@@ -1081,7 +1081,7 @@
           "label": "Bank",
           "placeholder": "Select bank"
         },
-      
+
       "sections": {
         "personal": "Personal Information",
         "address": "Address Information",
@@ -1112,14 +1112,33 @@
       "id": {
         "required": "Applicant ID is required"
       },
+      "dateOfBirth": {
+        "ageRequirement": "Applicant must be at least 18 years old"
+      },
+      "addressState": {
+        "required": "State is required"
+      },
+      "addressCity": {
+        "required": "City is required"
+      },
+      "addressFull": {
+        "required": "Full address is required"
+      },
       "aadharNumber": {
-        "format": "Aadhar number must be exactly 12 digits"
+        "format": "Aadhar number must be exactly 12 digits",
+        "invalid": "Invalid Aadhar number"
       },
       "panNumber": {
         "format": "PAN number must be in format AAAAA9999A"
       },
       "addressPinCode": {
         "format": "PIN code must be 6 digits"
+      },
+      "aadharVerificationStatus": {
+        "required": "Aadhar must be verified"
+      },
+      "panVerificationStatus": {
+        "required": "PAN must be verified"
       }
     },
     "errors": {
