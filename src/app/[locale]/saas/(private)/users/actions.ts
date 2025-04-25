@@ -1,10 +1,10 @@
 "use server";
 
-import { prisma } from "@/lib/prisma";
+import { prisma } from "@/lib/prisma/prisma";
 
 import { createClient } from "@supabase/supabase-js";
 import { createUserSchema, UserData, UserRecord } from "@/app/[locale]/saas/(private)/users/schema";
-import { getFormTranslation } from "@/utils/serverTranslationUtil";
+import { getFormTranslation } from "@/lib/serverTranslationUtil";
 import { revalidatePath } from "next/cache";
 import { handleActionError } from "@/lib/actionErrorHelpers";
 import { ActionResponse } from "@/types/globalTypes";
@@ -143,8 +143,7 @@ export async function submitPendingUserRequest(
         bankId: validated.bankId,
         actionType: PendingActionType.REQUEST_BANK_USER_CREATION,
         status: ApprovalStatus.PENDING,
-        // @ts-ignore
-        payload: { email: validated.email },
+        payload: { path: ["email"], equals: validated.email },
       },
     });
 

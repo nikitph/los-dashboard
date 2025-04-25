@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Building, Car, Edit, FileText, Home, MapPin, Trash, User } from "lucide-react";
 import { deleteVerification, getVerificationById } from "@/app/[locale]/saas/(private)/verifications/actions";
 import { toast } from "@/hooks/use-toast";
-import { formatDate } from "@/utils/displayUtils";
+import { formatDate } from "@/lib/displayUtils";
 import { useDocuments } from "@/hooks/useDocuments";
 import { VerificationPhoto } from "@/app/[locale]/saas/(private)/verifications/components/VerificationPhoto";
 

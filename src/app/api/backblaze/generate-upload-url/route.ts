@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getPresignedUploadUrl } from "@/utils/backblaze/backblazeUtils";
+import { getPresignedUploadUrl } from "@/lib/backblaze/backblazeUtils";
 
 export async function POST(request: Request) {
   try {

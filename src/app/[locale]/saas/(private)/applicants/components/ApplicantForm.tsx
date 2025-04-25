@@ -12,8 +12,8 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { toast } from "@/hooks/use-toast";
 import { createApplicant, updateApplicant } from "@/app/[locale]/saas/(private)/applicants/actions";
 import { z } from "zod";
-import { indianStates } from "@/lib/utils";
 import { ApplicantSchema } from "@/schemas/zodSchemas";
+import { indianStates } from "@/lib/constants";
 
 type ApplicantFormValues = z.infer<typeof ApplicantSchema>;
 

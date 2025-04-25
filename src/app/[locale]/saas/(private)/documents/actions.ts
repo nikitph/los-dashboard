@@ -2,13 +2,13 @@
 
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { prisma } from "@/lib/prisma";
+import { prisma } from "@/lib/prisma/prisma";
 import {
   deleteFile,
   determineStorageType,
   getPresignedDownloadUrl,
   getPresignedUploadUrl,
-} from "@/utils/backblaze/backblazeUtils";
+} from "@/lib/backblaze/backblazeUtils";
 
 // Response type for actions
 type ActionResponse = {

@@ -17,7 +17,7 @@ import {
 import { ArrowUpRight, Monitor, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import * as React from "react";
-import { createClient } from "@/utils/supabase/client";
+import { createClient } from "@/lib/supabase/client";
 import { useUser } from "@/contexts/userContext";
 import { useRouter } from "next/navigation";
 

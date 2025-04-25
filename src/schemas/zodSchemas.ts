@@ -1,3 +1,5 @@
+// Deprecated -- Do not use this file.
+
 import { z } from "zod";
 
 // Enums

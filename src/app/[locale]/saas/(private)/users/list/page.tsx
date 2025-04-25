@@ -105,6 +105,7 @@ export default function ManageUsersPage() {
       if (user?.currentRole?.bankId) {
         const data = await getPendingUserCreations(user.currentRole.bankId);
         const transformed = data.map((entry) => ({
+          /* @ts-ignore */
           ...entry.payload,
           id: entry.id,
           status: "Pending",

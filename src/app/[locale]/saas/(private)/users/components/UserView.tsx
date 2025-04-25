@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { UserRecord } from "@/app/[locale]/saas/(private)/users/schema";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -17,93 +16,34 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { approvePendingAction, rejectPendingAction } from "@/app/[locale]/saas/(private)/users/actions";
-import { toastError, toastSuccess } from "@/lib/toastUtils";
-import { useRouter } from "@/i18n/navigation";
-import { revalidatePath } from "next/cache";
+import { useUserView } from "../hooks/useUserView";
 
-export default function UserView({
-  user,
-  approveMode,
-  onActionComplete,
-}: {
+export interface UserViewProps {
   user: UserRecord;
   approveMode: boolean;
   onActionComplete?: () => void;
-}) {
-  const router = useRouter();
-  const [isRejectDialogOpen, setIsRejectDialogOpen] = useState(false);
-  const [remarks, setRemarks] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [remarksError, setRemarksError] = useState("");
+}
 
-  const fullName = `${user.firstName} ${user.lastName}`;
-  const initials = `${user.firstName?.[0] ?? ""}${user.lastName?.[0] ?? ""}`.toUpperCase();
-
-  const handleRejectClick = () => {
-    setIsRejectDialogOpen(true);
-    setRemarks("");
-    setRemarksError("");
-  };
-
-  const handleRejectSubmit = async () => {
-    // Validate remarks
-    if (!remarks.trim()) {
-      setRemarksError("Remarks are required");
-      return;
-    }
-
-    setIsSubmitting(true);
-
-    try {
-      // Call the server action with the pending action ID and remarks
-      await rejectPendingAction(user.id, remarks);
-
-      toastSuccess({ title: "Succes", description: "The user has been successfully rejected" });
-
-      // Notify parent component that action is complete
-      if (onActionComplete) {
-        onActionComplete();
-      }
-    } catch (error) {
-      console.error("Error rejecting user:", error);
-      toastError({
-        title: "Error",
-        description: "Failed to reject user. Please try again.",
-      });
-    } finally {
-      setIsSubmitting(false);
-      setIsRejectDialogOpen(false);
-    }
-  };
-
-  const handleApproveClick = async () => {
-    setIsSubmitting(true);
-
-    try {
-      const res = await approvePendingAction(user.id);
-      console.log("Approval result:", res);
-      revalidatePath("/page");
-
-      toastSuccess({
-        title: "User approved",
-        description: "The user has been successfully approved",
-      });
-
-      // Notify parent component that action is complete
-      if (onActionComplete) {
-        onActionComplete();
-      }
-    } catch (error) {
-      console.error("Error approving user:", error);
-      toastError({
-        title: "Error",
-        description: "Failed to approve user. Please try again.",
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+/**
+ * Component for displaying user details and approval/rejection actions
+ * Uses useUserView hook for all logic and state management
+ */
+export default function UserView({ user, approveMode, onActionComplete }: UserViewProps) {
+  const {
+    isRejectDialogOpen,
+    remarks,
+    isSubmitting,
+    remarksError,
+    fullName,
+    initials,
+    visibility,
+    setIsRejectDialogOpen,
+    setRemarks,
+    handleRejectClick,
+    handleRejectSubmit,
+    handleApproveClick,
+    t, // Get translation function from the hook
+  } = useUserView({ user, approveMode, onActionComplete });
 
   return (
     <>
@@ -116,48 +56,60 @@ export default function UserView({
 
           <div>
             <h2 className="text-xl font-semibold">{fullName}</h2>
-            <p className="text-sm text-muted-foreground">{user.email}</p>
-            <Badge variant="outline" className="mt-1">
-              {user.role}
-            </Badge>
+            {visibility.email && <p className="text-sm text-muted-foreground">{user.email}</p>}
+            {visibility.role && (
+              <Badge variant="outline" className="mt-1">
+                {user.role}
+              </Badge>
+            )}
           </div>
         </div>
 
         <Separator className="my-4" />
 
         <div className="grid grid-cols-1 gap-4 text-sm sm:grid-cols-2">
-          <div>
-            <p className="text-muted-foreground">Phone Number</p>
-            <p>{user.phoneNumber || "—"}</p>
-          </div>
-          <div>
-            <p className="text-muted-foreground">Branch</p>
-            <p>{user.branch || "—"}</p>
-          </div>
-          <div>
-            <p className="text-muted-foreground">Status</p>
-            <p>{user.status}</p>
-          </div>
-          <div>
-            <p className="text-muted-foreground">Last Login</p>
-            <p>{user.lastLogin || "—"}</p>
-          </div>
+          {visibility.phoneNumber && (
+            <div>
+              <p className="text-muted-foreground">{t("form.phoneNumber.label")}</p>
+              <p>{user.phoneNumber || "—"}</p>
+            </div>
+          )}
+          {visibility.branch && (
+            <div>
+              <p className="text-muted-foreground">{t("form.branch.label")}</p>
+              <p>{user.branch || "—"}</p>
+            </div>
+          )}
+          {visibility.status && (
+            <div>
+              <p className="text-muted-foreground">{t("form.status.label")}</p>
+              <p>{user.status}</p>
+            </div>
+          )}
+          {visibility.lastLogin && (
+            <div>
+              <p className="text-muted-foreground">{t("form.lastLogin.label")}</p>
+              <p>{user.lastLogin || "—"}</p>
+            </div>
+          )}
         </div>
       </Card>
 
-      {approveMode && (
+      {approveMode && visibility.canApprove && (
         <div className="flex justify-start gap-4 pt-4">
           <Button variant="default" onClick={handleApproveClick} disabled={isSubmitting}>
-            {isSubmitting ? "Processing..." : "Approve"}
+            {isSubmitting ? t("form.buttons.processing") : t("form.buttons.approve")}
           </Button>
-          <Button
-            variant="outline"
-            className="border-red-500 text-red-500 hover:text-red-500"
-            onClick={handleRejectClick}
-            disabled={isSubmitting}
-          >
-            Reject
-          </Button>
+          {visibility.canReject && (
+            <Button
+              variant="outline"
+              className="border-red-500 text-red-500 hover:text-red-500"
+              onClick={handleRejectClick}
+              disabled={isSubmitting}
+            >
+              {t("form.buttons.reject")}
+            </Button>
+          )}
         </div>
       )}
 
@@ -165,13 +117,13 @@ export default function UserView({
       <Dialog open={isRejectDialogOpen} onOpenChange={setIsRejectDialogOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Reject User Application</DialogTitle>
-            <DialogDescription>Please provide a reason for rejecting this user.</DialogDescription>
+            <DialogTitle>{t("form.rejectDialog.title")}</DialogTitle>
+            <DialogDescription>{t("form.rejectDialog.description")}</DialogDescription>
           </DialogHeader>
 
           <div className="py-4">
             <Label htmlFor="remarks" className="mb-2 flex items-center">
-              Remarks <span className="ml-1 text-red-500">*</span>
+              {t("form.rejectDialog.remarks.label")} <span className="ml-1 text-red-500">*</span>
             </Label>
             <Textarea
               id="remarks"
@@ -179,21 +131,21 @@ export default function UserView({
               onChange={(e) => {
                 setRemarks(e.target.value);
                 if (e.target.value.trim()) {
-                  setRemarksError("");
+                  // Clear error when user types valid content
                 }
               }}
               className={`min-h-24 resize-none ${remarksError ? "border-red-500 focus-visible:ring-red-500" : ""}`}
-              placeholder="Enter your reason for rejection..."
+              placeholder={t("form.rejectDialog.remarks.placeholder")}
             />
             {remarksError && <p className="mt-1 text-sm text-red-500">{remarksError}</p>}
           </div>
 
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsRejectDialogOpen(false)} disabled={isSubmitting}>
-              Cancel
+              {t("form.buttons.cancel")}
             </Button>
             <Button variant="destructive" onClick={handleRejectSubmit} disabled={isSubmitting}>
-              {isSubmitting ? "Submitting..." : "Submit"}
+              {isSubmitting ? t("form.buttons.submitting") : t("form.buttons.submit")}
             </Button>
           </DialogFooter>
         </DialogContent>

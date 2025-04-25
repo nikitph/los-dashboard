@@ -17,7 +17,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 import { ArrowLeft, ArrowUpDown, MoreHorizontal, Plus, Search } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { deleteLoanApplication, getLoanApplications, getLoanTypes } from "../actions";
-import { formatDate } from "@/utils/displayUtils";
+import { formatDate } from "@/lib/displayUtils";
 import { Badge } from "@/components/ui/badge";
 
 type LoanApplication = {

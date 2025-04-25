@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { Download, Eye, Loader2, Trash, Upload } from "lucide-react";
-import { validateFile } from "@/utils/backblaze/backblazeUtils";
+import { validateFile } from "@/lib/backblaze/backblazeUtils";
 import {
   confirmDocumentUpload,
   deleteDocument,

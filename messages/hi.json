@@ -296,5 +296,728 @@
         "invalid": "आधिकारिक ईमेल एक मान्य ईमेल पता होना चाहिए"
       }
     }
+  },
+  "Guarantor": {
+    "form": {
+      "create": {
+        "title": "नया गारंटर जोड़ें",
+        "description": "नए गारंटर के लिए जानकारी दर्ज करें"
+      },
+      "edit": {
+        "title": "गारंटर संपादित करें",
+        "description": "{name} की जानकारी संपादित करें"
+      },
+      "createTitle": "नया गारंटर जोड़ें",
+      "createDescription": "गारंटर जोड़ने के लिए फॉर्म भरें",
+      "editTitle": "गारंटर संपादित करें",
+      "editDescription": "गारंटर की जानकारी अपडेट करें",
+      "firstName": {
+        "label": "प्रथम नाम",
+        "placeholder": "प्रथम नाम दर्ज करें"
+      },
+      "lastName": {
+        "label": "अंतिम नाम",
+        "placeholder": "अंतिम नाम दर्ज करें"
+      },
+      "email": {
+        "label": "ईमेल पता",
+        "placeholder": "ईमेल पता दर्ज करें"
+      },
+      "mobileNumber": {
+        "label": "मोबाइल नंबर",
+        "placeholder": "मोबाइल नंबर दर्ज करें",
+        "description": "प्रारूप: (XXX) XXX-XXXX"
+      },
+      "address": {
+        "heading": "पता जानकारी"
+      },
+      "addressLine1": {
+        "label": "पता पंक्ति 1",
+        "placeholder": "सड़क का पता दर्ज करें"
+      },
+      "addressLine2": {
+        "label": "पता पंक्ति 2 (वैकल्पिक)",
+        "placeholder": "अपार्टमेंट, सूट, यूनिट आदि दर्ज करें",
+        "description": "वैकल्पिक"
+      },
+      "addressCity": {
+        "label": "शहर",
+        "placeholder": "शहर दर्ज करें"
+      },
+      "addressState": {
+        "label": "राज्य",
+        "placeholder": "राज्य दर्ज करें"
+      },
+      "addressZipCode": {
+        "label": "पिन कोड",
+        "placeholder": "पिन कोड दर्ज करें"
+      },
+      "loanApplicationId": {
+        "label": "ऋण आवेदन आईडी",
+        "placeholder": "ऋण आवेदन आईडी दर्ज करें"
+      },
+      "buttons": {
+        "create": "गारंटर बनाएं",
+        "creating": "बना रहे हैं...",
+        "save": "परिवर्तन सहेजें",
+        "saving": "सहेज रहे हैं...",
+        "cancel": "रद्द करें"
+      }
+    },
+    "validation": {
+      "firstName": {
+        "required": "प्रथम नाम आवश्यक है"
+      },
+      "lastName": {
+        "required": "अंतिम नाम आवश्यक है"
+      },
+      "email": {
+        "required": "ईमेल आवश्यक है",
+        "invalid": "कृपया एक वैध ईमेल पता दर्ज करें"
+      },
+      "mobileNumber": {
+        "required": "मोबाइल नंबर आवश्यक है",
+        "invalid": "कृपया एक वैध मोबाइल नंबर दर्ज करें"
+      },
+      "addressLine1": {
+        "required": "पता पंक्ति 1 आवश्यक है"
+      },
+      "addressCity": {
+        "required": "शहर आवश्यक है"
+      },
+      "addressState": {
+        "required": "राज्य आवश्यक है"
+      },
+      "addressZipCode": {
+        "required": "पिन कोड आवश्यक है"
+      },
+      "loanApplicationId": {
+        "required": "ऋण आवेदन आईडी आवश्यक है",
+        "notFound": "ऋण आवेदन नहीं मिला"
+      },
+      "id": {
+        "required": "गारंटर आईडी आवश्यक है",
+        "notFound": "गारंटर नहीं मिला"
+      }
+    },
+    "errors": {
+      "notFound": "गारंटर नहीं मिला",
+      "alreadyExists": "इस ईमेल के साथ एक गारंटर पहले से मौजूद है",
+      "unauthorized": "आपको यह क्रिया करने की अनुमति नहीं है",
+      "validationFailed": "कृपया सत्यापन त्रुटियों को ठीक करें",
+      "createFailed": "गारंटर बनाने में विफल",
+      "updateFailed": "गारंटर अपडेट करने में विफल",
+      "deleteFailed": "गारंटर हटाने में विफल",
+      "missingPermission": "आपके पास इस संसाधन तक पहुंचने की अनुमति नहीं है"
+    },
+    "toast": {
+      "success": "सफलता",
+      "error": "त्रुटि",
+      "createSuccess": "गारंटर बनाया गया",
+      "createSuccessDescription": "गारंटर सफलतापूर्वक बनाया गया है",
+      "createError": "निर्माण विफल रहा",
+      "updateSuccess": "गारंटर अपडेट किया गया",
+      "updateSuccessDescription": "गारंटर सफलतापूर्वक अपडेट किया गया है",
+      "updateError": "अपडेट विफल रहा",
+      "deleteSuccess": "गारंटर हटाया गया",
+      "deleteSuccessDescription": "गारंटर सफलतापूर्वक हटा दिया गया है",
+      "deleteError": "हटाना विफल रहा",
+      "fetchError": "गारंटर लाने में विफल",
+      "fetched": "गारंटर सफलतापूर्वक लोड किए गए",
+      "unexpectedError": "एक अप्रत्याशित त्रुटि हुई"
+    },
+    "list": {
+      "title": "गारंटर",
+      "description": "ऋण आवेदनों के लिए गारंटर प्रबंधित करें",
+      "empty": "कोई गारंटर नहीं मिला",
+      "addNew": "नया गारंटर जोड़ें",
+      "search": "गारंटर खोजें...",
+      "loading": "गारंटर लोड हो रहे हैं...",
+      "noResults": "कोई गारंटर नहीं मिला",
+      "actions": "कार्यवाई",
+      "edit": "संपादित करें",
+      "delete": "हटाएं",
+      "confirmDelete": "पुष्टि करें",
+      "cancel": "रद्द करें",
+      "success": "कार्य सफल",
+      "pageInfo": "पृष्ठ {page} कुल {total} का",
+      "createNew": "गारंटर जोड़ें",
+      "columns": {
+        "name": "नाम",
+        "fullName": "पूरा नाम",
+        "firstName": "प्रथम नाम",
+        "lastName": "अंतिम नाम",
+        "email": "ईमेल",
+        "phone": "फोन",
+        "mobileNumber": "मोबाइल नंबर",
+        "address": "पता",
+        "addressCity": "शहर",
+        "addressState": "राज्य",
+        "actions": "कार्रवाई"
+      },
+      "filters": {
+        "state": "राज्य द्वारा फ़िल्टर करें",
+        "clear": "फ़िल्टर साफ़ करें"
+      }
+    },
+    "view": {
+      "guarantorDetails": "इस गारंटर का विवरण",
+      "personalInfo": "व्यक्तिगत जानकारी",
+      "addressInfo": "पता जानकारी",
+      "systemInfo": "सिस्टम जानकारी",
+      "fullAddress": "पूरा पता",
+      "createdAt": "बनाया गया",
+      "updatedAt": "अंतिम अपडेट",
+      "buttons": {
+        "back": "सूची पर वापस जाएं",
+        "edit": "संपादित करें",
+        "delete": "हटाएं"
+      }
+    },
+    "delete": {
+      "confirmTitle": "गारंटर हटाएं",
+      "confirmDescription": "क्या आप वाकई {name} को हटाना चाहते हैं? यह क्रिया पूर्ववत नहीं की जा सकती।",
+      "confirm": "हां, हटाएं",
+      "deleting": "हटा रहे हैं...",
+      "cancel": "रद्द करें"
+    },
+    "page": {
+      "title": "गारंटर",
+      "description": "ऋण आवेदनों के लिए गारंटर प्रबंधित करें",
+      "createTitle": "गारंटर जोड़ें",
+      "createDescription": "सिस्टम में एक नया गारंटर जोड़ें",
+      "editTitle": "गारंटर संपादित करें",
+      "editDescription": "गारंटर की जानकारी अपडेट करें",
+      "error": "त्रुटि"
+    }
+  },
+  "Users": {
+    "form": {
+      "title": "उपयोगकर्ता बनाएं",
+      "description": "बैंक में नया उपयोगकर्ता जोड़ें",
+      "editTitle": "उपयोगकर्ता संपादित करें",
+      "editDescription": "उपयोगकर्ता विवरण अपडेट करें",
+      "viewTitle": "उपयोगकर्ता देखें",
+      "viewDescription": "उपयोगकर्ता विवरण",
+      "firstName": {
+        "label": "पहला नाम",
+        "placeholder": "पहला नाम दर्ज करें"
+      },
+      "lastName": {
+        "label": "अंतिम नाम",
+        "placeholder": "अंतिम नाम दर्ज करें"
+      },
+      "email": {
+        "label": "ईमेल",
+        "placeholder": "ईमेल पता दर्ज करें"
+      },
+      "phoneNumber": {
+        "label": "फोन नंबर",
+        "placeholder": "10-अंकों का फोन नंबर दर्ज करें"
+      },
+      "role": {
+        "label": "भूमिका",
+        "placeholder": "एक भूमिका चुनें"
+      },
+      "status": {
+        "label": "स्थिति"
+      },
+      "lastLogin": {
+        "label": "अंतिम लॉगिन"
+      },
+      "branch": {
+        "label": "शाखा"
+      },
+      "submit": {
+        "label": "उपयोगकर्ता बनाएं",
+        "loading": "उपयोगकर्ता बना रहा है...",
+        "edit": "उपयोगकर्ता अपडेट करें",
+        "editLoading": "उपयोगकर्ता अपडेट हो रहा है..."
+      },
+      "cancel": "रद्द करें",
+      "buttons": {
+        "approve": "स्वीकृत करें",
+        "reject": "अस्वीकार करें",
+        "processing": "प्रोसेसिंग...",
+        "submitting": "जमा हो रहा है...",
+        "submit": "जमा करें",
+        "cancel": "रद्द करें"
+      },
+      "rejectDialog": {
+        "title": "उपयोगकर्ता आवेदन अस्वीकार करें",
+        "description": "कृपया इस उपयोगकर्ता को अस्वीकार करने का कारण प्रदान करें।",
+        "remarks": {
+          "label": "टिप्पणियाँ",
+          "placeholder": "अस्वीकृति का कारण दर्ज करें..."
+        }
+      }
+    },
+    "validation": {
+      "firstName": {
+        "required": "पहला नाम आवश्यक है"
+      },
+      "lastName": {
+        "required": "अंतिम नाम आवश्यक है"
+      },
+      "email": {
+        "required": "ईमेल आवश्यक है",
+        "invalid": "कृपया एक वैध ईमेल पता दर्ज करें",
+        "alreadyExists": "इस ईमेल के साथ एक उपयोगकर्ता पहले से मौजूद है"
+      },
+      "phoneNumber": {
+        "required": "फोन नंबर आवश्यक है",
+        "invalid": "कृपया एक वैध 10-अंकों का फोन नंबर दर्ज करें",
+        "alreadyExists": "इस फोन नंबर के साथ एक उपयोगकर्ता पहले से मौजूद है"
+      },
+      "role": {
+        "required": "भूमिका आवश्यक है"
+      },
+      "bankId": {
+        "required": "बैंक आईडी आवश्यक है",
+        "notFound": "बैंक नहीं मिला"
+      },
+      "id": {
+        "required": "उपयोगकर्ता आईडी आवश्यक है"
+      },
+      "remarks": {
+        "required": "टिप्पणियाँ आवश्यक हैं"
+      }
+    },
+    "errors": {
+      "createFailed": "उपयोगकर्ता बनाने में विफल",
+      "updateFailed": "उपयोगकर्ता अपडेट करने में विफल",
+      "fetchFailed": "उपयोगकर्ता डेटा प्राप्त करने में विफल",
+      "userNotFound": "उपयोगकर्ता नहीं मिला",
+      "unexpected": "एक अप्रत्याशित त्रुटि हुई",
+      "validationFailed": "कृपया त्रुटियों के लिए फॉर्म की जांच करें",
+      "pendingRequestExists": "इस उपयोगकर्ता के लिए एक लंबित अनुरोध पहले से मौजूद है",
+      "pendingRequestNotFound": "लंबित अनुरोध नहीं मिला",
+      "approveFailed": "उपयोगकर्ता को स्वीकृत करने में विफल। कृपया पुनः प्रयास करें।",
+      "rejectFailed": "उपयोगकर्ता को अस्वीकृत करने में विफल। कृपया पुनः प्रयास करें।"
+    },
+    "toast": {
+      "created": "उपयोगकर्ता सफलतापूर्वक बनाया गया",
+      "updated": "उपयोगकर्ता सफलतापूर्वक अपडेट किया गया",
+      "deleted": "उपयोगकर्ता सफलतापूर्वक हटा दिया गया",
+      "passwordReset": "उपयोगकर्ता को पासवर्ड रीसेट ईमेल भेजा गया",
+      "userLocked": "उपयोगकर्ता खाता लॉक किया गया",
+      "userUnlocked": "उपयोगकर्ता खाता अनलॉक किया गया",
+      "pendingRequestSubmitted": "उपयोगकर्ता बनाने का अनुरोध अनुमोदन के लिए प्रस्तुत किया गया",
+      "pendingRequestApproved": "उपयोगकर्ता बनाने का अनुरोध स्वीकृत किया गया",
+      "pendingRequestRejected": "उपयोगकर्ता बनाने का अनुरोध अस्वीकृत किया गया",
+      "pendingRequestCancelled": "उपयोगकर्ता बनाने का अनुरोध रद्द किया गया",
+      "approve": {
+        "success": "उपयोगकर्ता सफलतापूर्वक स्वीकृत किया गया है",
+        "error": "उपयोगकर्ता को स्वीकृत करने में विफल। कृपया पुनः प्रयास करें।"
+      },
+      "reject": {
+        "success": "उपयोगकर्ता सफलतापूर्वक अस्वीकृत किया गया है",
+        "error": "उपयोगकर्ता को अस्वीकृत करने में विफल। कृपया पुनः प्रयास करें।"
+      }
+    },
+    "list": {
+      "title": "उपयोगकर्ता",
+      "description": "बैंक कर्मचारियों और सिस्टम उपयोगकर्ताओं का प्रबंधन करें",
+      "emptyState": "कोई उपयोगकर्ता नहीं मिला",
+      "addUser": "उपयोगकर्ता जोड़ें",
+      "search": "उपयोगकर्ता खोजें...",
+      "roles": "भूमिका द्वारा फ़िल्टर करें",
+      "status": "स्थिति द्वारा फ़िल्टर करें",
+      "export": "चयनित निर्यात करें",
+      "columns": {
+        "firstName": "पहला नाम",
+        "lastName": "अंतिम नाम",
+        "email": "ईमेल",
+        "role": "भूमिका",
+        "status": "स्थिति",
+        "lastLogin": "अंतिम लॉगिन",
+        "branch": "शाखा",
+        "user": "उपयोगकर्ता",
+        "actions": "कार्रवाई"
+      },
+      "actions": {
+        "label": "कार्रवाई",
+        "menu": "मेन्यू खोलें",
+        "view": "देखें",
+        "edit": "संपादित करें",
+        "delete": "हटाएं"
+      },
+      "filters": {
+        "all": "सभी",
+        "reset": "फ़िल्टर रीसेट करें",
+        "allRoles": "सभी भूमिकाएँ",
+        "allStatuses": "सभी स्थितियाँ",
+        "searchPlaceholder": "उपयोगकर्ता खोजें..."
+      },
+      "pendingRequests": "लंबित अनुरोध",
+      "confirmDelete": "क्या आप वाकई इस उपयोगकर्ता को हटाना चाहते हैं?",
+      "confirmDeleteSelected": "क्या आप वाकई चयनित उपयोगकर्ताओं को हटाना चाहते हैं?",
+      "stats": {
+        "activeUsers": "सक्रिय उपयोगकर्ता",
+        "pendingApproval": "अनुमोदन की प्रतीक्षा में",
+        "lockedAccounts": "लॉक किए गए खाते"
+      }
+    },
+    "pendingRequests": {
+      "title": "लंबित उपयोगकर्ता अनुरोध",
+      "description": "उपयोगकर्ता बनाने के अनुरोधों की समीक्षा और अनुमोदन करें",
+      "approveButton": "स्वीकृत करें",
+      "rejectButton": "अस्वीकार करें",
+      "cancelButton": "रद्द करें",
+      "requestedBy": "द्वारा अनुरोधित",
+      "requestedAt": "अनुरोधित समय",
+      "rejectReasonLabel": "अस्वीकृति का कारण",
+      "rejectReasonPlaceholder": "अस्वीकृति का कारण दर्ज करें",
+      "confirmReject": "क्या आप वाकई इस अनुरोध को अस्वीकार करना चाहते हैं?",
+      "confirmApprove": "क्या आप वाकई इस अनुरोध को स्वीकृत करना चाहते हैं?"
+    }
+  },
+  "LoanApplication": {
+    "meta": {
+      "list": {
+        "title": "ऋण आवेदन",
+        "description": "सभी ऋण आवेदनों की सूची"
+      },
+      "create": {
+        "title": "ऋण आवेदन बनाएं",
+        "description": "नया ऋण आवेदन बनाएं"
+      },
+      "edit": {
+        "title": "ऋण आवेदन संपादित करें",
+        "description": "मौजूदा ऋण आवेदन अपडेट करें"
+      },
+      "view": {
+        "title": "ऋण आवेदन देखें",
+        "description": "ऋण आवेदन विवरण देखें"
+      }
+    },
+    "form": {
+      "create": {
+        "title": "ऋण आवेदन बनाएं",
+        "description": "नया ऋण आवेदन बनाने के लिए विवरण भरें"
+      },
+      "update": {
+        "title": "ऋण आवेदन संपादित करें",
+        "description": "इस ऋण आवेदन के विवरण अपडेट करें"
+      },
+      "applicantId": {
+        "label": "आवेदक आईडी",
+        "placeholder": "आवेदक चुनें"
+      },
+      "bankId": {
+        "label": "बैंक आईडी",
+        "placeholder": "बैंक चुनें"
+      },
+      "loanType": {
+        "label": "ऋण प्रकार",
+        "placeholder": "ऋण प्रकार चुनें"
+      },
+      "amountRequested": {
+        "label": "अनुरोधित राशि",
+        "placeholder": "राशि दर्ज करें"
+      },
+      "status": {
+        "label": "स्थिति",
+        "placeholder": "स्थिति चुनें"
+      },
+      "cancel": "रद्द करें",
+      "submit": "जमा करें",
+      "submitting": "जमा किया जा रहा है..."
+    },
+    "list": {
+      "title": "ऋण आवेदन",
+      "description": "ऋण आवेदनों का प्रबंधन और देखें",
+      "empty": "कोई ऋण आवेदन नहीं मिला",
+      "search": "ऋण आवेदन खोजें",
+      "addNew": "नया आवेदन बनाएं",
+      "column": "कॉलम",
+      "exportSelected": "चयनित निर्यात करें",
+      "deleteSelected": "चयनित हटाएं",
+      "toggleColumns": "कॉलम टॉगल करें",
+      "loading": "ऋण आवेदन लोड हो रहे हैं...",
+      "actions": {
+        "label": "कार्रवाई",
+        "menu": "मेनू खोलें",
+        "view": "देखें",
+        "edit": "संपादित करें",
+        "delete": "हटाएं"
+      },
+      "columns": {
+        "id": "आईडी",
+        "applicant": "आवेदक",
+        "applicantName": "आवेदक का नाम",
+        "loanType": "ऋण प्रकार",
+        "amount": "राशि",
+        "amountRequested": "अनुरोधित राशि",
+        "status": "स्थिति",
+        "createdAt": "बनाया गया",
+        "actions": "कार्रवाई"
+      },
+      "pagination": {
+        "previous": "पिछला",
+        "next": "अगला",
+        "pageInfo": "पृष्ठ {page} का {total}",
+        "rowsPerPage": "प्रति पृष्ठ पंक्तियां"
+      }
+    },
+    "view": {
+      "title": "ऋण आवेदन विवरण",
+      "description": "इस ऋण आवेदन का विवरण देखें",
+      "id": "आईडी",
+      "applicant": "आवेदक",
+      "loanType": "ऋण प्रकार",
+      "amountRequested": "अनुरोधित राशि",
+      "status": "स्थिति",
+      "createdAt": "बनाया गया",
+      "updatedAt": "अंतिम अपडेट",
+      "back": "वापस",
+      "edit": "संपादित करें",
+      "delete": "हटाएं",
+      "deleting": "हटा रहा है...",
+      "notAvailable": "उपलब्ध नहीं",
+      "guarantors": "गारंटर",
+      "guarantorsDescription": "इस ऋण की गारंटी देने वाले लोग",
+      "documents": "दस्तावेज़",
+      "documentsDescription": "इस ऋण आवेदन से संबंधित दस्तावेज़"
+    },
+    "filter": {
+      "search": "ऋण आवेदन खोजें",
+      "reset": "रीसेट",
+      "loanType": {
+        "all": "सभी ऋण प्रकार",
+        "personal": "व्यक्तिगत",
+        "vehicle": "वाहन",
+        "houseConstruction": "घर निर्माण",
+        "plotPurchase": "प्लॉट खरीद",
+        "mortgage": "बंधक"
+      },
+      "status": {
+        "all": "सभी स्थितियां",
+        "pending": "लंबित",
+        "underReview": "समीक्षा के अधीन",
+        "approved": "स्वीकृत",
+        "rejected": "अस्वीकृत"
+      }
+    },
+    "toast": {
+      "created": "ऋण आवेदन सफलतापूर्वक बनाया गया",
+      "createdDescription": "ऋण आवेदन बना दिया गया है",
+      "updated": "ऋण आवेदन सफलतापूर्वक अपडेट किया गया",
+      "updatedDescription": "ऋण आवेदन अपडेट कर दिया गया है",
+      "deleted": "ऋण आवेदन सफलतापूर्वक हटा दिया गया",
+      "deletedDescription": "ऋण आवेदन हटा दिया गया है",
+      "fetched": "ऋण आवेदन लोड किया गया",
+      "error": "त्रुटि",
+      "errorDescription": "एक अनपेक्षित त्रुटि हुई"
+    },
+    "errors": {
+      "notFound": "ऋण आवेदन नहीं मिला",
+      "unauthorized": "आपके पास इस ऋण आवेदन तक पहुंचने की अनुमति नहीं है",
+      "invalidData": "प्रदान की गई जानकारी अमान्य है"
+    },
+    "confirm": {
+      "delete": "क्या आप वाकई इस ऋण आवेदन को हटाना चाहते हैं?",
+      "deleteMultiple": {
+        "title": "चयनित आवेदन हटाएं",
+        "description": "क्या आप वाकई {count} चयनित ऋण आवेदनों को हटाना चाहते हैं?"
+      },
+      "cancel": "रद्द करें",
+      "continue": "जारी रखें"
+    },
+    "validation": {
+      "id": {
+        "required": "आईडी आवश्यक है"
+      },
+      "applicantId": {
+        "required": "आवेदक आवश्यक है"
+      },
+      "bankId": {
+        "required": "बैंक आवश्यक है"
+      },
+      "loanType": {
+        "required": "ऋण प्रकार आवश्यक है",
+        "invalid": "अमान्य ऋण प्रकार"
+      },
+      "amountRequested": {
+        "required": "राशि आवश्यक है",
+        "positive": "राशि 0 से अधिक होनी चाहिए"
+      },
+      "status": {
+        "required": "स्थिति आवश्यक है",
+        "invalid": "अमान्य स्थिति"
+      }
+    }
+  },
+  "CoApplicant": {
+    "form": {
+      "firstName": {
+        "label": "पहला नाम",
+        "placeholder": "पहला नाम दर्ज करें"
+      },
+      "lastName": {
+        "label": "अंतिम नाम",
+        "placeholder": "अंतिम नाम दर्ज करें"
+      },
+      "email": {
+        "label": "ईमेल",
+        "placeholder": "ईमेल पता दर्ज करें"
+      },
+      "mobileNumber": {
+        "label": "मोबाइल नंबर",
+        "placeholder": "मोबाइल नंबर दर्ज करें",
+        "description": "देश कोड शामिल करें यदि लागू हो"
+      },
+      "addressLine1": {
+        "label": "पता पंक्ति 1",
+        "placeholder": "स्ट्रीट एड्रेस दर्ज करें"
+      },
+      "addressLine2": {
+        "label": "पता पंक्ति 2 (वैकल्पिक)",
+        "placeholder": "अपार्टमेंट, सूट, आदि दर्ज करें"
+      },
+      "addressCity": {
+        "label": "शहर",
+        "placeholder": "शहर दर्ज करें"
+      },
+      "addressState": {
+        "label": "राज्य",
+        "placeholder": "राज्य दर्ज करें"
+      },
+      "addressZipCode": {
+        "label": "पिन कोड",
+        "placeholder": "पिन कोड दर्ज करें"
+      },
+      "loanApplicationId": "ऋण आवेदन आईडी",
+      "fullName": "पूरा नाम",
+      "fullAddress": "पूरा पता",
+      "createdAt": "बनाया गया",
+      "updatedAt": "अपडेट किया गया",
+      "sections": {
+        "basic": "मूलभूत जानकारी",
+        "address": "पता जानकारी",
+        "metadata": "अतिरिक्त जानकारी"
+      },
+      "create": {
+        "title": "सह-आवेदक बनाएं",
+        "description": "ऋण आवेदन में नया सह-आवेदक जोड़ें"
+      },
+      "update": {
+        "title": "सह-आवेदक अपडेट करें",
+        "description": "सह-आवेदक की जानकारी संपादित करें"
+      },
+      "actions": {
+        "title": "कार्रवाइयां",
+        "description": "इस सह-आवेदक के लिए उपलब्ध कार्रवाइयां"
+      },
+      "submit": "जमा करें",
+      "cancel": "रद्द करें",
+      "back": "वापस जाएं",
+      "delete": "हटाएं",
+      "edit": "संपादित करें"
+    },
+    "validation": {
+      "firstName": {
+        "required": "पहला नाम आवश्यक है"
+      },
+      "lastName": {
+        "required": "अंतिम नाम आवश्यक है"
+      },
+      "email": {
+        "invalid": "कृपया एक वैध ईमेल पता दर्ज करें"
+      },
+      "addressState": {
+        "required": "राज्य आवश्यक है"
+      },
+      "addressCity": {
+        "required": "शहर आवश्यक है"
+      },
+      "addressZipCode": {
+        "required": "पिन कोड आवश्यक है"
+      },
+      "addressLine1": {
+        "required": "पता आवश्यक है"
+      },
+      "mobileNumber": {
+        "invalid": "कृपया एक वैध मोबाइल नंबर दर्ज करें"
+      },
+      "loanApplicationId": {
+        "required": "ऋण आवेदन आईडी आवश्यक है"
+      },
+      "id": {
+        "required": "सह-आवेदक आईडी आवश्यक है"
+      }
+    },
+    "errors": {
+      "unauthorized": "आपको यह कार्रवाई करने के लिए अधिकृत नहीं किया गया है",
+      "forbidden": "आपके पास इस संसाधन तक पहुंचने की अनुमति नहीं है",
+      "unexpected": "एक अप्रत्याशित त्रुटि हुई। कृपया बाद में पुन: प्रयास करें",
+      "notFound": "सह-आवेदक नहीं मिला",
+      "validationFailed": "कृपया अपना इनपुट जांचें और पुन: प्रयास करें",
+      "loadFailed": "सह-आवेदक डेटा लोड करने में विफल",
+      "deleteFailed": "सह-आवेदक को हटाने में विफल"
+    },
+    "toast": {
+      "created": "सह-आवेदक सफलतापूर्वक बनाया गया",
+      "updated": "सह-आवेदक सफलतापूर्वक अपडेट किया गया",
+      "deleted": "सह-आवेदक सफलतापूर्वक हटाया गया",
+      "fetched": "सह-आवेदक सफलतापूर्वक प्राप्त किया गया",
+      "listed": "सह-आवेदक सूची सफलतापूर्वक प्राप्त की गई"
+    },
+    "list": {
+      "title": "सह-आवेदक",
+      "titleForLoan": "ऋण आवेदन के लिए सह-आवेदक",
+      "description": "ऋण आवेदनों के लिए सह-आवेदकों का प्रबंधन करें",
+      "add": "सह-आवेदक जोड़ें",
+      "empty": "कोई सह-आवेदक नहीं मिला",
+      "search": {
+        "placeholder": "सह-आवेदकों की खोज करें..."
+      },
+      "columns": {
+        "title": "कॉलम",
+        "fullName": "पूरा नाम",
+        "email": "ईमेल",
+        "mobileNumber": "मोबाइल नंबर",
+        "location": "स्थान",
+        "createdAt": "बनाया गया",
+        "actions": "कार्रवाइयां"
+      },
+      "actions": {
+        "view": "विवरण देखें",
+        "edit": "संपादित करें",
+        "delete": "हटाएं"
+      }
+    },
+    "page": {
+      "create": {
+        "title": "सह-आवेदक बनाएं",
+        "description": "ऋण आवेदन में नया सह-आवेदक जोड़ें",
+        "noLoanApplicationId": "ऋण आवेदन आईडी आवश्यक है। कृपया वापस जाएं और ऋण आवेदन का चयन करें।"
+      },
+      "edit": {
+        "title": "सह-आवेदक संपादित करें",
+        "description": "सह-आवेदक की जानकारी अपडेट करें"
+      },
+      "view": {
+        "title": "सह-आवेदक विवरण",
+        "description": "सह-आवेदक की जानकारी देखें"
+      },
+      "list": {
+        "title": "सभी सह-आवेदक",
+        "titleForLoan": "ऋण के लिए सह-आवेदक",
+        "description": "सह-आवेदकों को देखें और प्रबंधित करें",
+        "add": "सह-आवेदक जोड़ें"
+      }
+    },
+    "dialog": {
+      "delete": {
+        "title": "सह-आवेदक हटाएं",
+        "description": "क्या आप वाकई इस सह-आवेदक को हटाना चाहते हैं? यह क्रिया पूर्ववत नहीं की जा सकती।",
+        "cancel": "रद्द करें",
+        "confirm": "हटाएं"
+      }
+    },
+    "common": {
+      "notSpecified": "निर्दिष्ट नहीं"
+    }
   }
 }

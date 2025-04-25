@@ -1,9 +1,12 @@
 // app/actions/user-actions.ts
 "use server";
 
-import { prisma } from "@/lib/prisma";
+import { prisma } from "@/lib/prisma/prisma";
 
 export async function getUserRoles(userId: string) {
+  if (!userId) {
+    return { success: false, error: "Invalid user ID" };
+  }
   try {
     const roles = await prisma.userRoles.findMany({
       where: {

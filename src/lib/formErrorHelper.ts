@@ -9,6 +9,7 @@ type ActionError = {
 export function handleFormErrors<T extends FieldValues>(
   response: { success: false } & ActionError,
   setError: UseFormSetError<T>,
+  t?: (key: string) => string,
 ): void {
   const { errors } = response;
 
@@ -19,7 +20,7 @@ export function handleFormErrors<T extends FieldValues>(
       if (key !== "root") {
         setError(key as Path<T>, {
           type: "manual",
-          message: String(msg),
+          message: t ? t(String(msg)) : String(msg),
         });
       }
     });

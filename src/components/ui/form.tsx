@@ -10,13 +10,42 @@ import {
   type FieldValues,
   FormProvider,
   useFormContext,
+  type UseFormReturn,
 } from "react-hook-form";
-
 import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
+import { useTranslations } from "next-intl";
 
-const Form = FormProvider;
+/* ───────────────────────────────────────
+ 🧠 Namespace Context (for i18n)
+─────────────────────────────────────── */
+const FormNamespaceContext = React.createContext<string | undefined>(undefined);
 
+export const useFormNamespace = () => {
+  return React.useContext(FormNamespaceContext);
+};
+
+/* ───────────────────────────────────────
+ 🧩 Form Wrapper with Namespace Support
+─────────────────────────────────────── */
+type CustomFormProps<TFieldValues extends FieldValues> = {
+  children: React.ReactNode;
+  namespace?: string;
+} & UseFormReturn<TFieldValues>;
+
+function Form<TFieldValues extends FieldValues>({ children, namespace, ...methods }: CustomFormProps<TFieldValues>) {
+  return (
+    <FormNamespaceContext.Provider value={namespace}>
+      <FormProvider {...methods}>{children}</FormProvider>
+    </FormNamespaceContext.Provider>
+  );
+}
+
+export { Form };
+
+/* ───────────────────────────────────────
+ 🔁 Form Field Context (for labels, errors)
+─────────────────────────────────────── */
 type FormFieldContextValue<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
@@ -29,9 +58,9 @@ const FormFieldContext = React.createContext<FormFieldContextValue>({} as FormFi
 const FormField = <
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
->({
-  ...props
-}: ControllerProps<TFieldValues, TName>) => {
+>(
+  props: ControllerProps<TFieldValues, TName>,
+) => {
   return (
     <FormFieldContext.Provider value={{ name: props.name }}>
       <Controller {...props} />
@@ -39,17 +68,19 @@ const FormField = <
   );
 };
 
+export { FormField };
+
+/* ───────────────────────────────────────
+ 🧩 Field Helpers (Errors, Labeling)
+─────────────────────────────────────── */
 const useFormField = () => {
   const fieldContext = React.useContext(FormFieldContext);
   const itemContext = React.useContext(FormItemContext);
   const { getFieldState, formState } = useFormContext();
 
+  if (!fieldContext) throw new Error("useFormField must be used within <FormField>");
+
   const fieldState = getFieldState(fieldContext.name, formState);
-
-  if (!fieldContext) {
-    throw new Error("useFormField should be used within <FormField>");
-  }
-
   const { id } = itemContext;
 
   return {
@@ -61,6 +92,8 @@ const useFormField = () => {
     ...fieldState,
   };
 };
+
+export { useFormField };
 
 type FormItemContextValue = {
   id: string;
@@ -122,7 +155,10 @@ FormDescription.displayName = "FormDescription";
 const FormMessage = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLParagraphElement>>(
   ({ className, children, ...props }, ref) => {
     const { error, formMessageId } = useFormField();
-    const body = error ? String(error?.message ?? "") : children;
+    const namespace = useFormNamespace();
+    const t = useTranslations(namespace);
+
+    const body = error ? (namespace && t ? t(String(error?.message ?? "")) : String(error?.message ?? "")) : children;
 
     if (!body) {
       return null;
@@ -142,4 +178,4 @@ const FormMessage = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<
 );
 FormMessage.displayName = "FormMessage";
 
-export { useFormField, Form, FormItem, FormLabel, FormControl, FormDescription, FormMessage, FormField };
+export { FormItem, FormLabel, FormControl, FormDescription, FormMessage };

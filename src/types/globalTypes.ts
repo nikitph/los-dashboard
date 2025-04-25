@@ -2,11 +2,13 @@ export type SuccessResponse<T> = {
   success: true;
   message: string;
   data?: T;
+  meta?: Record<string, any>;
 };
 
 export type ErrorResponse = {
   success: false;
   message: string;
+  code?: string;
   errors?: Record<string, string>;
 };
 

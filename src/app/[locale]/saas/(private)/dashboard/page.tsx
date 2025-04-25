@@ -75,7 +75,7 @@ function Dashboard() {
                 <IconWithBackground icon={FileText} size="medium" />
                 <div>
                   <p className="text-2xl font-bold">24</p>
-                  <p className="text-sm text-slate-500">Todays Applications</p>
+                  <p className="text-sm text-slate-500">Today&#39;s Applications</p>
                 </div>
               </div>
             </CardContent>

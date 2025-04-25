@@ -2,9 +2,9 @@
 
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
-import { prisma } from "@/lib/prisma";
+import { prisma } from "@/lib/prisma/prisma";
 import { cookies } from "next/headers";
-import { createClient } from "@/utils/supabase/server";
+import { createClient } from "@/lib/supabase/server";
 
 import {
   BankCreateInput,
@@ -22,7 +22,7 @@ import { ActionResponse } from "@/types/globalTypes";
 import { handleActionError } from "@/lib/actionErrorHelpers";
 import { getMessages } from "next-intl/server";
 import { createTranslator } from "next-intl";
-import { getFormTranslation } from "@/utils/serverTranslationUtil";
+import { getFormTranslation } from "@/lib/serverTranslationUtil";
 
 /**
  * Create a new bank with basic information

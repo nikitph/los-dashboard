@@ -17,7 +17,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 import { ArrowLeft, ArrowUpDown, MoreHorizontal, Plus } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { deleteApplicant, getApplicants, getStates } from "../actions";
-import { formatDate } from "@/utils/displayUtils";
+import { formatDate } from "@/lib/displayUtils";
 
 // Define type for applicants data
 type Applicant = {
