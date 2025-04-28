@@ -1,6 +1,6 @@
 "use server";
 
-import { prisma } from "@/lib/prisma";
+import { prisma } from "@/lib/prisma/prisma";
 import LoanObligationsForm from "@/app/[locale]/saas/(private)/loanobligations/components/LoanObligationsForm";
 
 export default async function LoanObligationsPage({ searchParams }: any) {

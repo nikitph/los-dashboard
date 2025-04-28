@@ -1325,5 +1325,33 @@
       "confirm": "Delete",
       "cancel": "Cancel"
     }
+  },
+  "PhotoCapture": {
+    "header": {
+      "title": "Photo Capture"
+    },
+    "controls": {
+      "capture": "Capture Photo",
+      "upload": "Upload Photo",
+      "proceed": "Proceed to Income Details",
+      "photoDescription": "Applicant profile photo"
+    },
+    "toast": {
+      "uploadSuccess": "Photo uploaded successfully",
+      "uploadFailed": "Failed to upload photo"
+    },
+    "validation": {
+      "entityIdRequired": "Entity ID is required",
+      "entityTypeInvalid": "Invalid entity type",
+      "documentTypeRequired": "Document type is required",
+      "uploadedByIdRequired": "Uploader ID is required",
+      "fileRequired": "A file is required",
+      "failed": "Validation failed"
+    },
+    "errors": {
+      "cameraAccess": "Error accessing camera",
+      "uploadFailed": "Failed to upload photo",
+      "unauthorized": "You are not authorized to perform this action"
+    }
   }
 }

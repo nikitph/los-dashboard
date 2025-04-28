@@ -1322,6 +1322,34 @@
       "confirmDescription": "क्या आप वाकई इस आवेदक को हटाना चाहते हैं? यह क्रिया पूर्ववत नहीं की जा सकती।",
       "confirm": "हटाएं",
       "cancel": "रद्द करें"
+    },
+    "PhotoCapture": {
+      "header": {
+        "title": "फोटो कैप्चर"
+      },
+      "controls": {
+        "capture": "फोटो कैप्चर करें",
+        "upload": "फोटो अपलोड करें",
+        "proceed": "आय विवरण पर आगे बढ़ें",
+        "photoDescription": "आवेदक प्रोफाइल फोटो"
+      },
+      "toast": {
+        "uploadSuccess": "फोटो सफलतापूर्वक अपलोड किया गया",
+        "uploadFailed": "फोटो अपलोड करने में विफल"
+      },
+      "validation": {
+        "entityIdRequired": "एंटिटी आईडी आवश्यक है",
+        "entityTypeInvalid": "अमान्य एंटिटी प्रकार",
+        "documentTypeRequired": "दस्तावेज़ प्रकार आवश्यक है",
+        "uploadedByIdRequired": "अपलोडर आईडी आवश्यक है",
+        "fileRequired": "फ़ाइल आवश्यक है",
+        "failed": "सत्यापन विफल"
+      },
+      "errors": {
+        "cameraAccess": "कैमरा तक पहुंचने में त्रुटि",
+        "uploadFailed": "फोटो अपलोड करने में विफल",
+        "unauthorized": "आपको यह कार्रवाई करने का अधिकार नहीं है"
+      }
     }
   }
 }
