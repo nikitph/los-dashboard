@@ -47,7 +47,7 @@ export function createClient(request: NextRequest) {
           });
           response.cookies.delete({
             name,
-            ...ptions,
+            ...options,
           });
         },
       },

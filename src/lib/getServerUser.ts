@@ -1,12 +1,10 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { cookies } from "next/headers";
 import { getUserRoles } from "@/contexts/actions/user-actions";
 
 export async function getServerSessionUser() {
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
+  const supabase = await createClient();
 
   const {
     data: { user },

@@ -1034,53 +1034,51 @@
         "title": "आवेदक देखें",
         "description": "आवेदक प्रोफाइल जानकारी"
       },
-      "fields": {
-        "userId": {
-          "label": "उपयोगकर्ता आईडी",
-          "placeholder": "उपयोगकर्ता चुनें"
-        },
-        "dateOfBirth": {
-          "label": "जन्म तिथि",
-          "placeholder": "जन्म तिथि चुनें"
-        },
-        "addressState": {
-          "label": "राज्य",
-          "placeholder": "राज्य दर्ज करें"
-        },
-        "addressCity": {
-          "label": "शहर",
-          "placeholder": "शहर दर्ज करें"
-        },
-        "addressFull": {
-          "label": "पूरा पता",
-          "placeholder": "पूरा पता दर्ज करें"
-        },
-        "addressPinCode": {
-          "label": "पिन कोड",
-          "placeholder": "पिन कोड दर्ज करें"
-        },
-        "aadharNumber": {
-          "label": "आधार संख्या",
-          "placeholder": "12-अंकों का आधार नंबर दर्ज करें"
-        },
-        "panNumber": {
-          "label": "पैन नंबर",
-          "placeholder": "पैन नंबर दर्ज करें"
-        },
-        "aadharVerificationStatus": {
-          "label": "आधार सत्यापित"
-        },
-        "panVerificationStatus": {
-          "label": "पैन सत्यापित"
-        },
-        "photoUrl": {
-          "label": "फोटो URL",
-          "placeholder": "फोटो URL दर्ज करें"
-        },
-        "bankId": {
-          "label": "बैंक",
-          "placeholder": "बैंक चुनें"
-        }
+      "userId": {
+        "label": "उपयोगकर्ता आईडी",
+        "placeholder": "उपयोगकर्ता चुनें"
+      },
+      "dateOfBirth": {
+        "label": "जन्म तिथि",
+        "placeholder": "जन्म तिथि चुनें"
+      },
+      "addressState": {
+        "label": "राज्य",
+        "placeholder": "राज्य दर्ज करें"
+      },
+      "addressCity": {
+        "label": "शहर",
+        "placeholder": "शहर दर्ज करें"
+      },
+      "addressFull": {
+        "label": "पूरा पता",
+        "placeholder": "पूरा पता दर्ज करें"
+      },
+      "addressPinCode": {
+        "label": "पिन कोड",
+        "placeholder": "पिन कोड दर्ज करें"
+      },
+      "aadharNumber": {
+        "label": "आधार संख्या",
+        "placeholder": "12-अंकों का आधार नंबर दर्ज करें"
+      },
+      "panNumber": {
+        "label": "पैन नंबर",
+        "placeholder": "पैन नंबर दर्ज करें"
+      },
+      "aadharVerificationStatus": {
+        "label": "आधार सत्यापित"
+      },
+      "panVerificationStatus": {
+        "label": "पैन सत्यापित"
+      },
+      "photoUrl": {
+        "label": "फोटो URL",
+        "placeholder": "फोटो URL दर्ज करें"
+      },
+      "bankId": {
+        "label": "बैंक",
+        "placeholder": "बैंक चुनें"
       },
       "sections": {
         "personal": "व्यक्तिगत जानकारी",
@@ -1100,6 +1098,38 @@
           "title": "आवेदक हटाया गया",
           "description": "यह आवेदक हटा दिया गया है और इसे संशोधित नहीं किया जा सकता"
         }
+      },
+      "uploadDocuments": {
+        "label": "दस्तावेज़ अपलोड करें"
+      },
+      "otp": {
+        "placeholder": "ओटीपी"
+      },
+      "verify": {
+        "button": "सत्यापित करें"
+      },
+      "documents": {
+        "aadhar": {
+          "title": "आधार कार्ड",
+          "description": "आवेदक का पहचान दस्तावेज़"
+        },
+        "pan": {
+          "title": "पैन कार्ड",
+          "description": "आवेदक का पहचान दस्तावेज़"
+        }
+      },
+      "fileSize": {
+        "hint": "5 एमबी से कम"
+      },
+      "permanentAddress": {
+        "label": "स्थायी पता"
+      },
+      "submit": {
+        "button": "जानकारी जमा करें",
+        "loading": "प्रोसेसिंग हो रही है..."
+      },
+      "errors": {
+        "correctBeforeSubmitting": "कृपया फॉर्म जमा करने से पहले त्रुटियों को सुधारें।"
       }
     },
     "validation": {
@@ -1113,6 +1143,7 @@
         "required": "आवेदक आईडी आवश्यक है"
       },
       "dateOfBirth": {
+        "required": "जन्म तिथि आवश्यक है",
         "ageRequirement": "आवेदक की आयु कम से कम 18 वर्ष होनी चाहिए"
       },
       "addressState": {
@@ -1145,7 +1176,10 @@
       "notFound": "आवेदक नहीं मिला",
       "alreadyExists": "इस उपयोगकर्ता के लिए एक आवेदक पहले से मौजूद है",
       "hasActiveLoans": "सक्रिय ऋण आवेदनों वाले आवेदक को हटा नहीं सकते",
-      "cannotVerify": "आपके पास इस दस्तावेज़ को सत्यापित करने की अनुमति नहीं है"
+      "cannotVerify": "आपके पास इस दस्तावेज़ को सत्यापित करने की अनुमति नहीं है",
+      "operationFailed": "ऑपरेशन विफल रहा",
+      "unexpectedError": "एक अनपेक्षित त्रुटि हुई",
+      "validationFailed": "वैधीकरण विफल रहा"
     },
     "toast": {
       "createSuccess": "आवेदक बनाया गया",
@@ -1161,7 +1195,13 @@
       "deleteError": "हटाना विफल",
       "deleteErrorDescription": "आवेदक को हटाने में विफल",
       "retrieved": "आवेदक सफलतापूर्वक प्राप्त किया गया",
-      "listRetrieved": "आवेदक सूची सफलतापूर्वक प्राप्त की गई"
+      "listRetrieved": "आवेदक सूची सफलतापूर्वक प्राप्त की गई",
+      "personalInfoAdded": "व्यक्तिगत जानकारी जोड़ी गई",
+      "error": "त्रुटि",
+      "verificationSuccessful": "सत्यापन सफल",
+      "aadharVerified": "आधार सफलतापूर्वक सत्यापित किया गया है",
+      "panVerified": "पैन सफलतापूर्वक सत्यापित किया गया है",
+      "updated": "आवेदक सफलतापूर्वक अपडेट किया गया"
     },
     "list": {
       "pageTitle": "आवेदक",
@@ -1192,7 +1232,10 @@
         "address": "पता",
         "loanCount": "ऋण",
         "actions": "कार्रवाई",
-        "view": "कॉलम"
+        "view": "कॉलम",
+        "name": "नाम",
+        "email": "ईमेल",
+        "status": "स्थिति"
       },
       "actions": {
         "createNew": "नया आवेदक",

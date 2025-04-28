@@ -1100,6 +1100,38 @@
           "title": "Applicant Deleted",
           "description": "This applicant has been deleted and cannot be modified"
         }
+      },
+      "uploadDocuments": {
+        "label": "Upload Documents"
+      },
+      "otp": {
+        "placeholder": "OTP"
+      },
+      "verify": {
+        "button": "Verify"
+      },
+      "documents": {
+        "aadhar": {
+          "title": "Aadhar Card",
+          "description": "Applicant's identification document"
+        },
+        "pan": {
+          "title": "PAN Card",
+          "description": "Applicant's identification document"
+        }
+      },
+      "fileSize": {
+        "hint": "Less than 5 MB"
+      },
+      "permanentAddress": {
+        "label": "Permanent Address"
+      },
+      "submit": {
+        "button": "Submit Information",
+        "loading": "Processing..."
+      },
+      "errors": {
+        "correctBeforeSubmitting": "Please correct the errors in the form before submitting."
       }
     },
     "validation": {
@@ -1113,6 +1145,7 @@
         "required": "Applicant ID is required"
       },
       "dateOfBirth": {
+        "required": "Date of birth is required",
         "ageRequirement": "Applicant must be at least 18 years old"
       },
       "addressState": {
@@ -1145,7 +1178,10 @@
       "notFound": "Applicant not found",
       "alreadyExists": "An applicant already exists for this user",
       "hasActiveLoans": "Cannot delete applicant with active loan applications",
-      "cannotVerify": "You don't have permission to verify this document"
+      "cannotVerify": "You don't have permission to verify this document",
+      "operationFailed": "Operation failed",
+      "unexpectedError": "An unexpected error occurred",
+      "validationFailed": "Validation failed"
     },
     "toast": {
       "createSuccess": "Applicant Created",
@@ -1161,7 +1197,13 @@
       "deleteError": "Deletion Failed",
       "deleteErrorDescription": "Failed to delete the applicant",
       "retrieved": "Applicant retrieved successfully",
-      "listRetrieved": "Applicant list retrieved successfully"
+      "listRetrieved": "Applicant list retrieved successfully",
+      "personalInfoAdded": "Personal Information Added",
+      "error": "Error",
+      "verificationSuccessful": "Verification Successful",
+      "aadharVerified": "Aadhar has been verified successfully",
+      "panVerified": "PAN has been verified successfully",
+      "updated": "Applicant updated successfully"
     },
     "list": {
       "pageTitle": "Applicants",
@@ -1192,7 +1234,10 @@
         "address": "Address",
         "loanCount": "Loans",
         "actions": "Actions",
-        "view": "Columns"
+        "view": "Columns",
+        "name": "Name",
+        "email": "Email",
+        "status": "Status"
       },
       "actions": {
         "createNew": "New Applicant",

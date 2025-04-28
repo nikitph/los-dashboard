@@ -1,73 +1,102 @@
 "use server";
+
 import { prisma } from "@/lib/prisma/prisma";
 import { revalidatePath } from "next/cache";
-import { z } from "zod";
+import { getServerSessionUser } from "@/lib/getServerUser";
+import { getAbility } from "@/lib/casl/getAbility";
+import { handleActionError } from "@/lib/actionErrorHelpers";
+import { ActionResponse } from "@/types/globalTypes";
 import {
   PersonalInformationFormValues,
-  PersonalInformationSchema,
+  PersonalInformationSchema
 } from "@/app/[locale]/saas/(private)/personal/schema";
-import { ActionResponse } from "@/types/globalTypes";
 
-export async function updateApplicant(id: string, formData: PersonalInformationFormValues): Promise<ActionResponse> {
+/**
+ * Updates an existing applicant's personal information
+ *
+ * @param {string} id - The ID of the applicant to update
+ * @param {PersonalInformationFormValues} data - The validated applicant data
+ * @returns {Promise<ActionResponse>} Response with updated applicant or error details
+ *
+ * @example
+ * // Success case
+ * const response = await updateApplicant("123e4567-e89b-12d3-a456-426614174000", validApplicantData);
+ * // => { success: true, message: "Applicant.toast.updated", data: { id: "123e4567-e89b-12d3-a456-426614174000", ... } }
+ *
+ * @example
+ * // Error case - validation failure
+ * const response = await updateApplicant("123e4567-e89b-12d3-a456-426614174000", invalidApplicantData);
+ * // => { success: false, message: "errors.validationFailed", errors: { aadharNumber: "validation.aadharNumber.format" } }
+ */
+
+export async function updateApplicant(id: string, data: PersonalInformationFormValues): Promise<ActionResponse> {
   try {
-    console.log("validated data 1");
-    // Validate form data
-    const validatedData = PersonalInformationSchema.parse(formData);
-    console.log("validated data 2");
+    const user = await getServerSessionUser();
+    if (!user) {
+      return { success: false, message: "errors.unauthorized" };
+    }
 
-    // Check if applicant exists
+    // Get user permissions
+    const ability = await getAbility(user);
+    if (!ability.can("update", "Applicant")) {
+      return { success: false, message: "errors.permissionDenied" };
+    }
+
+    const validation = PersonalInformationSchema.safeParse(data);
+    if (!validation.success) {
+      return handleActionError(validation.error);
+    }
+
+    const {
+      dateOfBirth,
+      addressState,
+      addressCity,
+      addressFull,
+      addressPinCode,
+      aadharNumber,
+      panNumber,
+      aadharVerificationStatus,
+      panVerificationStatus,
+    } = validation.data;
+
     const existingApplicant = await prisma.applicant.findUnique({
       where: { id },
     });
 
-    console.log("validated data 3");
-
     if (!existingApplicant) {
       return {
         success: false,
-        message: "Applicant not found",
+        message: "errors.notFound",
       };
     }
 
-    // Update applicant in database - only update the fields that come from the form
     const updatedApplicant = await prisma.applicant.update({
       where: { id },
       data: {
-        dateOfBirth:
-          validatedData.dateOfBirth instanceof Date ? validatedData.dateOfBirth : new Date(validatedData.dateOfBirth),
-        addressState: validatedData.addressState,
-        addressCity: validatedData.addressCity,
-        addressFull: validatedData.addressFull,
-        addressPinCode: validatedData.addressPinCode,
-        aadharNumber: validatedData.aadharNumber,
-        panNumber: validatedData.panNumber,
-        aadharVerificationStatus: Boolean(validatedData.aadharVerificationStatus),
-        panVerificationStatus: Boolean(validatedData.panVerificationStatus),
+        dateOfBirth,
+        addressState,
+        addressCity,
+        addressFull,
+        addressPinCode,
+        aadharNumber,
+        panNumber,
+        aadharVerificationStatus,
+        panVerificationStatus,
       },
     });
 
     // Revalidate relevant paths
     revalidatePath("/saas/applicants/list");
     revalidatePath(`/saas/applicants/${id}`);
+    revalidatePath(`/saas/applicants/${id}/view`);
+    revalidatePath(`/saas/applicants/${id}/edit`);
 
     return {
       success: true,
-      message: "Applicant updated successfully",
+      message: "Applicant.toast.updated",
       data: updatedApplicant,
     };
   } catch (error) {
-    console.error("Error updating applicant:", error);
-    if (error instanceof z.ZodError) {
-      return {
-        success: false,
-        message: "Validation failed",
-        errors: error.errors,
-      };
-    }
-    return {
-      success: false,
-      message: "Failed to update applicant",
-      errors: error instanceof Error ? error.message : "Unknown error",
-    };
+    return handleActionError(error);
   }
 }
