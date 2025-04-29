@@ -1,6 +1,6 @@
+import { User } from "@/types/globalTypes";
 import { AbilityBuilder, createMongoAbility } from "@casl/ability";
 import type { AppAbility } from "./types";
-import { User } from "@/types/globalTypes";
 
 export function defineAbilityFor(user: User | null | undefined): AppAbility {
   const { can, cannot, build } = new AbilityBuilder<AppAbility>(createMongoAbility);
@@ -8,6 +8,8 @@ export function defineAbilityFor(user: User | null | undefined): AppAbility {
   const manageableSubjects = [
     "UserProfile",
     "LoanApplication",
+    "LoanObligation",
+    "LoanObligationDetail",
     "Document",
     "Verification",
     "Applicant",

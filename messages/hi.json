@@ -1351,5 +1351,112 @@
         "unauthorized": "आपको यह कार्रवाई करने का अधिकार नहीं है"
       }
     }
+  },
+  "LoanObligations": {
+    "form": {
+      "basicDetails": "मूल विवरण",
+      "basicDetailsDescription": "ऋण दायित्व की सामान्य जानकारी दर्ज करें",
+      "loanDetails": "ऋण विवरण",
+      "loanDetailsDescription": "अपने मौजूदा ऋण दायित्वों को जोड़ें",
+      "noLoanDetails": "अभी तक कोई ऋण विवरण नहीं जोड़ा गया है। ऋण जोड़ने के लिए 'और जोड़ें' पर क्लिक करें।",
+      "cibilScore": "सिबिल स्कोर",
+      "cibilScorePlaceholder": "सिबिल स्कोर दर्ज करें",
+      "outstandingLoan": "बकाया ऋण",
+      "outstandingLoanPlaceholder": "बकाया राशि दर्ज करें",
+      "emiAmount": "ईएमआई राशि",
+      "emiAmountPlaceholder": "ईएमआई राशि दर्ज करें",
+      "loanDate": "ऋण तिथि",
+      "loanType": "ऋण प्रकार",
+      "loanTypePlaceholder": "ऋण प्रकार चुनें",
+      "bankName": "बैंक का नाम",
+      "bankNamePlaceholder": "बैंक का नाम दर्ज करें",
+      "totalLoan": "कुल ऋण",
+      "totalEmi": "कुल मौजूदा ईएमआई"
+    },
+    "validation": {
+      "cibilScore": {
+        "required": "सिबिल स्कोर आवश्यक है",
+        "invalid": "सिबिल स्कोर 300 और 900 के बीच होना चाहिए"
+      },
+      "outstandingLoan": {
+        "required": "बकाया ऋण राशि आवश्यक है",
+        "nonnegative": "बकाया ऋण राशि सकारात्मक संख्या होनी चाहिए"
+      },
+      "emiAmount": {
+        "required": "ईएमआई राशि आवश्यक है",
+        "nonnegative": "ईएमआई राशि सकारात्मक संख्या होनी चाहिए"
+      },
+      "loanDate": {
+        "required": "ऋण तिथि आवश्यक है"
+      },
+      "loanType": {
+        "required": "ऋण प्रकार आवश्यक है"
+      },
+      "bankName": {
+        "required": "बैंक का नाम आवश्यक है"
+      },
+      "loanDetails": {
+        "required": "कम से कम एक ऋण विवरण आवश्यक है"
+      }
+    },
+    "errors": {
+      "validationFailed": "कृपया फॉर्म में त्रुटियों की जांच करें",
+      "unauthorized": "आपको यह कार्य करने का अधिकार नहीं है",
+      "forbidden": "आपको इस संसाधन तक पहुंचने की अनुमति नहीं है",
+      "forbiddenDetails": "आपको ऋण विवरण प्रबंधित करने की अनुमति नहीं है",
+      "notFound": "ऋण दायित्व नहीं मिला",
+      "unexpected": "एक अनपेक्षित त्रुटि हुई"
+    },
+    "toast": {
+      "created": "ऋण दायित्व सफलतापूर्वक बनाया गया",
+      "updated": "ऋण दायित्व सफलतापूर्वक अपडेट किया गया",
+      "deleted": "ऋण दायित्व सफलतापूर्वक हटा दिया गया",
+      "success": "आपके परिवर्तन सहेज लिए गए हैं",
+      "error": "कुछ गलत हो गया",
+      "errorDescription": "कृपया पुनः प्रयास करें या सहायता से संपर्क करें"
+    },
+    "list": {
+      "title": "ऋण दायित्व",
+      "createNew": "नया ऋण दायित्व बनाएं",
+      "noObligationsFound": "कोई ऋण दायित्व नहीं मिला",
+      "applicant": "आवेदक",
+      "cibilScore": "सिबिल स्कोर",
+      "totalLoan": "कुल ऋण",
+      "totalEmi": "कुल ईएमआई",
+      "loanDetailsCount": "ऋण विवरण",
+      "actions": "कार्यवाहियां"
+    },
+    "loanTypes": {
+      "homeLoan": "गृह ऋण",
+      "carLoan": "कार ऋण",
+      "personalLoan": "व्यक्तिगत ऋण",
+      "educationLoan": "शिक्षा ऋण",
+      "businessLoan": "व्यापार ऋण",
+      "creditCard": "क्रेडिट कार्ड",
+      "other": "अन्य"
+    },
+    "actions": {
+      "addMore": "और जोड़ें",
+      "remove": "हटाएं",
+      "edit": "संपादित करें",
+      "view": "देखें",
+      "actions": "कार्यवाहियां",
+      "delete": "हटाएं",
+      "back": "वापस",
+      "cancel": "रद्द करें",
+      "create": "बनाएं",
+      "update": "अपडेट करें",
+      "save": "सहेजें",
+      "proceed": "आगे बढ़ें",
+      "submitting": "जमा कर रहे हैं...",
+      "proceedToIncomeDetails": "आय विवरण पर आगे बढ़ें"
+    },
+    "pageTitle": {
+      "create": "ऋण दायित्व बनाएं",
+      "edit": "ऋण दायित्व संपादित करें",
+      "view": "ऋण दायित्व देखें",
+      "list": "ऋण दायित्व"
+    },
+    "existingLoanObligations": "मौजूदा ऋण दायित्व"
   }
 }

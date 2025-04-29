@@ -1353,5 +1353,112 @@
       "uploadFailed": "Failed to upload photo",
       "unauthorized": "You are not authorized to perform this action"
     }
+  },
+  "LoanObligations": {
+    "form": {
+      "basicDetails": "Basic Details",
+      "basicDetailsDescription": "Enter general loan obligation information",
+      "loanDetails": "Loan Details",
+      "loanDetailsDescription": "Add your existing loan obligations",
+      "noLoanDetails": "No loan details added yet. Click 'Add More' to add a loan.",
+      "cibilScore": "CIBIL Score",
+      "cibilScorePlaceholder": "Enter CIBIL score",
+      "outstandingLoan": "Outstanding Loan",
+      "outstandingLoanPlaceholder": "Enter outstanding amount",
+      "emiAmount": "EMI Amount",
+      "emiAmountPlaceholder": "Enter EMI amount",
+      "loanDate": "Loan Date",
+      "loanType": "Loan Type",
+      "loanTypePlaceholder": "Select loan type",
+      "bankName": "Name of Bank",
+      "bankNamePlaceholder": "Enter bank name",
+      "totalLoan": "Total Loan",
+      "totalEmi": "Total existing EMI"
+    },
+    "validation": {
+      "cibilScore": {
+        "required": "CIBIL score is required",
+        "invalid": "CIBIL score must be between 300 and 900"
+      },
+      "outstandingLoan": {
+        "required": "Outstanding loan amount is required",
+        "nonnegative": "Outstanding loan amount must be a positive number"
+      },
+      "emiAmount": {
+        "required": "EMI amount is required",
+        "nonnegative": "EMI amount must be a positive number"
+      },
+      "loanDate": {
+        "required": "Loan date is required"
+      },
+      "loanType": {
+        "required": "Loan type is required"
+      },
+      "bankName": {
+        "required": "Bank name is required"
+      },
+      "loanDetails": {
+        "required": "At least one loan detail is required"
+      }
+    },
+    "errors": {
+      "validationFailed": "Please check the form for errors",
+      "unauthorized": "You are not authorized to perform this action",
+      "forbidden": "You don't have permission to access this resource",
+      "forbiddenDetails": "You don't have permission to manage loan details",
+      "notFound": "Loan obligation not found",
+      "unexpected": "An unexpected error occurred"
+    },
+    "toast": {
+      "created": "Loan obligation created successfully",
+      "updated": "Loan obligation updated successfully",
+      "deleted": "Loan obligation deleted successfully",
+      "success": "Your changes have been saved",
+      "error": "Something went wrong",
+      "errorDescription": "Please try again or contact support"
+    },
+    "list": {
+      "title": "Loan Obligations",
+      "createNew": "Create New Loan Obligation",
+      "noObligationsFound": "No loan obligations found",
+      "applicant": "Applicant",
+      "cibilScore": "CIBIL Score",
+      "totalLoan": "Total Loan",
+      "totalEmi": "Total EMI",
+      "loanDetailsCount": "Loan Details",
+      "actions": "Actions"
+    },
+    "loanTypes": {
+      "homeLoan": "Home Loan",
+      "carLoan": "Car Loan",
+      "personalLoan": "Personal Loan",
+      "educationLoan": "Education Loan",
+      "businessLoan": "Business Loan",
+      "creditCard": "Credit Card",
+      "other": "Other"
+    },
+    "actions": {
+      "addMore": "Add More",
+      "actions": "Actions",
+      "remove": "Remove",
+      "edit": "Edit",
+      "view": "View",
+      "delete": "Delete",
+      "back": "Back",
+      "cancel": "Cancel",
+      "create": "Create",
+      "update": "Update",
+      "save": "Save",
+      "proceed": "Proceed",
+      "submitting": "Submitting...",
+      "proceedToIncomeDetails": "Proceed to Income Details"
+    },
+    "pageTitle": {
+      "create": "Create Loan Obligation",
+      "edit": "Edit Loan Obligation",
+      "view": "View Loan Obligation",
+      "list": "Loan Obligations"
+    },
+    "existingLoanObligations": "Existing Loan Obligations"
   }
 }
