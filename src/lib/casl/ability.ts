@@ -11,6 +11,8 @@ export function defineAbilityFor(user: User | null | undefined): AppAbility {
     "LoanObligation",
     "LoanObligationDetail",
     "Document",
+    "Income",
+    "IncomeDetail",
     "Verification",
     "Applicant",
     "Guarantor",
