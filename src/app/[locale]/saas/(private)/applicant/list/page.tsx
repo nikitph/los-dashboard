@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/ui/page-header";
 import { Skeleton } from "@/components/ui/skeleton";
-import { PlusIcon } from "@radix-ui/react-icons";
+import { PlusIcon } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { Suspense } from "react";

@@ -11,17 +11,36 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { InfoItem } from "@/components/ui/info-item";
-import { LoadingButton } from "@/components/ui/loading-button";
-import { ExclamationTriangleIcon, Pencil2Icon, TrashIcon } from "@radix-ui/react-icons";
+import { PencilIcon, TrashIcon, TriangleIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useViewApplicantForm } from "../hooks/useViewApplicantForm";
 import { getVerificationStatusColor } from "../lib/helpers";
 import { ApplicantView } from "../schemas/applicantSchema";
+import { cn } from "@/lib/utils";
+import { ReactNode } from "react";
 
 type ViewApplicantFormProps = {
   applicant: ApplicantView;
 };
+
+type InfoItemProps = {
+  label: string;
+  value: string | ReactNode;
+  badge?: ReactNode;
+  className?: string;
+};
+
+export function InfoItem({ label, value, badge, className }: InfoItemProps) {
+  return (
+    <div className={cn("space-y-1", className)}>
+      <p className="text-sm font-medium text-muted-foreground">{label}</p>
+      <div className="flex items-center justify-between">
+        <p className="text-base font-semibold">{value}</p>
+        {badge && <div className="ml-4 shrink-0">{badge}</div>}
+      </div>
+    </div>
+  );
+}
 
 /**
  * View component for displaying applicant details
@@ -71,7 +90,7 @@ export function ViewApplicantForm({ applicant }: ViewApplicantFormProps) {
       {applicant.deletedAt && (
         <div className="px-6 pb-3">
           <Alert variant="destructive">
-            <ExclamationTriangleIcon className="h-4 w-4" />
+            <TriangleIcon className="h-4 w-4" />
             <AlertTitle>{t("view.alert.deleted.title")}</AlertTitle>
             <AlertDescription>{t("view.alert.deleted.description")}</AlertDescription>
           </Alert>
@@ -183,7 +202,7 @@ export function ViewApplicantForm({ applicant }: ViewApplicantFormProps) {
         <div className="flex space-x-2">
           {canEdit && (
             <Button variant="outline" onClick={handleEdit} disabled={!!applicant.deletedAt}>
-              <Pencil2Icon className="mr-2 h-4 w-4" />
+              <PencilIcon className="mr-2 h-4 w-4" />
               {t("view.actions.edit")}
             </Button>
           )}
@@ -205,9 +224,9 @@ export function ViewApplicantForm({ applicant }: ViewApplicantFormProps) {
                   <Button variant="outline" onClick={() => setShowDeleteConfirm(false)}>
                     {t("delete.cancel")}
                   </Button>
-                  <LoadingButton variant="destructive" onClick={handleDelete} loading={isDeleting}>
+                  <Button variant="destructive" onClick={handleDelete}>
                     {t("delete.confirm")}
-                  </LoadingButton>
+                  </Button>
                 </DialogFooter>
               </DialogContent>
             </Dialog>

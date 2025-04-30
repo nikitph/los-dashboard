@@ -4,13 +4,13 @@ import { PageHeader } from "@/components/ui/page-header";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getAbility } from "@/lib/casl/getAbility";
 import { getServerSessionUser } from "@/lib/getServerUser";
-import { ChevronLeftIcon } from "@radix-ui/react-icons";
+import { ChevronLeftIcon } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
-import { getApplicant } from "../../../actions/getApplicant";
-import { ViewApplicantForm } from "../../../components/ViewApplicantForm";
+import { getApplicant } from "../../actions/getApplicant";
+import { ViewApplicantForm } from "../../components/ViewApplicantForm";
 
 type ViewApplicantPageProps = {
   params: {

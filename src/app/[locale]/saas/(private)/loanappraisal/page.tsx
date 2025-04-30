@@ -1,5 +1,5 @@
 import IncomeForm from "@/app/[locale]/saas/(private)/income/components/IncomeForm";
-import { prisma } from "@/lib/prisma";
+import { prisma } from "@/lib/prisma/prisma";
 import { z } from "zod";
 import { LoanType } from "@/schemas/zodSchemas";
 import VehicleAppraisalForm from "@/app/[locale]/saas/(private)/loanappraisal/components/VehicleAppraisalForm";
