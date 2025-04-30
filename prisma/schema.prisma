@@ -25,6 +25,7 @@ model UserProfile {
   actionsReviewed  PendingAction[] @relation("ReviewedActions")
   userRoles        UserRoles[]
   verifications    Verification[]
+  timelineEvents   TimelineEvent[]
 }
 
 model UserRoles {
@@ -65,6 +66,7 @@ model Applicant {
   incomes                  Income[]
   loanApplications         LoanApplication[]
   loanObligations          LoanObligation[]
+  timelineEvents           TimelineEvent[]
 }
 
 model LoanObligation {
@@ -196,21 +198,22 @@ model BankConfiguration {
 }
 
 model LoanApplication {
-  id              String         @id @default(dbgenerated("gen_random_uuid()"))
+  id              String          @id @default(dbgenerated("gen_random_uuid()"))
   applicantId     String
   bankId          String
   loanType        LoanType
   amountRequested Float
   status          LoanStatus
-  createdAt       DateTime       @default(now())
-  updatedAt       DateTime       @updatedAt
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
   deletedAt       DateTime?
   coApplicants    CoApplicant[]
   documents       Document[]
   guarantors      Guarantor[]
-  applicant       Applicant      @relation(fields: [applicantId], references: [id])
-  bank            Bank           @relation(fields: [bankId], references: [id])
+  applicant       Applicant       @relation(fields: [applicantId], references: [id])
+  bank            Bank            @relation(fields: [bankId], references: [id])
   verifications   Verification[]
+  timelineEvents  TimelineEvent[]
 }
 
 model Guarantor {
@@ -294,6 +297,7 @@ model Document {
   subscription         Subscription?         @relation(fields: [subscriptionId], references: [id])
   userProfile          UserProfile?          @relation(fields: [userProfileId], references: [id])
   verification         Verification?         @relation(fields: [verificationId], references: [id])
+  timelineEvents       TimelineEvent[]
 }
 
 model Verification {
@@ -403,6 +407,34 @@ model PendingAction {
   @@index([reviewedById])
 }
 
+model TimelineEvent {
+  id                 String             @id @default(dbgenerated("gen_random_uuid()"))
+  timelineEntityType TimelineEntityType
+  timelinEntityId    String
+  timelineEventType  TimelineEventType
+  actionData         Json?
+  remarks            String?
+  createdAt          DateTime           @default(now())
+
+  // Relationships
+  userId String
+  user   UserProfile @relation(fields: [userId], references: [id])
+
+  loanApplicationId String?
+  loanApplication   LoanApplication? @relation(fields: [loanApplicationId], references: [id])
+
+  applicantId String?
+  applicant   Applicant? @relation(fields: [applicantId], references: [id])
+
+  documentId String?
+  document   Document? @relation(fields: [documentId], references: [id])
+
+  // Indexes for common queries
+  @@index([timelineEntityType, timelinEntityId])
+  @@index([timelineEventType])
+  @@index([createdAt])
+}
+
 model AuditLog {
   id         String      @id @default(dbgenerated("gen_random_uuid()"))
   action     String
@@ -415,6 +447,58 @@ model AuditLog {
   ipAddress  String?
   deviceInfo String?
   user       UserProfile @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum TimelineEntityType {
+  APPLICANT
+  LOAN_APPLICATION
+  DOCUMENT
+}
+
+enum TimelineEventType {
+  // Application lifecycle
+  APPLICATION_CREATED
+  APPLICATION_UPDATED
+  APPLICATION_DELETED
+  APPLICATION_REOPENED
+  STATUS_CHANGE
+
+  // Documents
+  DOCUMENT_UPLOADED
+  DOCUMENT_REVIEWED
+  DOCUMENT_DELETED
+  DOCUMENT_REQUESTED
+
+  // User actions
+  USER_CREATED
+  USER_ASSIGNED_ROLE
+  USER_REMOVED_ROLE
+
+  // Verifications
+  VERIFICATION_STARTED
+  VERIFICATION_COMPLETED
+  VERIFICATION_FAILED
+  VERIFICATION_REMARK_ADDED
+
+  // Approval flow
+  ACTION_REQUESTED
+  ACTION_APPROVED
+  ACTION_REJECTED
+  ACTION_CANCELLED
+  ACTION_REVIEWED
+
+  // Notes and remarks
+  NOTE_ADDED
+  REMARK_ADDED
+
+  // System events
+  SYSTEM_EVENT
+  AUTO_VERIFICATION
+  SCHEDULED_TASK_COMPLETED
+
+  // security actions
+  ACCESS_GRANTED
+  ACCESS_REVOKED
 }
 
 enum RoleType {
