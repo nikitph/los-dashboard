@@ -69,7 +69,7 @@ model Applicant {
 
 model LoanObligation {
   id          String                 @id @default(dbgenerated("gen_random_uuid()"))
-  applicantId String
+  applicantId String                 @unique
   cibilScore  Float?
   totalLoan   Float?
   totalEmi    Float?
