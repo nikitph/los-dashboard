@@ -98,7 +98,7 @@ model LoanObligationDetail {
 
 model Income {
   id                        String         @id @default(dbgenerated("gen_random_uuid()"))
-  applicantId               String
+  applicantId               String         @unique
   type                      String
   createdAt                 DateTime       @default(now())
   updatedAt                 DateTime       @updatedAt
