@@ -7,7 +7,14 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import CardRadioGroup from "@/components/CardRadioGroup";
 
-function LoanEligibilityForm({ loanApplication }: { loanApplication: any }) {
+function LoanEligibilityForm({
+  loanApplication,
+  loanEligibilityData,
+}: {
+  loanApplication: any;
+  loanEligibilityData: any;
+}) {
+  console.log("loanEligibilityData", loanEligibilityData);
   return (
     <div className="flex h-full w-full flex-col">
       {/* Header */}
@@ -27,7 +34,7 @@ function LoanEligibilityForm({ loanApplication }: { loanApplication: any }) {
               <CardContent className="flex items-center gap-4 p-6">
                 <div className="flex grow flex-col gap-1">
                   <span className="text-sm text-muted-foreground">As Per Income Document</span>
-                  <span className="text-2xl font-semibold">₹20,00,000</span>
+                  <span className="text-2xl font-semibold">₹{loanEligibilityData.eligibleLoanAmount}</span>
                 </div>
                 <div className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary">
                   <FileText className="h-5 w-5" />
@@ -39,7 +46,7 @@ function LoanEligibilityForm({ loanApplication }: { loanApplication: any }) {
               <CardContent className="flex items-center gap-4 p-6">
                 <div className="flex grow flex-col gap-1">
                   <span className="text-sm text-muted-foreground">As Per Loan Application</span>
-                  <span className="text-2xl font-semibold">₹30,00,000</span>
+                  <span className="text-2xl font-semibold">₹{loanApplication.amountRequested}</span>
                 </div>
                 <div className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary">
                   <Clipboard className="h-5 w-5" />
