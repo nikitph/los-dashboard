@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -10,10 +12,10 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { ChevronDownIcon, MagnifyingGlassIcon, PlusIcon } from "@radix-ui/react-icons";
+import { ChevronDownIcon, PlusIcon, ZoomIn } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { useApplicantTable } from "../hooks/useApplicantTable";
 import { ApplicantView } from "../schemas/applicantSchema";
 
@@ -49,6 +51,7 @@ export function ApplicantTable({ initialData = [] }: ApplicantTableProps) {
     }
   }, [initialData.length, refreshData]);
 
+  // @ts-ignore
   return (
     <Card>
       <CardHeader>
@@ -68,7 +71,7 @@ export function ApplicantTable({ initialData = [] }: ApplicantTableProps) {
       <CardContent>
         <div className="flex flex-col items-center gap-2 py-4 sm:flex-row">
           <div className="flex max-w-sm flex-1 items-center">
-            <MagnifyingGlassIcon className="mr-2 h-4 w-4 opacity-50" />
+            <ZoomIn className="mr-2 h-4 w-4 opacity-50" />
             <Input
               placeholder={t("list.search.placeholder")}
               value={globalFilter || ""}

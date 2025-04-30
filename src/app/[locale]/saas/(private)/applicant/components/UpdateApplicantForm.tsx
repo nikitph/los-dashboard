@@ -2,8 +2,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form } from "@/components/ui/form";
-import { LoadingButton } from "@/components/ui/loading-button";
-import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
+import { TriangleIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useUpdateApplicantForm } from "../hooks/useUpdateApplicantForm";
 import { ApplicantView } from "../schemas/applicantSchema";
@@ -32,7 +31,7 @@ export function UpdateApplicantForm({ initialData, readOnly = false }: UpdateApp
       {initialData.deletedAt && (
         <div className="px-6 pb-3">
           <Alert variant="destructive">
-            <ExclamationTriangleIcon className="h-4 w-4" />
+            <TriangleIcon className="h-4 w-4" />
             <AlertTitle>{t("form.alert.deleted.title")}</AlertTitle>
             <AlertDescription>{t("form.alert.deleted.description")}</AlertDescription>
           </Alert>
@@ -50,9 +49,9 @@ export function UpdateApplicantForm({ initialData, readOnly = false }: UpdateApp
             </Button>
 
             {!readOnly && (
-              <LoadingButton type="submit" loading={isSubmitting}>
+              <Button type="submit" loading={isSubmitting}>
                 {t("form.actions.update")}
-              </LoadingButton>
+              </Button>
             )}
           </CardFooter>
         </form>

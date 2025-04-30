@@ -1,3 +1,5 @@
+"use client";
+
 import { useCallback, useMemo, useState } from "react";
 import { useAbility } from "@/lib/casl/abilityContext";
 import { defineApplicantFieldVisibility } from "../lib/defineApplicantFieldVisibility";
