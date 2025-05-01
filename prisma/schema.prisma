@@ -203,6 +203,9 @@ model LoanApplication {
   bankId          String
   loanType        LoanType
   amountRequested Float
+  selectedTenure  Int?
+  proposedAmount  Float?
+  calculatedEMI   Float?
   status          LoanStatus
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
