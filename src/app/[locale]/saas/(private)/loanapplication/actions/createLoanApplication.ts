@@ -3,10 +3,10 @@
 import { handleActionError } from "@/lib/actionErrorHelpers";
 import { getAbility } from "@/lib/casl/getAbility";
 import { getServerSessionUser } from "@/lib/getServerUser";
-import { prisma } from "@/lib/prisma/prisma";
 import { ActionResponse } from "@/types/globalTypes";
 import { getTranslations } from "next-intl/server";
 import { CreateLoanApplicationInput, createLoanApplicationSchema } from "../schemas/loanApplicationSchema";
+import { createLoanApplicationWithLog } from "@/services/loanApplicationService";
 
 /**
  * Creates a new loan application in the database
@@ -52,17 +52,9 @@ export async function createLoanApplication(rawData: CreateLoanApplicationInput)
     const t = await getTranslations({ locale: "en", namespace: "LoanApplication" });
 
     // Create the loan application
-    const newLoanApplication = await prisma.loanApplication.create({
-      data: {
-        applicantId: validatedData.applicantId,
-        bankId: validatedData.bankId,
-        loanType: validatedData.loanType,
-        amountRequested: validatedData.amountRequested,
-        status: validatedData.status,
-      },
-      include: {
-        applicant: true,
-      },
+    const newLoanApplication = await createLoanApplicationWithLog({
+      ...validatedData,
+      userId: user.id,
     });
 
     return {
