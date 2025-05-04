@@ -1520,5 +1520,76 @@
         "maxLength": "टिप्पणी 500 अक्षरों से अधिक नहीं हो सकती"
       }
     }
+  },
+  "LoanEligibility": {
+    "title": "ऋण पात्रता",
+    "sections": {
+      "document": {
+        "title": "पात्र ऋण राशि"
+      },
+      "tenure": {
+        "title": "आवेदक द्वारा चुनी गई अवधि"
+      },
+      "agreement": {
+        "title": "आवेदक ऋण राशि से सहमत है"
+      }
+    },
+    "form": {
+      "proposedAmount": {
+        "label": "प्रस्तावित ऋण राशि",
+        "placeholder": "राशि दर्ज करें"
+      },
+      "eligibleLoanAmount": {
+        "label": "आय दस्तावेज के अनुसार"
+      },
+      "applicationLoanAmount": {
+        "label": "ऋण आवेदन के अनुसार"
+      },
+      "maxEligibleAmount": "अधिकतम ऋण राशि {amount} है",
+      "tenure": {
+        "unit": "महीने",
+        "label": "चयनित अवधि"
+      },
+      "emi": {
+        "label": "मासिक ईएमआई",
+        "summary": "ईएमआई के साथ"
+      }
+    },
+    "buttons": {
+      "proceed": "हां, आगे बढ़ें",
+      "decline": "नहीं, अस्वीकार करें",
+      "copy": "कॉपी करें",
+      "download": "डाउनलोड करें"
+    },
+    "errors": {
+      "notFound": "ऋण आवेदन नहीं मिला",
+      "invalidValues": "अमान्य इनपुट मान",
+      "unauthorized": "आपको यह क्रिया करने की अनुमति नहीं है",
+      "proposedAmount": {
+        "exceedsEligibleAmount": {
+          "title": "प्रस्तावित राशि अधिकतम पात्र राशि से अधिक है",
+          "description": "प्रस्तावित राशि अधिकतम पात्र ऋण राशि से अधिक है। कृपया कम राशि चुनें।"
+        }
+      }
+    },
+    "toast": {
+      "updated": "ऋण आवेदन सफलतापूर्वक अपडेट किया गया",
+      "error": "ऋण पात्रता पुष्टिकरण के दौरान एक त्रुटि हुई",
+      "unauthorized": "आपको यह क्रिया करने की अनुमति नहीं है"
+    },
+    "validation": {
+      "loanApplicationId": {
+        "required": "ऋण आवेदन आईडी आवश्यक है"
+      },
+      "proposedAmount": {
+        "positive": "प्रस्तावित राशि एक सकारात्मक संख्या होनी चाहिए"
+      },
+      "selectedTenure": {
+        "positive": "चयनित अवधि एक सकारात्मक संख्या होनी चाहिए"
+      },
+      "calculatedEMI": {
+        "positive": "गणना किया गया ईएमआई एक सकारात्मक संख्या होनी चाहिए"
+      }
+    }
   }
 }

@@ -1522,5 +1522,76 @@
         "maxLength": "Remark cannot exceed 500 characters"
       }
     }
+  },
+  "LoanEligibility": {
+    "title": "Loan Eligibility",
+    "sections": {
+      "document": {
+        "title": "Eligible Loan Amount"
+      },
+      "tenure": {
+        "title": "Tenure chosen by the applicant"
+      },
+      "agreement": {
+        "title": "Applicant agrees to the loan amount"
+      }
+    },
+    "form": {
+      "proposedAmount": {
+        "label": "Proposed Loan Amount",
+        "placeholder": "Enter amount"
+      },
+      "eligibleLoanAmount": {
+        "label": "As per Income Document"
+      },
+      "applicationLoanAmount": {
+        "label": "As per Loan Application"
+      },
+      "maxEligibleAmount": "max loan amount is {amount}",
+      "tenure": {
+        "unit": "months",
+        "label": "Selected tenure"
+      },
+      "emi": {
+        "label": "Monthly EMI",
+        "summary": "With EMI of"
+      }
+    },
+    "buttons": {
+      "proceed": "Yes, proceed",
+      "decline": "No, decline",
+      "copy": "Copy",
+      "download": "Download"
+    },
+    "errors": {
+      "notFound": "Loan application not found",
+      "invalidValues": "Invalid input values",
+      "unauthorized": "You are not authorized to perform this action",
+      "proposedAmount": {
+        "exceedsEligibleAmount": {
+          "title": "Proposed amount exceeds max eligible amount",
+          "description": "The proposed amount exceeds the max eligible loan amount. Please choose a lower amount."
+        }
+      }
+    },
+    "toast": {
+      "updated": "Loan application updated successfully",
+      "error": "An error occurred during loan eligibility confirmation",
+      "unauthorized": "You are not authorized to perform this action"
+    },
+    "validation": {
+      "loanApplicationId": {
+        "required": "Loan application ID is required"
+      },
+      "proposedAmount": {
+        "positive": "Proposed amount must be a positive number"
+      },
+      "selectedTenure": {
+        "positive": "Selected tenure must be a positive number"
+      },
+      "calculatedEMI": {
+        "positive": "Calculated EMI must be a positive number"
+      }
+    }
   }
 }

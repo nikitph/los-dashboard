@@ -2,6 +2,9 @@
 
 import { prisma } from "@/lib/prisma/prisma";
 import LoanEligibilityForm from "@/app/[locale]/saas/(private)/loaneligibility/components/LoanEligibilityForm";
+import { getAbility } from "@/lib/casl/getAbility";
+import { getServerSessionUser } from "@/lib/getServerUser";
+import { redirect } from "next/navigation";
 
 async function calculateLoanEligibility(applicantId: string) {
   // Constant for 'times of net income'. This will be derived from the bank Configuration
@@ -47,6 +50,16 @@ async function calculateLoanEligibility(applicantId: string) {
 export default async function LoanEligibilityPage({ searchParams }: { searchParams: { lid: string; aid: string } }) {
   const applicantId = searchParams?.aid;
   const loanApplicationId = searchParams?.lid;
+
+  const user = await getServerSessionUser();
+  if (!user) {
+    redirect("/login");
+  }
+
+  const ability = await getAbility(user);
+  if (!ability.can("read", "LoanApplication")) {
+    redirect("/unauthorized");
+  }
 
   const loanApplication = await prisma.loanApplication.findUnique({
     where: {

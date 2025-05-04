@@ -3,13 +3,8 @@ import { RadioGroup } from "@/components/ui/radio-group";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { CalendarDays, CreditCard } from "lucide-react";
-
-export type TenureOption = {
-  id: string;
-  tenure: number;
-  unit: string;
-  emi: number;
-};
+import { TenureOption } from "@/app/[locale]/saas/(private)/loaneligibility/schemas/loanEligibilitySchema";
+import { useTranslations } from "next-intl";
 
 type Props = {
   options: TenureOption[];
@@ -18,6 +13,7 @@ type Props = {
 };
 
 const EMITenureSelector = ({ options, selectedValue, setSelectedValue }: Props) => {
+  const t = useTranslations("LoanEligibility");
   return (
     <div className="mx-auto w-full max-w-4xl">
       <RadioGroup
@@ -61,7 +57,7 @@ const EMITenureSelector = ({ options, selectedValue, setSelectedValue }: Props) 
                 <div className="text-center">
                   <div className="flex items-baseline justify-center">
                     <span className="text-2xl font-bold">{option.tenure}</span>
-                    <span className="ml-1 text-xs text-muted-foreground">{option.unit}</span>
+                    <span className="text-sm text-muted-foreground">{t("form.tenure.unit")}</span>
                   </div>
                 </div>
 
@@ -72,7 +68,7 @@ const EMITenureSelector = ({ options, selectedValue, setSelectedValue }: Props) 
                 <div className="text-center">
                   <div className="mb-1 flex items-center justify-center gap-1 text-xs text-muted-foreground">
                     <CreditCard className="h-3 w-3" />
-                    <span>Monthly EMI</span>
+                    <span className="text-sm text-muted-foreground">{t("form.emi.label")}</span>
                   </div>
                   <p className={cn("text-lg font-bold", selectedValue === option.id ? "text-primary" : "")}>
                     {`₹${option.emi.toLocaleString("en-IN")}`}
@@ -87,11 +83,12 @@ const EMITenureSelector = ({ options, selectedValue, setSelectedValue }: Props) 
       <div className="mt-6 flex items-center">
         <div className="rounded-md bg-gray-50 px-3 py-2">
           <p className="text-sm">
-            Selected tenure:{" "}
+            {t("form.tenure.label")}:{" "}
             <span className="font-bold">
               {options.find((o) => o.id === selectedValue)?.tenure} {options.find((o) => o.id === selectedValue)?.unit}
             </span>{" "}
-            with EMI of <span className="font-bold">{options.find((o) => o.id === selectedValue)?.emi}</span>
+            {t("form.emi.summary")}{" "}
+            <span className="font-bold">{options.find((o) => o.id === selectedValue)?.emi}</span>
           </p>
         </div>
       </div>
