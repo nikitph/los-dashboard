@@ -1458,5 +1458,67 @@
       "list": "ऋण दायित्व"
     },
     "existingLoanObligations": "मौजूदा ऋण दायित्व"
+  },
+  "LoanConfirmation": {
+    "title": "ऋण आवेदन पूर्णता",
+    "messageForwarded": "संदेश आवेदक को भेजा गया",
+    "loanTypes": {
+      "personal": "व्यक्तिगत ऋण",
+      "vehicle": "वाहन ऋण",
+      "houseConstruction": "मकान निर्माण ऋण",
+      "plotAndHouseConstruction": "प्लॉट और मकान निर्माण ऋण",
+      "plotPurchase": "प्लॉट खरीद ऋण",
+      "mortgage": "बंधक ऋण",
+      "unknown": "अज्ञात ऋण प्रकार"
+    },
+    "status": {
+      "loading": "लोड हो रहा है...",
+      "success": "सफलता",
+      "error": "त्रुटि"
+    },
+    "messages": {
+      "accepted": "{loanType} ₹{amount} का {emi} मासिक EMI और {tenure} महीनों की अवधि के साथ स्वीकृत किया जाएगा।",
+      "rejected": "{loanType} ₹{amount} का आवेदक द्वारा अस्वीकृत किया गया है।",
+      "escalated": "{loanType} ₹{amount} स्वीकृति मानदंडों को पूरा नहीं करता है, इसलिए विचलन का अनुरोध किया गया है।",
+      "processing": "ऋण की स्थिति की प्रक्रिया चल रही है।"
+    },
+    "buttons": {
+      "proceedToInspection": "निरीक्षण के लिए भेजें",
+      "finishApplication": "आवेदन समाप्त करें",
+      "proceedToLoanOfficer": "ऋण अधिकारी को भेजें",
+      "proceed": "आगे बढ़ें",
+      "back": "वापस",
+      "next": "अगला",
+      "submit": "जमा करें",
+      "cancel": "रद्द करें",
+      "save": "सहेजें"
+    },
+    "form": {
+      "remark": {
+        "label": "टिप्पणी",
+        "placeholder": "यहां कोई भी प्रासंगिक टिप्पणी दर्ज करें..."
+      }
+    },
+    "errors": {
+      "notFound": "ऋण आवेदन नहीं मिला",
+      "invalidStatus": "अमान्य ऋण स्थिति",
+      "unauthorized": "आप इस क्रिया को करने के लिए अधिकृत नहीं हैं"
+    },
+    "toast": {
+      "completed": "ऋण पुष्टि सफलतापूर्वक पूर्ण हुई",
+      "error": "ऋण पुष्टि के दौरान त्रुटि हुई",
+      "unauthorized": "आप इस क्रिया को करने के लिए अधिकृत नहीं हैं"
+    },
+    "validation": {
+      "status": {
+        "invalid": "अमान्य स्थिति मान"
+      },
+      "loanApplicationId": {
+        "required": "ऋण आवेदन आईडी आवश्यक है"
+      },
+      "remark": {
+        "maxLength": "टिप्पणी 500 अक्षरों से अधिक नहीं हो सकती"
+      }
+    }
   }
 }

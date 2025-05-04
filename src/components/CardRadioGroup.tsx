@@ -1,45 +1,23 @@
-import React, { useState } from "react";
+import React from "react";
 import { RadioGroup } from "@/components/ui/radio-group";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { CalendarDays, CreditCard } from "lucide-react";
 
-const EMITenureSelector = () => {
-  const [selectedValue, setSelectedValue] = useState("tenure2");
+export type TenureOption = {
+  id: string;
+  tenure: number;
+  unit: string;
+  emi: number;
+};
 
-  const options = [
-    {
-      id: "tenure1",
-      tenure: "12",
-      unit: "months",
-      emi: "₹12,500",
-    },
-    {
-      id: "tenure2",
-      tenure: "24",
-      unit: "months",
-      emi: "₹6,800",
-    },
-    {
-      id: "tenure3",
-      tenure: "36",
-      unit: "months",
-      emi: "₹4,900",
-    },
-    {
-      id: "tenure4",
-      tenure: "48",
-      unit: "months",
-      emi: "₹3,850",
-    },
-    {
-      id: "tenure5",
-      tenure: "60",
-      unit: "months",
-      emi: "₹3,200",
-    },
-  ];
+type Props = {
+  options: TenureOption[];
+  selectedValue: string;
+  setSelectedValue: (value: string) => void;
+};
 
+const EMITenureSelector = ({ options, selectedValue, setSelectedValue }: Props) => {
   return (
     <div className="mx-auto w-full max-w-4xl">
       <RadioGroup
@@ -97,7 +75,7 @@ const EMITenureSelector = () => {
                     <span>Monthly EMI</span>
                   </div>
                   <p className={cn("text-lg font-bold", selectedValue === option.id ? "text-primary" : "")}>
-                    {option.emi}
+                    {`₹${option.emi.toLocaleString("en-IN")}`}
                   </p>
                 </div>
               </CardContent>

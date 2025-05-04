@@ -1,11 +1,22 @@
 "use client";
 
-import React from "react";
-import { ArrowLeft, CheckCircle, Clipboard, FileText, Mail } from "lucide-react";
+import React, { useState } from "react";
+import { ArrowLeft, Clipboard, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import CardRadioGroup from "@/components/CardRadioGroup";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { updateLoanApplicationTenure } from "@/app/[locale]/saas/(private)/loaneligibility/actions/updateLoanApplicationTenure";
+import { useLocale } from "next-intl";
+import { useRouter } from "next/navigation";
+
+function calculateEMI(principal: number, tenureMonths: number, annualRate = 12): number {
+  const monthlyRate = annualRate / 12 / 100;
+  return Math.round(
+    (principal * monthlyRate * Math.pow(1 + monthlyRate, tenureMonths)) / (Math.pow(1 + monthlyRate, tenureMonths) - 1),
+  );
+}
 
 function LoanEligibilityForm({
   loanApplication,
@@ -15,6 +26,29 @@ function LoanEligibilityForm({
   loanEligibilityData: any;
 }) {
   console.log("loanEligibilityData", loanEligibilityData);
+  const [value, setValue] = React.useState(loanEligibilityData.eligibleLoanAmount || "");
+  const [selectedValue, setSelectedValue] = useState<string>("tenure2");
+  const router = useRouter();
+  const locale = useLocale();
+
+  const options = React.useMemo(() => {
+    const principal = parseFloat(value);
+    if (isNaN(principal) || principal <= 0) return [];
+
+    const tenures = [12, 24, 36, 48, 60];
+
+    return tenures.map((months, i) => {
+      const emi = calculateEMI(principal, months);
+      return {
+        id: `tenure${i + 1}`,
+        tenure: months,
+        unit: "months",
+        emi: emi,
+      };
+    });
+  }, [value]);
+
+  const selectedOption = options.find((option) => option.id === selectedValue)!;
   return (
     <div className="flex h-full w-full flex-col">
       {/* Header */}
@@ -56,38 +90,50 @@ function LoanEligibilityForm({
 
             <Card>
               <CardContent className="flex items-center gap-4 p-6">
-                <div className="flex grow flex-col gap-1">
-                  <span className="text-sm text-muted-foreground">Proposed Loan Amount</span>
-                  <span className="text-2xl font-semibold">₹30,00,000</span>
-                </div>
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-100">
-                  <CheckCircle className="h-5 w-5 text-green-600" />
+                <div className="flex shrink-0 grow basis-0 flex-col items-start gap-1">
+                  <Label htmlFor="proposedAmount" className="text-sm text-muted-foreground">
+                    Proposed Loan Amount
+                  </Label>
+                  <Input
+                    id="proposedAmount"
+                    placeholder="Enter amount"
+                    value={value}
+                    onChange={(e) => setValue(e.target.value)}
+                    className="w-full border-none bg-gray-100"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    max loan amount is {loanEligibilityData?.eligibleLoanAmount}
+                  </p>
                 </div>
               </CardContent>
             </Card>
           </div>
 
-          {/* Message Alert */}
-          <Alert className="border-none bg-secondary">
-            <div className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-background">
-                <Mail className="h-4 w-4" />
-              </div>
-              <AlertDescription className="text-sm">Message forwarded to Applicant</AlertDescription>
-            </div>
-          </Alert>
-
           {/* Tenure Section */}
           <div className="flex w-full flex-col gap-4 pt-4">
             <h3 className="text-xl font-semibold">Tenure chosen by the applicant</h3>
-            <CardRadioGroup />
+            <CardRadioGroup options={options} setSelectedValue={setSelectedValue} selectedValue={selectedValue} />
           </div>
 
           {/* Agreement Section */}
           <div className="flex w-full flex-col gap-4 pt-4">
             <span className="font-medium">Applicant agrees to the loan amount</span>
             <div className="flex items-start gap-2">
-              <Button size="lg">Yes, proceed</Button>
+              <Button
+                size="lg"
+                onClick={async () => {
+                  const response = await updateLoanApplicationTenure(
+                    loanApplication.id,
+                    selectedOption.tenure,
+                    selectedOption.emi,
+                    parseFloat(value),
+                  );
+                  console.log("response", response);
+                  router.push(`/${locale}/saas/loanconfirmation?lid=${loanApplication.id}&status=a`);
+                }}
+              >
+                Yes, proceed
+              </Button>
               <Button variant="outline" size="lg">
                 No, decline
               </Button>

@@ -1460,5 +1460,67 @@
       "list": "Loan Obligations"
     },
     "existingLoanObligations": "Existing Loan Obligations"
+  },
+  "LoanConfirmation": {
+    "title": "Loan Application Completion",
+    "messageForwarded": "Message forwarded to Applicant",
+    "loanTypes": {
+      "personal": "Personal Loan",
+      "vehicle": "Vehicle Loan",
+      "houseConstruction": "House Construction Loan",
+      "plotAndHouseConstruction": "Plot and House Construction Loan",
+      "plotPurchase": "Plot Purchase Loan",
+      "mortgage": "Mortgage Loan",
+      "unknown": "Unknown Loan Type"
+    },
+    "status": {
+      "loading": "Loading...",
+      "success": "Success",
+      "error": "Error"
+    },
+    "messages": {
+      "accepted": "{loanType} of Rs {amount} at {emi} Monthly EMI with {tenure} months of tenure is to be sanctioned.",
+      "rejected": "{loanType} of Rs {amount} has been denied by the applicant.",
+      "escalated": "{loanType} of Rs {amount} has not met the criteria for sanction, hence a deviation is requested.",
+      "processing": "Loan status is currently being processed."
+    },
+    "buttons": {
+      "proceedToInspection": "Proceed to send for Inspection",
+      "finishApplication": "Finish Application",
+      "proceedToLoanOfficer": "Proceed to send to Loan Officer",
+      "proceed": "Proceed",
+      "back": "Back",
+      "next": "Next",
+      "submit": "Submit",
+      "cancel": "Cancel",
+      "save": "Save"
+    },
+    "form": {
+      "remark": {
+        "label": "Remarks",
+        "placeholder": "Enter any relevant remarks here..."
+      }
+    },
+    "errors": {
+      "notFound": "Loan application not found",
+      "invalidStatus": "Invalid loan status",
+      "unauthorized": "You are not authorized to perform this action"
+    },
+    "toast": {
+      "completed": "Loan confirmation completed successfully",
+      "error": "An error occurred during loan confirmation",
+      "unauthorized": "You are not authorized to perform this action"
+    },
+    "validation": {
+      "status": {
+        "invalid": "Invalid status value"
+      },
+      "loanApplicationId": {
+        "required": "Loan application ID is required"
+      },
+      "remark": {
+        "maxLength": "Remark cannot exceed 500 characters"
+      }
+    }
   }
 }
