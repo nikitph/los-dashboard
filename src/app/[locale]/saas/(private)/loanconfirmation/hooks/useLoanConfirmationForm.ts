@@ -6,6 +6,9 @@ import { defineLoanConfirmationFieldVisibility } from "../lib/defineLoanConfirma
 import { CreateLoanConfirmationInput, createLoanConfirmationSchema } from "../schemas/loanConfirmationSchema";
 import { LoanApplication } from "@prisma/client";
 import { useRouter } from "next/navigation";
+import { completeLoanConfirmation } from "../actions/completeLoanConfirmation";
+import { toastSuccess } from "@/lib/toastUtils";
+import { useTranslations } from "next-intl";
 
 type UseLoanConfirmationFormProps = {
   loanApplication: LoanApplication;
@@ -23,6 +26,7 @@ type UseLoanConfirmationFormProps = {
 export function useLoanConfirmationForm({ loanApplication, status }: UseLoanConfirmationFormProps) {
   const [remark, setRemark] = useState("");
   const router = useRouter();
+  const t = useTranslations("LoanConfirmation");
 
   // Get CASL ability and compute field visibility
   const ability = useAbility();
@@ -76,13 +80,22 @@ export function useLoanConfirmationForm({ loanApplication, status }: UseLoanConf
     router.back();
   };
 
-  const handleProceedClick = () => {
+  const handleProceedClick = async () => {
     // Here we would implement the actual proceed logic
     // based on the status, potentially calling server actions
     console.log("Proceed button clicked for LId:", loanApplication.id);
     console.log("Status:", status);
     console.log("Remark:", remark);
-    // Example: callProceedAction({ loanApplicationId: loanApplication.id, status, remark });
+
+    const response = await completeLoanConfirmation({
+      loanApplicationId: loanApplication.id,
+      status,
+      remark,
+    });
+
+    if (response.success) {
+      toastSuccess({ title: t("status.success"), description: t(response.message) });
+    }
   };
 
   return {

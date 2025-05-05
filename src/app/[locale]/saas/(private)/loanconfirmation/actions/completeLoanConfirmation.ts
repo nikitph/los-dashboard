@@ -6,6 +6,7 @@ import { getServerSessionUser } from "@/lib/getServerUser";
 import { getAbility } from "@/lib/casl/getAbility";
 import { ActionResponse } from "@/types/globalTypes";
 import { createLoanConfirmationSchema } from "../schemas/loanConfirmationSchema";
+import { updateLoanApplicationStatusWithLog } from "@/services/loanApplicationService";
 
 /**
  * Completes the loan confirmation process based on the status
@@ -57,7 +58,7 @@ export async function completeLoanConfirmation(data: {
     if (!existingLoanApplication) {
       return {
         success: false,
-        message: "loanConfirmation.errors.notFound",
+        message: "errors.notFound",
       };
     }
 
@@ -73,15 +74,14 @@ export async function completeLoanConfirmation(data: {
           };
         }
 
-        updatedLoanApplication = await prisma.loanApplication.update({
-          where: { id: data.loanApplicationId },
-          data: {
-            status: "PENDING_INSPECTOR_ASSIGNMENT",
-            updatedAt: new Date(),
-          },
+        updatedLoanApplication = await updateLoanApplicationStatusWithLog({
+          loanApplicationId: data.loanApplicationId,
+          newStatus: "PENDING_INSPECTOR_ASSIGNMENT",
+          userId: user.id,
+          eventType: "APPLICATION_UPDATED",
+          remarks: data.remark,
         });
 
-        // Optionally create an inspection record here
         break;
 
       case "r": // Rejected - finish application
@@ -92,12 +92,12 @@ export async function completeLoanConfirmation(data: {
           };
         }
 
-        updatedLoanApplication = await prisma.loanApplication.update({
-          where: { id: data.loanApplicationId },
-          data: {
-            status: "REJECTED_BY_APPLICANT",
-            updatedAt: new Date(),
-          },
+        updatedLoanApplication = await updateLoanApplicationStatusWithLog({
+          loanApplicationId: data.loanApplicationId,
+          newStatus: "REJECTED_BY_APPLICANT",
+          userId: user.id,
+          eventType: "APPLICATION_UPDATED",
+          remarks: data.remark,
         });
         break;
 
@@ -109,26 +109,26 @@ export async function completeLoanConfirmation(data: {
           };
         }
 
-        updatedLoanApplication = await prisma.loanApplication.update({
-          where: { id: data.loanApplicationId },
-          data: {
-            status: "PENDING_LOAN_OFFICER_REVIEW",
-            updatedAt: new Date(),
-          },
+        updatedLoanApplication = await updateLoanApplicationStatusWithLog({
+          loanApplicationId: data.loanApplicationId,
+          newStatus: "PENDING_LOAN_OFFICER_ASSIGNMENT",
+          userId: user.id,
+          eventType: "APPLICATION_UPDATED",
+          remarks: data.remark,
         });
         break;
 
       default:
         return {
           success: false,
-          message: "loanConfirmation.errors.invalidStatus",
+          message: "errors.invalidStatus",
         };
     }
 
     // Return success response
     return {
       success: true,
-      message: "loanConfirmation.toast.completed",
+      message: "toast.completed",
       data: updatedLoanApplication,
     };
   } catch (error) {
