@@ -41,10 +41,11 @@ type FormValues = z.infer<typeof formSchema>;
 
 interface LoanObligationsFormProps {
   applicantId: string;
+  loanapplicationId: string;
   initialData?: FormValues;
 }
 
-export default function LoanObligationsForm({ applicantId, initialData }: LoanObligationsFormProps) {
+export default function LoanObligationsForm({ applicantId, loanapplicationId, initialData }: LoanObligationsFormProps) {
   const router = useRouter();
   const locale = useLocale();
   const { toast } = useToast();
@@ -110,7 +111,7 @@ export default function LoanObligationsForm({ applicantId, initialData }: LoanOb
       console.log("response", response);
 
       if (response.success) {
-        router.push(`/${locale}/saas/income`);
+        router.push(`/${locale}/saas/income?aid=${applicantId}&lid=${loanapplicationId}`);
       }
 
       // If we get here, it means we didn't redirect, so there must be an error

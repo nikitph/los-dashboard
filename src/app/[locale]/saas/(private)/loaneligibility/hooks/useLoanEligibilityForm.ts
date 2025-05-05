@@ -38,7 +38,12 @@ function calculateEMI(principal: number, tenureMonths: number, annualRate = 12):
  * @returns Form state, handlers, and computed data for the loan eligibility form
  */
 export function useLoanEligibilityForm({ loanApplication, loanEligibilityData }: UseLoanEligibilityFormProps) {
-  const [value, setValue] = useState(loanEligibilityData.eligibleLoanAmount?.toString() || "");
+  const [value, setValue] = useState(() => {
+    const eligible = Number(loanEligibilityData?.eligibleLoanAmount ?? 0);
+    const proposed = Number(loanApplication?.amountRequested ?? 0);
+    const lesser = Math.min(eligible, proposed);
+    return lesser.toString();
+  });
   const [selectedValue, setSelectedValue] = useState<string>("tenure2");
   const t = useTranslations("LoanEligibility");
   const router = useRouter();

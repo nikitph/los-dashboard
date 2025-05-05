@@ -1,20 +1,9 @@
 "use server";
 
-import { prisma } from "@/lib/prisma/prisma";
 import LoanObligationsForm from "@/app/[locale]/saas/(private)/loanobligations/components/LoanObligationsForm";
 
-export default async function LoanObligationsPage({ searchParams }: any) {
-  const { lid } = await searchParams;
-
-  console.log("lid", lid);
-  const loanApplication = await prisma.loanApplication.findUnique({
-    where: {
-      id: lid,
-    },
-    include: {
-      applicant: true,
-    },
-  });
+export default async function LoanObligationsPage({ searchParams }: { searchParams: { aid: string; lid: string } }) {
+  const { lid, aid } = await searchParams;
 
   return (
     <div className="min-h-screen bg-gray-50/50">
@@ -24,7 +13,7 @@ export default async function LoanObligationsPage({ searchParams }: any) {
         </div>
 
         <div className="rounded-lg bg-white shadow">
-          <LoanObligationsForm applicantId={loanApplication?.applicant?.id} />
+          <LoanObligationsForm applicantId={aid} loanapplicationId={lid} />
         </div>
       </div>
     </div>

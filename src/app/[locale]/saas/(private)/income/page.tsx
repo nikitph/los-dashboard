@@ -1,11 +1,15 @@
 import IncomeForm from "@/app/[locale]/saas/(private)/income/components/IncomeForm";
 
-export default function IncomeDocumentationPage({ searchParams }: { searchParams: { aid: string } }) {
-  const applicantId = searchParams?.aid;
+export default async function IncomeDocumentationPage({
+  searchParams,
+}: {
+  searchParams: { aid: string; lid: string };
+}) {
+  const { aid, lid } = await searchParams;
 
   return (
     <div>
-      <IncomeForm applicantId={applicantId} />
+      <IncomeForm applicantId={aid} loanapplicationId={lid} />
     </div>
   );
 }

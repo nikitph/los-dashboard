@@ -16,6 +16,8 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { saveIncomeData } from "../actions";
 import { toast } from "@/hooks/use-toast";
+import { useLocale } from "next-intl";
+import { useRouter } from "next/navigation";
 
 // Zod Schema
 const incomeDetailSchema = z.object({
@@ -69,13 +71,16 @@ type FormValues = z.infer<typeof FormSchema>;
 
 interface IncomeFormProps {
   applicantId: string;
+  loanapplicationId: string;
 }
 
-export default function IncomeForm({ applicantId }: IncomeFormProps) {
+export default function IncomeForm({ applicantId, loanapplicationId }: IncomeFormProps) {
   const [years, setYears] = useState([1]);
   const [activeYear, setActiveYear] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [documents, setDocuments] = useState<File[]>([]);
+  const locale = useLocale();
+  const router = useRouter();
 
   const {
     register,
@@ -190,7 +195,7 @@ export default function IncomeForm({ applicantId }: IncomeFormProps) {
           title: "Success",
           description: response.message,
         });
-        // You can add navigation logic here
+        router.push(`${locale}/saas/loaneligibility?lid=${loanapplicationId}&aid=${applicantId}`);
       } else {
         toast({
           title: "Error",
@@ -313,10 +318,12 @@ export default function IncomeForm({ applicantId }: IncomeFormProps) {
                         id={`${key}-${activeYear}`}
                         placeholder="Enter amount"
                         className="pl-8"
+                        /* @ts-ignore */
                         {...register(`incomeDetails.${yearIndex}.${key as any}`)}
                       />
                       {errors.incomeDetails?.[yearIndex]?.[key as keyof (typeof errors.incomeDetails)[0]] && (
                         <p className="text-sm text-red-500">
+                          {/* @ts-ignore */}
                           {errors.incomeDetails[yearIndex]?.[key as keyof (typeof errors.incomeDetails)[0]]?.message}
                         </p>
                       )}

@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { toast } from "@/hooks/use-toast";
 import {
   PersonalInformationFormValues,
@@ -31,6 +31,7 @@ export function usePersonalInformationForm({
   const [aadharOtp, setAadharOtp] = useState("");
   const [panOtp, setPanOtp] = useState("");
   const { fetchDocuments } = useDocuments();
+  const locale = useLocale();
 
   // Initialize form with react-hook-form
   const form = useForm<PersonalInformationFormValues>({
@@ -73,7 +74,7 @@ export function usePersonalInformationForm({
           description: t(response.message),
         });
 
-        router.push(`/saas/photocapture?aid=${applicantId}&lid=${loanApplicationId}`);
+        router.push(`/${locale}/saas/photocapture?aid=${applicantId}&lid=${loanApplicationId}`);
         router.refresh();
       } else {
         toast({
