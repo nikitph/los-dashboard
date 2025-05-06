@@ -1,0 +1,4 @@
+{
+  "directory": "./src/components/subframe/ui",
+  "importAlias": "@/subframe/*"
+}

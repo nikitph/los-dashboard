@@ -45,6 +45,7 @@
     "@radix-ui/react-visually-hidden": "^1.1.1",
     "@remixicon/react": "^4.6.0",
     "@sentry/nextjs": "^9",
+    "@subframe/core": "1.143.0",
     "@supabase/auth-helpers-nextjs": "^0.10.0",
     "@supabase/ssr": "^0.5.2",
     "@supabase/supabase-js": "^2.48.1",
