@@ -10,42 +10,70 @@ export function defineLoanApplicationFieldVisibility(ability: AppAbility) {
   const canReadLoanApplication = ability.can("read", "LoanApplication");
   const canUpdateLoanApplication = ability.can("update", "LoanApplication");
 
+  // Field-level read permissions
+  const canReadStatus = ability.can("read", "LoanApplication", "status");
+  const canReadAmountRequested = ability.can("read", "LoanApplication", "amountRequested");
+  const canReadTenure = ability.can("read", "LoanApplication", "selectedTenure");
+  const canReadEMI = ability.can("read", "LoanApplication", "calculatedEMI");
+  const canReadCreatedAt = ability.can("read", "LoanApplication", "createdAt");
+  const canReadLoanType = ability.can("read", "LoanApplication", "loanType");
+
+  // Related entity read permissions
+  const canReadApplicant = ability.can("read", "Applicant");
+  const canReadCoApplicants = ability.can("read", "CoApplicant");
+  const canReadGuarantors = ability.can("read", "Guarantor");
+  const canReadDocuments = ability.can("read", "Document");
+  const canReadVerifications = ability.can("read", "Verification");
+  const canReadTimelineEvents = ability.can("read", "TimelineEvent");
+
+  // Create permissions for related entities
+  const canCreateCoApplicant = ability.can("create", "CoApplicant");
+  const canCreateGuarantor = ability.can("create", "Guarantor");
+  const canCreateDocument = ability.can("create", "Document");
+  const canCreateVerification = ability.can("create", "Verification");
+
   return {
-    // Read permissions - use the overall permission
+    // Basic permissions
     id: canReadLoanApplication,
     applicantId: canReadLoanApplication,
     bankId: canReadLoanApplication,
-    loanType: canReadLoanApplication,
-    amountRequested: canReadLoanApplication,
-    status: canReadLoanApplication,
-    createdAt: canReadLoanApplication,
+
+    // Field-level read permissions
+    loanType: canReadLoanType && canReadLoanApplication,
+    amountRequested: canReadAmountRequested && canReadLoanApplication,
+    selectedTenure: canReadTenure && canReadLoanApplication,
+    calculatedEMI: canReadEMI && canReadLoanApplication,
+    status: canReadStatus && canReadLoanApplication,
+    createdAt: canReadCreatedAt && canReadLoanApplication,
     updatedAt: canReadLoanApplication,
     deletedAt: canReadLoanApplication,
 
-    // Related entities
-    applicant: canReadLoanApplication,
-    guarantors: canReadLoanApplication,
-    coApplicants: canReadLoanApplication,
-    verifications: canReadLoanApplication,
-    documents: canReadLoanApplication,
+    // Related entity visibility
+    applicant: canReadApplicant,
+    guarantors: canReadGuarantors,
+    coApplicants: canReadCoApplicants,
+    verifications: canReadVerifications,
+    documents: canReadDocuments,
+    timelineEvents: canReadTimelineEvents,
 
-    // Update permissions - use the overall permission
-    canUpdateApplicantId: canUpdateLoanApplication,
-    canUpdateBankId: canUpdateLoanApplication,
-    canUpdateLoanType: canUpdateLoanApplication,
-    canUpdateAmountRequested: canUpdateLoanApplication,
-    canUpdateStatus: canUpdateLoanApplication,
+    // Update field permissions
+    canUpdateApplicantId: ability.can("update", "LoanApplication", "applicantId"),
+    canUpdateBankId: ability.can("update", "LoanApplication", "bankId"),
+    canUpdateLoanType: ability.can("update", "LoanApplication", "loanType"),
+    canUpdateAmountRequested: ability.can("update", "LoanApplication", "amountRequested"),
+    canUpdateStatus: ability.can("update", "LoanApplication", "status"),
+    canUpdateSelectedTenure: ability.can("update", "LoanApplication", "selectedTenure"),
 
-    // Action permissions
+    // General action permissions
     canCreate: ability.can("create", "LoanApplication"),
     canUpdate: canUpdateLoanApplication,
     canDelete: ability.can("delete", "LoanApplication"),
 
     // Related entity actions
-    canAddGuarantor: ability.can("create", "Guarantor"),
-    canAddCoApplicant: ability.can("create", "CoApplicant"),
-    canAddVerification: ability.can("create", "Verification"),
-    canAddDocument: ability.can("create", "Document"),
+    canAddGuarantor: canCreateGuarantor,
+    canAddCoApplicant: canCreateCoApplicant,
+    canAddVerification: canCreateVerification,
+    canAddDocument: canCreateDocument,
   };
 }
 

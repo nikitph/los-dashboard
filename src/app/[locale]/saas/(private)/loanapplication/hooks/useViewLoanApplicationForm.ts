@@ -1,23 +1,22 @@
 "use client";
 
-import { useToast } from "@/hooks/use-toast";
-import { useAbility } from "@/lib/casl/abilityContext";
-import { useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { useAbility } from "@/lib/casl/abilityContext";
 import { deleteLoanApplication } from "../actions/deleteLoanApplication";
 import { defineLoanApplicationFieldVisibility } from "../lib/defineLoanApplicationFieldVisibility";
 import { LoanApplicationView } from "../schemas/loanApplicationSchema";
+import { toastError, toastSuccess } from "@/lib/toastUtils";
 
 /**
- * Hook for managing the loan application view state
+ * Hook for managing the loan application view form state and actions
  *
- * @param {object} options - Options for initializing the view
- * @param {LoanApplicationView} options.loanApplication - Loan application data to display
- * @returns {object} View state and handlers
+ * @param {object} params - Hook parameters
+ * @param {LoanApplicationView} params.loanApplication - The loan application data to display
+ * @returns {object} Form state and handlers
  */
 export function useViewLoanApplicationForm({ loanApplication }: { loanApplication: LoanApplicationView }) {
-  const { toast } = useToast();
   const router = useRouter();
   const t = useTranslations("LoanApplication");
   const [isDeleting, setIsDeleting] = useState(false);
@@ -26,7 +25,10 @@ export function useViewLoanApplicationForm({ loanApplication }: { loanApplicatio
   const ability = useAbility();
   const visibility = useMemo(() => defineLoanApplicationFieldVisibility(ability), [ability]);
 
-  // Delete handler
+  /**
+   * Handles the deletion of the loan application
+   * Confirms with the user before proceeding
+   */
   const handleDelete = async () => {
     if (!confirm(t("confirm.delete"))) return;
 
@@ -35,28 +37,40 @@ export function useViewLoanApplicationForm({ loanApplication }: { loanApplicatio
       const response = await deleteLoanApplication(loanApplication.id);
 
       if (response.success) {
-        toast({
+        toastSuccess({
           title: t("toast.deleted"),
           description: t("toast.deletedDescription"),
         });
         router.push("/saas/loanapplication/list");
       } else {
-        toast({
+        toastError({
           title: t("toast.error"),
           description: response.message,
-          variant: "destructive",
         });
       }
     } catch (error) {
       console.error("Error deleting loan application:", error);
-      toast({
+      toastError({
         title: t("toast.error"),
         description: t("toast.errorDescription"),
-        variant: "destructive",
       });
     } finally {
       setIsDeleting(false);
     }
+  };
+
+  /**
+   * Formats a date for display
+   *
+   * @param {Date} date - The date to format
+   * @returns {string} Formatted date string
+   */
+  const formatDate = (date: Date): string => {
+    return new Intl.DateTimeFormat("en-IN", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    }).format(date);
   };
 
   return {
@@ -64,5 +78,6 @@ export function useViewLoanApplicationForm({ loanApplication }: { loanApplicatio
     visibility,
     isDeleting,
     handleDelete,
+    formatDate,
   };
 }

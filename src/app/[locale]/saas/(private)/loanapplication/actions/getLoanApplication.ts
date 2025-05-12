@@ -21,7 +21,7 @@ import { LoanApplicationView } from "../schemas/loanApplicationSchema";
  * const response = await getLoanApplication("loan123");
  * // => { success: true, data: { id: "loan123", applicantId: "app456", ... } }
  */
-export async function getLoanApplication(id: string): Promise<ActionResponse<LoanApplicationView>> {
+export async function getLoanApplication(id: string): Promise<ActionResponse> {
   try {
     // Get authenticated user
     const user = await getServerSessionUser();
@@ -42,10 +42,19 @@ export async function getLoanApplication(id: string): Promise<ActionResponse<Loa
     const loanApplication = await prisma.loanApplication.findUnique({
       where: { id },
       include: {
-        applicant: true,
+        applicant: {
+          include: {
+            user: true,
+          },
+        },
         guarantors: true,
         coApplicants: true,
         verifications: true,
+        timelineEvents: {
+          include: {
+            user: true,
+          },
+        },
         documents: true,
       },
     });

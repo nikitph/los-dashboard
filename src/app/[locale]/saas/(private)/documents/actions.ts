@@ -142,6 +142,7 @@ export async function getDocumentUploadUrl(metadata: DocumentMetadata): Promise<
           fileKey: fileKey,
         },
         uploadedById: validatedData.uploadedById,
+        userProfileId: validatedData.uploadedById,
         uploadedAt: new Date(),
         // Set the relationships based on provided IDs
         loanApplicationId: validatedData.loanApplicationId,
@@ -355,6 +356,9 @@ export async function getLoanApplicationDocuments(loanApplicationId: string): Pr
       where: {
         loanApplicationId,
         deletedAt: null,
+      },
+      include: {
+        userProfile: true,
       },
       orderBy: { uploadedAt: "desc" },
     });
