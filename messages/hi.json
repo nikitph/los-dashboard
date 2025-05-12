@@ -680,7 +680,7 @@
       },
       "create": {
         "title": "ऋण आवेदन बनाएं",
-        "description": "नया ऋण आवेदन बनाएं"
+        "description": "एक नया ऋण आवेदन बनाएं"
       },
       "edit": {
         "title": "ऋण आवेदन संपादित करें",
@@ -702,11 +702,11 @@
       },
       "applicantId": {
         "label": "आवेदक आईडी",
-        "placeholder": "आवेदक चुनें"
+        "placeholder": "एक आवेदक चुनें"
       },
       "bankId": {
         "label": "बैंक आईडी",
-        "placeholder": "बैंक चुनें"
+        "placeholder": "एक बैंक चुनें"
       },
       "loanType": {
         "label": "ऋण प्रकार",
@@ -722,7 +722,7 @@
       },
       "cancel": "रद्द करें",
       "submit": "जमा करें",
-      "submitting": "जमा किया जा रहा है..."
+      "submitting": "जमा कर रहा है..."
     },
     "list": {
       "title": "ऋण आवेदन",
@@ -734,9 +734,9 @@
       "exportSelected": "चयनित निर्यात करें",
       "deleteSelected": "चयनित हटाएं",
       "toggleColumns": "कॉलम टॉगल करें",
-      "loading": "ऋण आवेदन लोड हो रहे हैं...",
+      "loading": "ऋण आवेदन लोड हो रहा है...",
       "actions": {
-        "label": "कार्रवाई",
+        "label": "क्रियाएँ",
         "menu": "मेनू खोलें",
         "view": "देखें",
         "edit": "संपादित करें",
@@ -751,25 +751,32 @@
         "amountRequested": "अनुरोधित राशि",
         "status": "स्थिति",
         "createdAt": "बनाया गया",
-        "actions": "कार्रवाई"
+        "actions": "क्रियाएँ"
       },
       "pagination": {
         "previous": "पिछला",
         "next": "अगला",
-        "pageInfo": "पृष्ठ {page} का {total}",
+        "pageInfo": "पृष्ठ {page} / {total}",
         "rowsPerPage": "प्रति पृष्ठ पंक्तियां"
       }
     },
     "view": {
       "title": "ऋण आवेदन विवरण",
-      "description": "इस ऋण आवेदन का विवरण देखें",
+      "description": "इस ऋण आवेदन के विवरण देखें",
       "id": "आईडी",
       "applicant": "आवेदक",
+      "phone": "फोन",
+      "age": "उम्र",
+      "ageValue": "{age} वर्ष",
+      "address": "पता",
       "loanType": "ऋण प्रकार",
       "amountRequested": "अनुरोधित राशि",
+      "selectedTenure": "चयनित अवधि",
+      "tenureValue": "{months} महीने",
+      "monthlyEMI": "मासिक ईएमआई",
       "status": "स्थिति",
       "createdAt": "बनाया गया",
-      "updatedAt": "अंतिम अपडेट",
+      "updatedAt": "अपडेट किया गया",
       "back": "वापस",
       "edit": "संपादित करें",
       "delete": "हटाएं",
@@ -778,11 +785,12 @@
       "guarantors": "गारंटर",
       "guarantorsDescription": "इस ऋण की गारंटी देने वाले लोग",
       "documents": "दस्तावेज़",
-      "documentsDescription": "इस ऋण आवेदन से संबंधित दस्तावेज़"
+      "documentsDescription": "इस ऋण आवेदन से संबंधित दस्तावेज़",
+      "submittedTimeAgo": "{timeAgo} पहले जमा किया गया"
     },
     "filter": {
       "search": "ऋण आवेदन खोजें",
-      "reset": "रीसेट",
+      "reset": "रीसेट करें",
       "loanType": {
         "all": "सभी ऋण प्रकार",
         "personal": "व्यक्तिगत",
@@ -799,6 +807,42 @@
         "rejected": "अस्वीकृत"
       }
     },
+    "actions": {
+      "edit": "आवेदन संपादित करें",
+      "delete": "हटाएं",
+      "deleting": "हटा रहा है...",
+      "back": "सूची पर वापस जाएं",
+      "addCoApplicant": "सह-आवेदक जोड़ें",
+      "addGuarantor": "गारंटर जोड़ें",
+      "addDocument": "दस्तावेज़ जोड़ें",
+      "addVerification": "सत्यापन जोड़ें"
+    },
+    "tabs": {
+      "documents": "दस्तावेज़",
+      "coApplicants": "सह-आवेदक",
+      "guarantors": "गारंटर",
+      "verifications": "सत्यापन",
+      "timeline": "समयरेखा"
+    },
+    "alerts": {
+      "verificationTitle": "सत्यापन प्रगति पर है",
+      "verificationDescription": "हमारी टीम वर्तमान में आवेदन दस्तावेजों की समीक्षा कर रही है। 24-48 घंटों में पूरा होने की उम्मीद है।",
+      "noDocumentsTitle": "कोई दस्तावेज़ नहीं मिला",
+      "noDocumentsDescription": "इस आवेदन से अभी तक कोई दस्तावेज़ संलग्न नहीं है।",
+      "noCoApplicantsTitle": "कोई सह-आवेदक नहीं",
+      "noCoApplicantsDescription": "इस ऋण आवेदन में कोई सह-आवेदक नहीं है।",
+      "noGuarantorsTitle": "कोई गारंटर नहीं",
+      "noGuarantorsDescription": "इस ऋण आवेदन में कोई गारंटर नहीं है।",
+      "noVerificationsTitle": "कोई सत्यापन नहीं",
+      "noVerificationsDescription": "इस आवेदन के लिए कोई सत्यापन रिकॉर्ड नहीं मिला।"
+    },
+    "verificationStatus": {
+      "PENDING": "लंबित",
+      "IN_PROGRESS": "प्रगति पर",
+      "APPROVED": "स्वीकृत",
+      "REJECTED": "अस्वीकृत",
+      "NEEDS_CLARIFICATION": "स्पष्टीकरण की आवश्यकता है"
+    },
     "toast": {
       "created": "ऋण आवेदन सफलतापूर्वक बनाया गया",
       "createdDescription": "ऋण आवेदन बना दिया गया है",
@@ -806,20 +850,25 @@
       "updatedDescription": "ऋण आवेदन अपडेट कर दिया गया है",
       "deleted": "ऋण आवेदन सफलतापूर्वक हटा दिया गया",
       "deletedDescription": "ऋण आवेदन हटा दिया गया है",
-      "fetched": "ऋण आवेदन लोड किया गया",
+      "fetched": "ऋण आवेदन लोड हो गया",
       "error": "त्रुटि",
-      "errorDescription": "एक अनपेक्षित त्रुटि हुई"
+      "errorDescription": "एक अप्रत्याशित त्रुटि हुई"
     },
     "errors": {
+      "unauthorized": "अनधिकृत पहुंच",
+      "noViewPermission": "आपके पास इस ऋण आवेदन को देखने की अनुमति नहीं है।",
+      "noEditPermission": "आपके पास इस ऋण आवेदन को संपादित करने की अनुमति नहीं है।",
+      "noDeletePermission": "आपके पास इस ऋण आवेदन को हटाने की अनुमति नहीं है।",
       "notFound": "ऋण आवेदन नहीं मिला",
-      "unauthorized": "आपके पास इस ऋण आवेदन तक पहुंचने की अनुमति नहीं है",
+      "generic": "ऋण आवेदन प्राप्त करते समय एक त्रुटि हुई।",
+      "validation": "कृपया फॉर्म में त्रुटियों की जांच करें।",
       "invalidData": "प्रदान की गई जानकारी अमान्य है"
     },
     "confirm": {
-      "delete": "क्या आप वाकई इस ऋण आवेदन को हटाना चाहते हैं?",
+      "delete": "क्या आप वाकई इस ऋण आवेदन को हटाना चाहते हैं? यह क्रिया पूर्ववत नहीं की जा सकती है।",
       "deleteMultiple": {
         "title": "चयनित आवेदन हटाएं",
-        "description": "क्या आप वाकई {count} चयनित ऋण आवेदनों को हटाना चाहते हैं?"
+        "description": "क्या आप {count} चयनित ऋण आवेदनों को हटाना चाहते हैं?"
       },
       "cancel": "रद्द करें",
       "continue": "जारी रखें"
@@ -846,6 +895,27 @@
         "required": "स्थिति आवश्यक है",
         "invalid": "अमान्य स्थिति"
       }
+    },
+    "timeline": {
+      "created": "आवेदन बनाया",
+      "updated": "आवेदन अपडेट किया",
+      "statusChanged": "स्थिति बदलकर {status} कर दी",
+      "documentAdded": "दस्तावेज़ जोड़ा",
+      "verificationAdded": "सत्यापन जोड़ा",
+      "verificationCompleted": "सत्यापन पूरा किया",
+      "coApplicantAdded": "सह-आवेदक जोड़ा",
+      "guarantorAdded": "गारंटर जोड़ा"
+    },
+    "documents": {
+      "type": "दस्तावेज़ प्रकार",
+      "name": "फ़ाइल नाम",
+      "size": "आकार",
+      "status": "स्थिति",
+      "uploadedAt": "अपलोड किया गया",
+      "actions": "क्रियाएँ",
+      "download": "डाउनलोड",
+      "delete": "हटाएं",
+      "view": "देखें"
     }
   },
   "CoApplicant": {

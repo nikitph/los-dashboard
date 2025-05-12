@@ -765,8 +765,15 @@
       "description": "View the details of this loan application",
       "id": "ID",
       "applicant": "Applicant",
+      "phone": "Phone",
+      "age": "Age",
+      "ageValue": "{age} years",
+      "address": "Address",
       "loanType": "Loan Type",
       "amountRequested": "Amount Requested",
+      "selectedTenure": "Selected Tenure",
+      "tenureValue": "{months} months",
+      "monthlyEMI": "Monthly EMI",
       "status": "Status",
       "createdAt": "Created At",
       "updatedAt": "Last Updated",
@@ -778,7 +785,8 @@
       "guarantors": "Guarantors",
       "guarantorsDescription": "People who have guaranteed this loan",
       "documents": "Documents",
-      "documentsDescription": "Documents related to this loan application"
+      "documentsDescription": "Documents related to this loan application",
+      "submittedTimeAgo": "Submitted {timeAgo}"
     },
     "filter": {
       "search": "Search loan applications",
@@ -799,6 +807,42 @@
         "rejected": "Rejected"
       }
     },
+    "actions": {
+      "edit": "Edit Application",
+      "delete": "Delete",
+      "deleting": "Deleting...",
+      "back": "Back to List",
+      "addCoApplicant": "Add Co-Applicant",
+      "addGuarantor": "Add Guarantor",
+      "addDocument": "Add Document",
+      "addVerification": "Add Verification"
+    },
+    "tabs": {
+      "documents": "Documents",
+      "coApplicants": "Co-Applicants",
+      "guarantors": "Guarantors",
+      "verifications": "Verifications",
+      "timeline": "Timeline"
+    },
+    "alerts": {
+      "verificationTitle": "Verification in Progress",
+      "verificationDescription": "Our team is currently reviewing the application documents. Expected completion in 24-48 hours.",
+      "noDocumentsTitle": "No Documents Found",
+      "noDocumentsDescription": "There are no documents attached to this application yet.",
+      "noCoApplicantsTitle": "No Co-Applicants",
+      "noCoApplicantsDescription": "This loan application does not have any co-applicants.",
+      "noGuarantorsTitle": "No Guarantors",
+      "noGuarantorsDescription": "This loan application does not have any guarantors.",
+      "noVerificationsTitle": "No Verifications",
+      "noVerificationsDescription": "No verification records found for this application."
+    },
+    "verificationStatus": {
+      "PENDING": "Pending",
+      "IN_PROGRESS": "In Progress",
+      "APPROVED": "Approved",
+      "REJECTED": "Rejected",
+      "NEEDS_CLARIFICATION": "Needs Clarification"
+    },
     "toast": {
       "created": "Loan application created successfully",
       "createdDescription": "The loan application has been created",
@@ -811,12 +855,17 @@
       "errorDescription": "An unexpected error occurred"
     },
     "errors": {
+      "unauthorized": "Unauthorized Access",
+      "noViewPermission": "You do not have permission to view this loan application.",
+      "noEditPermission": "You do not have permission to edit this loan application.",
+      "noDeletePermission": "You do not have permission to delete this loan application.",
       "notFound": "Loan application not found",
-      "unauthorized": "You don't have permission to access this loan application",
+      "generic": "An error occurred while fetching the loan application.",
+      "validation": "Please check the form for errors.",
       "invalidData": "The provided information is invalid"
     },
     "confirm": {
-      "delete": "Are you sure you want to delete this loan application?",
+      "delete": "Are you sure you want to delete this loan application? This action cannot be undone.",
       "deleteMultiple": {
         "title": "Delete Selected Applications",
         "description": "Are you sure you want to delete {count} selected loan applications?"
@@ -846,6 +895,27 @@
         "required": "Status is required",
         "invalid": "Invalid status"
       }
+    },
+    "timeline": {
+      "created": "created application",
+      "updated": "updated application",
+      "statusChanged": "changed status to {status}",
+      "documentAdded": "added document",
+      "verificationAdded": "added verification",
+      "verificationCompleted": "completed verification",
+      "coApplicantAdded": "added co-applicant",
+      "guarantorAdded": "added guarantor"
+    },
+    "documents": {
+      "type": "Document Type",
+      "name": "File Name",
+      "size": "Size",
+      "status": "Status",
+      "uploadedAt": "Uploaded",
+      "actions": "Actions",
+      "download": "Download",
+      "delete": "Delete",
+      "view": "View"
     }
   },
   "CoApplicant": {
