@@ -309,16 +309,8 @@ model Verification {
   type                  VerificationType
   status                VerificationStatus
   verifiedById          String?
-  verifiedAt            DateTime?
   deletedAt             DateTime?
-  addressCity           String?
-  addressLine1          String?
-  addressLine2          String?
-  addressState          String?
-  addressZipCode        String?
   createdAt             DateTime               @default(now())
-  locationFromMain      String?
-  photographUrl         String?
   remarks               String?
   result                Boolean
   updatedAt             DateTime               @updatedAt
@@ -334,53 +326,65 @@ model Verification {
 }
 
 model ResidenceVerification {
-  id             String       @id @default(dbgenerated("gen_random_uuid()"))
-  verificationId String       @unique
-  ownerFirstName String?
-  ownerLastName  String?
-  residentSince  String?
-  residenceType  String?
-  structureType  String?
-  verification   Verification @relation(fields: [verificationId], references: [id])
+  id               String        @id @default(dbgenerated("gen_random_uuid()"))
+  verificationId   String        @unique
+  ownerFirstName   String
+  ownerLastName    String
+  residentSince    String?
+  residenceType    ResidenceType
+  structureType    StructureType
+  addressCity      String
+  addressLine1     String
+  addressLine2     String?
+  addressState     String
+  addressZipCode   String
+  locationFromMain String
+  verification     Verification  @relation(fields: [verificationId], references: [id])
 }
 
 model BusinessVerification {
   id                String       @id @default(dbgenerated("gen_random_uuid()"))
   verificationId    String       @unique
-  businessName      String?
-  businessType      String?
-  contactDetails    String?
-  businessExistence Boolean?
-  natureOfBusiness  String?
-  salesPerDay       String?
+  businessName      String
+  businessType      String
+  addressCity       String
+  addressLine1      String
+  addressLine2      String?
+  addressState      String
+  addressZipCode    String
+  locationFromMain  String
+  contactDetails    String
+  businessExistence Boolean
+  natureOfBusiness  String
+  salesPerDay       String
   verification      Verification @relation(fields: [verificationId], references: [id])
 }
 
 model PropertyVerification {
-  id             String       @id @default(dbgenerated("gen_random_uuid()"))
-  verificationId String       @unique
-  ownerFirstName String?
-  ownerLastName  String?
-  structureType  String?
-  verification   Verification @relation(fields: [verificationId], references: [id])
+  id               String       @id @default(dbgenerated("gen_random_uuid()"))
+  verificationId   String       @unique
+  ownerFirstName   String
+  ownerLastName    String
+  structureType    String
+  addressCity      String
+  addressLine1     String
+  addressLine2     String?
+  addressState     String
+  addressZipCode   String
+  locationFromMain String
+  verification     Verification @relation(fields: [verificationId], references: [id])
 }
 
 model VehicleVerification {
-  id                  String       @id @default(dbgenerated("gen_random_uuid()"))
-  verificationId      String       @unique
-  engineNumber        String?
-  chassisNumber       String?
-  registrationNumber  String?
-  make                String?
-  model               String?
-  vehicleType         String?
-  taxInvoiceUrl       String?
-  deliveryChalanUrl   String?
-  stampedReceiptUrl   String?
-  rcUrl               String?
-  inspectionReportUrl String?
-  vehiclePhotoUrl     String?
-  verification        Verification @relation(fields: [verificationId], references: [id])
+  id                 String       @id @default(dbgenerated("gen_random_uuid()"))
+  verificationId     String       @unique
+  engineNumber       String?
+  chassisNumber      String?
+  registrationNumber String?
+  make               String
+  model              String
+  vehicleType        String?
+  verification       Verification @relation(fields: [verificationId], references: [id])
 }
 
 model PendingAction {
@@ -590,6 +594,14 @@ enum DocumentType {
   KYC_DOCUMENT
   APPLICATION_FORM
   APPLICANT_PHOTO
+  VEHICLE_PHOTO
+  PROPERTY_PHOTO
+  BUSINESS_PHOTO
+  VEHICLE_REGISTRATION_CERTIFICATE
+  VEHICLE_INSPECTION_REPORT
+  VEHICLE_STAMPED_RECEIPT
+  VEHICLE_TAX_INVOICE
+  VEHICLE_DELIVERY_CHALAN
   OTHER
 }
 
@@ -602,4 +614,15 @@ enum PlanType {
 enum BillingCycle {
   MONTHLY
   ANNUAL
+}
+
+enum ResidenceType {
+  OWNED
+  RENTED
+}
+
+enum StructureType {
+  DUPLEX
+  APARTMENT
+  BUNGALOW
 }
