@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 
 import { IconButton } from "@/subframe/components/IconButton";
 import { Alert } from "@/subframe/components/Alert";
-import { FilterBadge } from "@/subframe/components/FilterBadge";
+import { ToggleGroup } from "@/subframe/components/ToggleGroup";
 import { IconWithBackground } from "@/subframe/components/IconWithBackground";
 import { Badge } from "@/subframe/components/Badge";
 import { Button } from "@/subframe/components/Button";
@@ -13,6 +13,7 @@ import { formatDistanceToNow } from "date-fns";
 interface DocumentType {
   label: string;
   value: DocumentMetadata["documentType"];
+  icon?: string;
 }
 
 interface DocumentsUploadProps {
@@ -42,13 +43,15 @@ const DocumentsUpload: React.FC<DocumentsUploadProps> = ({ entityType = "loanApp
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const documentTypes: DocumentType[] = [
-    { label: "Tax Invoice", value: "VEHICLE_TAX_INVOICE" },
-    { label: "Delivery Chaalan", value: "VEHICLE_DELIVERY_CHALAN" },
-    { label: "Stamped Receipt", value: "VEHICLE_STAMPED_RECEIPT" },
-    { label: "RC", value: "VEHICLE_REGISTRATION_CERTIFICATE" },
-    { label: "Inspection Report", value: "VEHICLE_INSPECTION_REPORT" },
-    { label: "Vehicle Photo", value: "VEHICLE_PHOTO" },
+    { label: "Tax Invoice", value: "VEHICLE_TAX_INVOICE", icon: "FeatherFileText" },
+    { label: "Delivery Chaalan", value: "VEHICLE_DELIVERY_CHALAN", icon: "FeatherTruck" },
+    { label: "Stamped Receipt", value: "VEHICLE_STAMPED_RECEIPT", icon: "FeatherClipboard" },
+    { label: "RC", value: "VEHICLE_REGISTRATION_CERTIFICATE", icon: "FeatherFileText" },
+    { label: "Inspection Report", value: "VEHICLE_INSPECTION_REPORT", icon: "FeatherCheckSquare" },
+    { label: "Vehicle Photo", value: "VEHICLE_PHOTO", icon: "FeatherCamera" },
   ];
+
+  const availableDocumentTypes = documentTypes.filter((docType) => !uploadedDocs[docType.value]);
 
   useEffect(() => {
     fetchDocuments(entityType, entityId);
@@ -75,8 +78,9 @@ const DocumentsUpload: React.FC<DocumentsUploadProps> = ({ entityType = "loanApp
     }
   }, [documents]);
 
-  const handleDocTypeSelect = (docType: DocumentType): void => {
-    if (uploadedDocs[docType.value]) return; // Already uploaded
+  const handleDocTypeSelect = (value: string): void => {
+    const docType = documentTypes.find((type) => type.value === value);
+    if (!docType || uploadedDocs[docType.value]) return; // Already uploaded
     setSelectedDocType(docType);
   };
 
@@ -108,8 +112,6 @@ const DocumentsUpload: React.FC<DocumentsUploadProps> = ({ entityType = "loanApp
       description: `${selectedDocType.label} document`,
     };
 
-    console.log("metadata", metadata);
-
     const result = await uploadDocument(file, metadata);
 
     if (result.success) {
@@ -120,9 +122,6 @@ const DocumentsUpload: React.FC<DocumentsUploadProps> = ({ entityType = "loanApp
       e.target.value = "";
     }
   };
-
-  // Filter out document types that have already been uploaded
-  const availableDocumentTypes = documentTypes.filter((docType) => !uploadedDocs[docType.value]);
 
   return (
     <div className="flex w-full flex-col items-start gap-4">
@@ -143,24 +142,30 @@ const DocumentsUpload: React.FC<DocumentsUploadProps> = ({ entityType = "loanApp
         />
       )}
 
-      <div className="flex w-full flex-wrap items-start gap-2">
-        {availableDocumentTypes.length > 0 ? (
-          availableDocumentTypes.map((docType) => (
-            <FilterBadge
+      {availableDocumentTypes.length > 0 ? (
+        <ToggleGroup
+          type="single"
+          value={selectedDocType?.value || ""}
+          onValueChange={handleDocTypeSelect}
+          className={"bg-gray-200"}
+        >
+          {availableDocumentTypes.map((docType) => (
+            <ToggleGroup.Item
               key={docType.value}
-              label={docType.label}
-              count=""
-              selected={selectedDocType?.value === docType.value}
-              onClick={() => handleDocTypeSelect(docType)}
-            />
-          ))
-        ) : (
-          <span className="font-body-bold text-success-500">All document types have been uploaded</span>
-        )}
-      </div>
+              value={docType.value}
+              icon={docType.icon || "FeatherFile"}
+              className={"w-[150px]"}
+            >
+              {docType.label}
+            </ToggleGroup.Item>
+          ))}
+        </ToggleGroup>
+      ) : (
+        <span className="font-body-bold text-success-500">All document types have been uploaded</span>
+      )}
 
       {!allDocumentsUploaded && (
-        <div className="flex w-full flex-col items-start gap-4 rounded-md border border-solid border-neutral-border bg-default-background px-6 py-6">
+        <div className="flex w-full flex-col items-start gap-4 rounded-md border border-solid border-neutral-border bg-default-background px-1 py-1">
           <div className="flex w-full items-center gap-4 px-2 py-2">
             <IconWithBackground variant="neutral" size="large" icon="FeatherUpload" />
             <div className="flex shrink-0 grow basis-0 flex-col items-start justify-center gap-1">
