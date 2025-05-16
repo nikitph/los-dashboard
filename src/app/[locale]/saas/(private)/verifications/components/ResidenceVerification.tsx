@@ -31,6 +31,7 @@ function ResidenceVerification({ loanApplicationId, defaultType = "RESIDENCE" }:
   const { form, visibility, isSubmitting, onSubmit, selectedType, formattedDate } = useCreateVerificationForm({
     loanApplicationId,
     defaultType: defaultType as VerificationType,
+    secondary: false,
   });
 
   // Handle back button

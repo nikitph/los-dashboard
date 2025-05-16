@@ -7,7 +7,6 @@ import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useCallback, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { format } from "date-fns";
 import { createVerification } from "../actions/createVerification";
 import { defineVerificationFieldVisibility } from "../lib/defineVerificationFieldVisibility";
@@ -17,6 +16,7 @@ import {
   VerificationFormValues
 } from "../../verifications/schemas/verificationSchema";
 import { VerificationType } from "@prisma/client";
+import { toastError, toastSuccess } from "@/lib/toastUtils";
 
 /**
  * Props for the useCreateVerificationForm hook
@@ -31,6 +31,7 @@ interface UseCreateVerificationFormProps {
    * Optional default verification type to pre-select
    */
   defaultType?: VerificationType;
+  secondary?: boolean;
 }
 
 /**
@@ -81,6 +82,7 @@ interface UseCreateVerificationFormReturn {
 export function useCreateVerificationForm({
   loanApplicationId,
   defaultType = "RESIDENCE",
+  secondary = true,
 }: UseCreateVerificationFormProps): UseCreateVerificationFormReturn {
   const ability = useAbility();
   const router = useRouter();
@@ -210,13 +212,16 @@ export function useCreateVerificationForm({
       const response = await createVerification(submitData);
 
       if (response.success) {
-        toast.success(t("toast.createSuccess"), {
+        toastSuccess({
+          title: t("toast.createSuccess"),
           description: t("toast.createSuccessDescription"),
         });
 
         // Redirect to view page after successful creation
         if (response.data?.id) {
-          router.push(`/${locale}/saas/verifications/secondary?lid=${loanApplicationId}`);
+          secondary
+            ? router.push(`/${locale}/saas/verifications/complete?lid=${loanApplicationId}`)
+            : router.push(`/${locale}/saas/verifications/secondary?lid=${loanApplicationId}`);
         } else {
           router.push(`/${locale}/saas/verification/list`);
         }
@@ -226,7 +231,8 @@ export function useCreateVerificationForm({
       }
     } catch (error) {
       console.error("Error creating verification:", error);
-      toast.error(t("toast.createError"), {
+      toastError({
+        title: t("toast.createError"),
         description: t("toast.unexpectedError"),
       });
     } finally {
