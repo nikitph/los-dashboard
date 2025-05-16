@@ -1,3 +1,5 @@
+"use client";
+
 import { useCallback, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -41,6 +43,14 @@ export type DocumentMetadata = {
     | "KYC_DOCUMENT"
     | "APPLICATION_FORM"
     | "APPLICANT_PHOTO"
+    | "VEHICLE_PHOTO"
+    | "PROPERTY_PHOTO"
+    | "BUSINESS_PHOTO"
+    | "VEHICLE_REGISTRATION_CERTIFICATE"
+    | "VEHICLE_INSPECTION_REPORT"
+    | "VEHICLE_STAMPED_RECEIPT"
+    | "VEHICLE_TAX_INVOICE"
+    | "VEHICLE_DELIVERY_CHALAN"
     | "OTHER";
   description?: string;
   uploadedById: string;

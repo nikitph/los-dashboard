@@ -47,6 +47,14 @@ const documentMetadataSchema = z.object({
     "KYC_DOCUMENT",
     "APPLICATION_FORM",
     "APPLICANT_PHOTO",
+    "VEHICLE_PHOTO",
+    "PROPERTY_PHOTO",
+    "BUSINESS_PHOTO",
+    "VEHICLE_REGISTRATION_CERTIFICATE",
+    "VEHICLE_INSPECTION_REPORT",
+    "VEHICLE_STAMPED_RECEIPT",
+    "VEHICLE_TAX_INVOICE",
+    "VEHICLE_DELIVERY_CHALAN",
     "OTHER",
   ]),
   mimeType: z.string(),
@@ -65,6 +73,7 @@ export type DocumentMetadata = z.infer<typeof documentMetadataSchema>;
 export async function getDocumentUploadUrl(metadata: DocumentMetadata): Promise<ActionResponse> {
   try {
     // Validate metadata
+    console.log("metadata", metadata);
     const validatedData = documentMetadataSchema.parse(metadata);
 
     console.log("metadata", metadata);

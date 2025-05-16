@@ -1663,5 +1663,401 @@
         "positive": "Calculated EMI must be a positive number"
       }
     }
+  },
+  "Verification": {
+    "list": {
+      "title": "Verifications",
+      "subtitle": "Manage verification records",
+      "columns": {
+        "type": "Type",
+        "status": "Status",
+        "result": "Result",
+        "verificationDate": "Date",
+        "verificationTime": "Time",
+        "address": "Address",
+        "verifiedBy": "Verified By",
+        "actions": "Actions"
+      },
+      "result": {
+        "positive": "Positive",
+        "negative": "Negative"
+      },
+      "actions": {
+        "create": "New Verification",
+        "view": "View",
+        "edit": "Edit",
+        "delete": "Delete",
+        "openMenu": "Open menu"
+      },
+      "empty": "No verifications found"
+    },
+    "create": {
+      "title": "Create Verification",
+      "subtitle": "Add a new verification record"
+    },
+    "edit": {
+      "title": "Edit Verification",
+      "subtitle": "Update verification details"
+    },
+    "view": {
+      "title": "Verification Details",
+      "sections": {
+        "main": "Main Information",
+        "address": "Address Information",
+        "residence": "Residence Details",
+        "business": "Business Details",
+        "property": "Property Details",
+        "vehicle": "Vehicle Details",
+        "additional": "Additional Information"
+      },
+      "fields": {
+        "type": "Verification Type",
+        "verificationDate": "Verification Date",
+        "result": "Result",
+        "verifiedBy": "Verified By",
+        "address": "Address",
+        "locationFromMain": "Location from Main",
+        "created": "Created",
+        "updated": "Last Updated",
+        "remarks": "Remarks",
+        "residence": {
+          "owner": "Owner Name",
+          "residentSince": "Resident Since",
+          "residenceType": "Residence Type",
+          "structureType": "Structure Type"
+        },
+        "business": {
+          "businessName": "Business Name",
+          "businessType": "Business Type",
+          "businessExistence": "Business Existence",
+          "natureOfBusiness": "Nature of Business",
+          "salesPerDay": "Sales Per Day",
+          "contactDetails": "Contact Details"
+        },
+        "property": {
+          "owner": "Owner Name",
+          "structureType": "Structure Type"
+        },
+        "vehicle": {
+          "makeModel": "Make & Model",
+          "vehicleType": "Vehicle Type",
+          "registrationNumber": "Registration Number",
+          "engineNumber": "Engine Number",
+          "chassisNumber": "Chassis Number"
+        }
+      },
+      "result": {
+        "positive": "Positive",
+        "negative": "Negative"
+      },
+      "business": {
+        "exists": "Exists",
+        "notExists": "Does Not Exist"
+      },
+      "actions": {
+        "edit": "Edit"
+      }
+    },
+    "form": {
+      "sections": {
+        "main": "Main Information",
+        "address": "Address Information",
+        "residence": "Residence Details",
+        "business": "Business Details",
+        "property": "Property Details",
+        "vehicle": "Vehicle Details",
+        "additional": "Additional Information"
+      },
+      "fields": {
+        "type": {
+          "label": "Verification Type",
+          "placeholder": "Select verification type",
+          "options": {
+            "residence": "Residence Verification",
+            "business": "Business Verification",
+            "property": "Property Verification",
+            "vehicle": "Vehicle Verification"
+          }
+        },
+        "status": {
+          "label": "Status",
+          "placeholder": "Select status",
+          "options": {
+            "pending": "Pending",
+            "in_progress": "In Progress",
+            "completed": "Completed",
+            "rejected": "Rejected"
+          }
+        },
+        "verificationDate": {
+          "label": "Verification Date",
+          "placeholder": "Select date"
+        },
+        "verificationTime": {
+          "label": "Verification Time",
+          "placeholder": "e.g. 10:00 AM"
+        },
+        "result": {
+          "label": "Verification Result"
+        },
+        "addressLine1": {
+          "label": "Address Line 1",
+          "placeholder": "Enter address line 1"
+        },
+        "addressLine2": {
+          "label": "Address Line 2",
+          "placeholder": "Enter address line 2"
+        },
+        "addressCity": {
+          "label": "City",
+          "placeholder": "Enter city"
+        },
+        "addressState": {
+          "label": "State",
+          "placeholder": "Enter state"
+        },
+        "addressZipCode": {
+          "label": "ZIP Code",
+          "placeholder": "Enter ZIP code"
+        },
+        "locationFromMain": {
+          "label": "Location from Main",
+          "placeholder": "e.g. 500m from main road"
+        },
+        "remarks": {
+          "label": "Remarks",
+          "placeholder": "Enter any additional remarks"
+        },
+        "photographUrl": {
+          "label": "Photograph URL",
+          "placeholder": "Enter URL to the photograph"
+        },
+        "residence": {
+          "ownerFirstName": {
+            "label": "Owner First Name",
+            "placeholder": "Enter owner's first name"
+          },
+          "ownerLastName": {
+            "label": "Owner Last Name",
+            "placeholder": "Enter owner's last name"
+          },
+          "residentSince": {
+            "label": "Resident Since",
+            "placeholder": "e.g. Jan 2020"
+          },
+          "residenceType": {
+            "label": "Residence Type",
+            "placeholder": "Select residence type",
+            "options": {
+              "owned": "Owned",
+              "rented": "Rented",
+              "familyOwned": "Family Owned",
+              "other": "Other"
+            }
+          },
+          "structureType": {
+            "label": "Structure Type",
+            "placeholder": "Select structure type",
+            "options": {
+              "apartment": "Apartment",
+              "duplex": "Duplex",
+              "bungalow": "Bungalow"
+            }
+          }
+        },
+        "business": {
+          "businessName": {
+            "label": "Business Name",
+            "placeholder": "Enter business name"
+          },
+          "businessType": {
+            "label": "Business Type",
+            "placeholder": "Select business type",
+            "options": {
+              "retail": "Retail",
+              "wholesale": "Wholesale",
+              "manufacturing": "Manufacturing",
+              "services": "Services",
+              "other": "Other"
+            }
+          },
+          "contactDetails": {
+            "label": "Contact Details",
+            "placeholder": "Enter contact details"
+          },
+          "businessExistence": {
+            "label": "Business Existence"
+          },
+          "natureOfBusiness": {
+            "label": "Nature of Business",
+            "placeholder": "Describe the nature of business"
+          },
+          "salesPerDay": {
+            "label": "Sales Per Day",
+            "placeholder": "Enter average sales per day"
+          }
+        },
+        "property": {
+          "ownerFirstName": {
+            "label": "Owner First Name",
+            "placeholder": "Enter owner's first name"
+          },
+          "ownerLastName": {
+            "label": "Owner Last Name",
+            "placeholder": "Enter owner's last name"
+          },
+          "structureType": {
+            "label": "Structure Type",
+            "placeholder": "Select structure type",
+            "options": {
+              "commercial": "Commercial",
+              "residential": "Residential",
+              "industrial": "Industrial",
+              "land": "Land",
+              "other": "Other"
+            }
+          }
+        },
+        "vehicle": {
+          "make": {
+            "label": "Make",
+            "placeholder": "e.g. Honda"
+          },
+          "model": {
+            "label": "Model",
+            "placeholder": "e.g. Civic"
+          },
+          "vehicleType": {
+            "label": "Vehicle Type",
+            "placeholder": "Select vehicle type",
+            "options": {
+              "car": "Car",
+              "motorcycle": "Motorcycle",
+              "truck": "Truck",
+              "bus": "Bus",
+              "other": "Other"
+            }
+          },
+          "registrationNumber": {
+            "label": "Registration Number",
+            "placeholder": "Enter registration number"
+          },
+          "engineNumber": {
+            "label": "Engine Number",
+            "placeholder": "Enter engine number"
+          },
+          "chassisNumber": {
+            "label": "Chassis Number",
+            "placeholder": "Enter chassis number"
+          },
+          "taxInvoiceUrl": {
+            "label": "Tax Invoice URL",
+            "placeholder": "Enter URL to tax invoice"
+          },
+          "deliveryChalanUrl": {
+            "label": "Delivery Chalan URL",
+            "placeholder": "Enter URL to delivery chalan"
+          },
+          "stampedReceiptUrl": {
+            "label": "Stamped Receipt URL",
+            "placeholder": "Enter URL to stamped receipt"
+          },
+          "rcUrl": {
+            "label": "RC URL",
+            "placeholder": "Enter URL to registration certificate"
+          },
+          "inspectionReportUrl": {
+            "label": "Inspection Report URL",
+            "placeholder": "Enter URL to inspection report"
+          },
+          "vehiclePhotoUrl": {
+            "label": "Vehicle Photo URL",
+            "placeholder": "Enter URL to vehicle photo"
+          }
+        }
+      },
+      "actions": {
+        "create": "Create Verification",
+        "creating": "Creating...",
+        "update": "Update Verification",
+        "updating": "Updating...",
+        "cancel": "Cancel",
+        "back": "Back"
+      },
+      "errors": {
+        "title": "Form Error",
+        "description": "Please correct the errors in the form before submitting."
+      }
+    },
+    "toast": {
+      "created": "Verification Created",
+      "createdDescription": "The verification has been created successfully",
+      "updated": "Verification Updated",
+      "updatedDescription": "The verification has been updated successfully",
+      "deleted": "Verification Deleted",
+      "deletedDescription": "The verification has been deleted successfully",
+      "error": "Error",
+      "errorDescription": "An error occurred. Please try again."
+    },
+    "validation": {
+      "loanApplicationId": {
+        "required": "Loan application is required",
+        "notFound": "Loan application not found"
+      },
+      "id": {
+        "required": "Verification ID is required",
+        "invalid": "Invalid verification ID format",
+        "notFound": "Verification not found"
+      },
+      "type": {
+        "invalid": "Invalid verification type"
+      },
+      "status": {
+        "invalid": "Invalid verification status"
+      },
+      "verificationDate": {
+        "required": "Verification date is required"
+      },
+      "verificationTime": {
+        "required": "Verification time is required"
+      },
+      "result": {
+        "required": "Verification result is required"
+      },
+      "addressState": {
+        "required": "State is required"
+      },
+      "addressCity": {
+        "required": "City is required"
+      },
+      "addressZipCode": {
+        "required": "ZIP code is required"
+      },
+      "addressLine1": {
+        "required": "Address line 1 is required"
+      },
+      "locationFromMain": {
+        "required": "Location from main road is required"
+      },
+      "ownerFirstName": {
+        "required": "Owner's first name is required"
+      },
+      "ownerLastName": {
+        "required": "Owner's last name is required"
+      },
+      "residentSince": {
+        "required": "Resident since date is required",
+        "invalid": "Please enter a valid resident since date"
+      },
+      "residenceType": {
+        "required": "Residence type is required"
+      },
+      "structureType": {
+        "required": "Structure type is required"
+      },
+      "remarks": {
+        "tooLong": "Remarks cannot exceed 500 characters"
+      }
+    }
   }
 }
