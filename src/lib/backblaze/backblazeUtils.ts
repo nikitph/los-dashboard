@@ -35,6 +35,7 @@ const generateFileKey = (
   fileType: string,
   entityType:
     | "loan"
+    | "loanApplication"
     | "customer"
     | "verification"
     | "income"
@@ -93,6 +94,7 @@ export const getPresignedUploadUrl = async (
     | "loan"
     | "customer"
     | "verification"
+    | "loanApplication"
     | "income"
     | "document"
     | "applicant"
@@ -138,6 +140,7 @@ export const uploadFile = async (
   fileType: string,
   entityType:
     | "loan"
+    | "loanApplication"
     | "customer"
     | "verification"
     | "income"
@@ -232,7 +235,16 @@ export const determineStorageType = (
     | "VERIFICATION_PHOTO"
     | "KYC_DOCUMENT"
     | "APPLICATION_FORM"
-    | "OTHER" = "OTHER",
+    | "APPLICANT_PHOTO"
+    | "VEHICLE_PHOTO"
+    | "PROPERTY_PHOTO"
+    | "BUSINESS_PHOTO"
+    | "VEHICLE_REGISTRATION_CERTIFICATE"
+    | "VEHICLE_INSPECTION_REPORT"
+    | "VEHICLE_STAMPED_RECEIPT"
+    | "VEHICLE_TAX_INVOICE"
+    | "VEHICLE_DELIVERY_CHALAN"
+    | "OTHER",
 ): "hot" | "cold" => {
   // Critical documents that need to be stored long-term go to cold storage
   const coldStorageDocuments = ["AADHAAR_CARD", "PAN_CARD", "IDENTITY_PROOF", "LOAN_AGREEMENT", "PROPERTY_DOCUMENT"];
