@@ -80,15 +80,21 @@ const DocumentsUpload: React.FC<DocumentsUploadProps> = ({ entityType = "loanApp
     setSelectedDocType(docType);
   };
 
-  const handleView = async (documentId: string) => {
-    if (documentId) {
-      await viewDocument(documentId);
-    }
-  };
-
   const handleUploadClick = (): void => {
     if (!selectedDocType) return;
     fileInputRef.current?.click();
+  };
+
+  const handleView = async (documentId: string) => {
+    await viewDocument(documentId);
+  };
+
+  const handleRemove = async (documentId: string, documentType: string) => {
+    const success = await removeDocument(documentId);
+    if (success) {
+      // Update the local state if needed
+      fetchDocuments(entityType, entityId);
+    }
   };
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
@@ -125,8 +131,7 @@ const DocumentsUpload: React.FC<DocumentsUploadProps> = ({ entityType = "loanApp
       {showAlert && !allDocumentsUploaded && (
         <Alert
           title="Select a document type before uploading"
-          description="Each document type can only be used once. The tag will be disabled after upload."
-          actions={<IconButton size="medium" icon="FeatherX" onClick={() => setShowAlert(false)} />}
+          description="Each document type can only be used once. The tag will be removed after upload."
         />
       )}
 
@@ -134,8 +139,7 @@ const DocumentsUpload: React.FC<DocumentsUploadProps> = ({ entityType = "loanApp
         <Alert
           variant="success"
           title="All documents uploaded successfully"
-          description="All required documents have been uploaded for this application."
-          actions={<IconButton size="medium" icon="FeatherX" onClick={() => setShowSuccessAlert(false)} />}
+          description="All required documents have been uploaded for this verification."
         />
       )}
 
@@ -145,7 +149,7 @@ const DocumentsUpload: React.FC<DocumentsUploadProps> = ({ entityType = "loanApp
             <FilterBadge
               key={docType.value}
               label={docType.label}
-              count="1"
+              count=""
               selected={selectedDocType?.value === docType.value}
               onClick={() => handleDocTypeSelect(docType)}
             />
@@ -200,9 +204,25 @@ const DocumentsUpload: React.FC<DocumentsUploadProps> = ({ entityType = "loanApp
                     Uploaded {formatDistanceToNow(doc.uploadedAt, { addSuffix: true })} • {formatFileSize(doc.fileSize)}
                   </span>
                 </div>
-                <Badge variant="success" icon="FeatherCheck">
-                  Uploaded
-                </Badge>
+                <div className="flex gap-2">
+                  <IconButton
+                    icon="FeatherEye"
+                    size="small"
+                    variant="ghost"
+                    onClick={() => handleView(doc.id)}
+                    title="View Document"
+                  />
+                  <IconButton
+                    icon="FeatherTrash"
+                    size="small"
+                    variant="ghost"
+                    onClick={() => handleRemove(doc.id, doc.documentType)}
+                    title="Remove Document"
+                  />
+                  <Badge variant="success" icon="FeatherCheck">
+                    Uploaded
+                  </Badge>
+                </div>
               </div>
             </div>
           );
