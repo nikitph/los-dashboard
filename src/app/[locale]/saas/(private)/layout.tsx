@@ -3,7 +3,6 @@ import { AppSidebar } from "@/components/ui/navigation/AppSidebar";
 import { Breadcrumbs } from "@/components/ui/navigation/Breadcrumbs";
 import type { Metadata } from "next";
 import { ThemeProvider } from "next-themes";
-import localFont from "next/font/local";
 import { cookies } from "next/headers";
 import "../../../globals.css";
 import { siteConfig } from "@/app/siteConfig";
@@ -15,12 +14,18 @@ import { setRequestLocale } from "next-intl/server";
 import { Toaster } from "@/components/ui/toaster";
 import { AbilityProvider } from "@/lib/casl/abilityContext";
 import { getServerSessionUser } from "@/lib/getServerUser";
+import { Inter } from "next/font/google";
+import localFont from "next/font/local";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
+// Load Inter font for sans-serif
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });
+
+// Keep Geist Mono if you still want to use it for monospace
 const geistMono = localFont({
   src: "./fonts/GeistMonoVF.woff",
   variable: "--font-geist-mono",
@@ -76,7 +81,9 @@ export default async function RootLayout({
 
   return (
     <html lang="en" className="h-full" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} bg-white-50 h-full antialiased dark:bg-gray-950`}>
+      <body
+        className={`${inter.variable} ${geistMono.variable} bg-white-50 h-full font-sans antialiased dark:bg-gray-950`}
+      >
         <NextIntlClientProvider>
           <ThemeProvider defaultTheme="system" disableTransitionOnChange attribute="class">
             <UserProvider initialUser={serverUser}>

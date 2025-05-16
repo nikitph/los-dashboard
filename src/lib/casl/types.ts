@@ -22,6 +22,7 @@ export type Subjects =
   | "PropertyVerification"
   | "ResidenceVerification"
   | "Subscription"
+  | "TimelineEvent"
   | "UserProfile"
   | "UserRoles"
   | "VehicleVerification"

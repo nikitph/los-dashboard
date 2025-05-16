@@ -1,4 +1,5 @@
-import { format } from "date-fns";
+import { differenceInYears, format, formatDistanceToNow, Locale } from "date-fns";
+import { enUS } from "date-fns/locale";
 
 export function formatDate(date: Date | string) {
   if (!date) return "";
@@ -115,3 +116,45 @@ export const formatters: FormatterFunctions = {
     }).format(number)}M`;
   },
 };
+
+/**
+ * Formats a date/time into a relative "time ago" string.
+ * @param input - Date or string, can be null/undefined
+ * @param options - Optional fallback, locale, and suffix
+ * @returns Formatted "X time ago" string or fallback
+ */
+export function getTimeAgo(
+  input: Date | string | null | undefined,
+  options?: {
+    fallback?: string;
+    locale?: Locale;
+    addSuffix?: boolean;
+  },
+): string {
+  const { fallback = "–", locale = enUS, addSuffix = true } = options || {};
+
+  try {
+    const date = typeof input === "string" ? new Date(input) : input;
+    if (!date || isNaN(date.getTime())) return fallback;
+
+    return formatDistanceToNow(date, {
+      addSuffix,
+      locale,
+    });
+  } catch {
+    return fallback;
+  }
+}
+
+/**
+ * Calculates age from date of birth
+ * @param dob Date object or date string
+ * @returns Age in years or null if invalid
+ */
+export function calculateAge(dob: Date | string | null | undefined): number | null {
+  if (!dob) return null;
+  const date = typeof dob === "string" ? new Date(dob) : dob;
+  if (isNaN(date.getTime())) return null;
+
+  return differenceInYears(new Date(), date);
+}

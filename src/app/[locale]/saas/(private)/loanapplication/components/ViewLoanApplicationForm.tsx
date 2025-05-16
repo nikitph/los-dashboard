@@ -1,124 +1,326 @@
+// LoanApplicationView.tsx
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import React from "react";
 import { useTranslations } from "next-intl";
+import { IconButton } from "@/subframe/components/IconButton";
+import { Badge } from "@/subframe/components/Badge";
+import { Button } from "@/subframe/components/Button";
+import { IconWithBackground } from "@/subframe/components/IconWithBackground";
+import { Alert } from "@/subframe/components/Alert";
+import { Avatar } from "@/subframe/components/Avatar";
+import { Tabs } from "@/components/subframe/ui";
+import { LoanStatusBadge } from "@/components/LoanStatusBadge";
+import { getTimeAgo } from "@/lib/displayUtils";
+import { DocumentsTab } from "@/app/[locale]/saas/(private)/loanapplication/components/DocumentsTab";
+import Timeline from "@/components/Timeline";
 import { useViewLoanApplicationForm } from "../hooks/useViewLoanApplicationForm";
-import { formatCurrency, formatDate, formatLoanStatus, formatLoanType } from "../lib/helpers";
 import { LoanApplicationView } from "../schemas/loanApplicationSchema";
+import { Separator } from "@/components/ui/separator";
+import { Card, CardContent } from "@/components/ui/card";
+import { useRouter } from "next/navigation";
 
-interface ViewLoanApplicationFormProps {
-  loanApplication: LoanApplicationView;
-}
-
-export function ViewLoanApplicationForm({ loanApplication }: ViewLoanApplicationFormProps) {
+/**
+ * Component for displaying detailed loan application information
+ *
+ * @param {object} props - Component props
+ * @param {LoanApplicationView} props.loanApplication - The loan application data to display
+ * @returns {JSX.Element} Loan application view component
+ */
+export function ViewLoanApplicationForm({ loanApplication }: { loanApplication: LoanApplicationView }): JSX.Element {
   const { visibility, isDeleting, handleDelete } = useViewLoanApplicationForm({ loanApplication });
   const t = useTranslations("LoanApplication");
+  const router = useRouter();
+  const [activeTabIndex, setActiveTabIndex] = React.useState(0);
+
+  // Handle back navigation
+  const handleBack = () => {
+    router.push("/saas/loanapplication/list");
+  };
+
+  // Handle edit navigation
+  const handleEdit = () => {
+    router.push(`/saas/loanapplication/${loanApplication.id}/edit`);
+  };
+
+  // Handle tab change
+  const handleTabChange = (index: number) => {
+    setActiveTabIndex(index);
+  };
+
+  if (!visibility.id) {
+    return (
+      <div className="flex flex-col items-center justify-center p-12">
+        <Alert
+          icon="FeatherAlertTriangle"
+          title={t("errors.unauthorized")}
+          description={t("errors.noViewPermission")}
+        />
+      </div>
+    );
+  }
 
   return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardTitle>{t("view.title")}</CardTitle>
-        <CardDescription>{t("view.description")}</CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-6">
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+    <div className="flex w-full flex-col items-start gap-4 px-12 py-12">
+      {/* Header Section */}
+      <div className="flex w-full flex-col items-start gap-4">
+        <div className="flex w-full items-center gap-4">
+          <div className="flex shrink-0 grow basis-0 items-center gap-3">
+            <IconButton icon="FeatherArrowLeft" onClick={handleBack} />
+            <span className="font-heading-2 text-heading-2 text-default-font">{t("view.title")}</span>
+            {visibility.status && <LoanStatusBadge status={loanApplication.status} />}
+          </div>
+
+          {/* Actions */}
+          <div className="flex items-center gap-2">
+            {visibility.canUpdate && (
+              <Button icon="FeatherEdit2" onClick={handleEdit}>
+                {t("actions.edit")}
+              </Button>
+            )}
+            {visibility.canDelete && (
+              <Button variant="destructive" icon="FeatherTrash2" onClick={handleDelete} disabled={isDeleting}>
+                {isDeleting ? t("actions.deleting") : t("actions.delete")}
+              </Button>
+            )}
+          </div>
+        </div>
+
+        {/* Metadata badges */}
+        <div className="flex w-full items-center gap-2">
           {visibility.id && (
-            <div className="space-y-1">
-              <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400">{t("view.id")}</h4>
-              <p className="break-all text-sm font-medium">{loanApplication.id}</p>
-            </div>
+            <Badge variant="neutral" icon="FeatherHash">
+              LA-{loanApplication.id.substring(0, 6)}
+            </Badge>
           )}
-
-          {visibility.applicant && (
-            <div className="space-y-1">
-              <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400">{t("view.applicant")}</h4>
-              <p className="text-sm font-medium">{loanApplication.applicantName || t("view.notAvailable")}</p>
-            </div>
+          <div className="flex h-4 w-px flex-none flex-col items-center gap-2 bg-neutral-border" />
+          {visibility.createdAt && (
+            <Badge variant="neutral" icon="FeatherClock">
+              {t("view.submittedTimeAgo", { timeAgo: getTimeAgo(loanApplication.createdAt) })}
+            </Badge>
           )}
+        </div>
+      </div>
 
-          {visibility.loanType && (
-            <div className="space-y-1">
-              <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400">{t("view.loanType")}</h4>
-              <p className="text-sm font-medium">{formatLoanType(loanApplication.loanType)}</p>
-            </div>
-          )}
-
-          {visibility.amountRequested && (
-            <div className="space-y-1">
-              <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400">{t("view.amountRequested")}</h4>
-              <p className="text-sm font-medium">
-                {loanApplication.formattedAmount || formatCurrency(loanApplication.amountRequested)}
-              </p>
-            </div>
-          )}
-
-          {visibility.status && (
-            <div className="space-y-1">
-              <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400">{t("view.status")}</h4>
-              <div className={`w-fit rounded-full px-2 py-1 text-xs font-medium ${loanApplication.statusBadgeColor}`}>
-                {formatLoanStatus(loanApplication.status)}
+      {/* Applicant Information */}
+      {visibility.applicant && (
+        <Card className="w-full">
+          <CardContent className="flex flex-col gap-4 px-4 py-4">
+            <div className="flex w-full items-center gap-4">
+              <Avatar size="large" image={loanApplication.applicant.photoUrl ?? ""}>
+                {loanApplication.applicant.user.firstName[0]}
+                {loanApplication.applicant.user.lastName[0]}
+              </Avatar>
+              <div className="flex shrink-0 grow basis-0 flex-col items-start">
+                <span className="font-heading-3 text-heading-3 text-default-font">
+                  {loanApplication.applicant.user.firstName} {loanApplication.applicant.user.lastName}
+                </span>
+                <span className="font-body text-body text-subtext-color">{loanApplication.applicant.user.email}</span>
               </div>
             </div>
-          )}
 
-          {visibility.createdAt && (
-            <div className="space-y-1">
-              <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400">{t("view.createdAt")}</h4>
-              <p className="text-sm font-medium">
-                {loanApplication.formattedCreatedAt || formatDate(loanApplication.createdAt)}
-              </p>
+            <Separator />
+
+            <div className="flex w-full flex-wrap items-start gap-8">
+              <div className="flex shrink-0 grow basis-0 flex-col items-start gap-1">
+                <span className="font-caption text-caption text-subtext-color">{t("view.phone")}</span>
+                <span className="font-body-bold text-body-bold text-default-font">
+                  +91 {loanApplication.applicant.user.phoneNumber}
+                </span>
+              </div>
+
+              {loanApplication.applicant.dateOfBirth && (
+                <div className="flex shrink-0 grow basis-0 flex-col items-start gap-1">
+                  <span className="font-caption text-caption text-subtext-color">{t("view.age")}</span>
+                  <span className="font-body-bold text-body-bold text-default-font">
+                    {t("view.ageValue", {
+                      age: new Date().getFullYear() - loanApplication.applicant.dateOfBirth.getFullYear(),
+                    })}
+                  </span>
+                </div>
+              )}
+
+              <div className="flex shrink-0 grow basis-0 flex-col items-start gap-1">
+                <span className="font-caption text-caption text-subtext-color">{t("view.address")}</span>
+                <span className="font-body-bold text-body-bold text-default-font">
+                  {loanApplication.applicant.addressCity || ""} {loanApplication.applicant.addressState || ""}
+                  {loanApplication.applicant.addressPinCode ? `, ${loanApplication.applicant.addressPinCode}` : ""}
+                </span>
+              </div>
             </div>
-          )}
+          </CardContent>
+        </Card>
+      )}
 
-          {visibility.updatedAt && (
-            <div className="space-y-1">
-              <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400">{t("view.updatedAt")}</h4>
-              <p className="text-sm font-medium">
-                {loanApplication.formattedUpdatedAt || formatDate(loanApplication.updatedAt)}
-              </p>
+      {/* Loan Details Cards */}
+      <div className="flex w-full flex-wrap items-start gap-4">
+        {visibility.amountRequested && (
+          <div className="flex shrink-0 grow basis-0 items-center gap-4 rounded-md border border-solid border-neutral-border bg-default-background px-6 py-6">
+            <IconWithBackground icon="FeatherDollarSign" />
+            <div className="flex shrink-0 grow basis-0 flex-col items-start">
+              <span className="font-body text-body text-subtext-color">{t("view.amountRequested")}</span>
+              <span className="font-heading-2 text-heading-2 text-default-font">
+                {new Intl.NumberFormat("en-IN", {
+                  style: "currency",
+                  currency: "INR",
+                  maximumFractionDigits: 0,
+                }).format(loanApplication.amountRequested)}
+              </span>
             </div>
-          )}
-        </div>
-
-        {/* Relation sections */}
-        {visibility.guarantors && (
-          <div className="mt-4 border-t pt-4">
-            <h3 className="mb-2 text-lg font-medium">{t("view.guarantors")}</h3>
-            {/* Guarantors list would go here */}
-            <p className="text-sm text-gray-500">{t("view.guarantorsDescription")}</p>
           </div>
         )}
 
-        {visibility.documents && (
-          <div className="mt-4 border-t pt-4">
-            <h3 className="mb-2 text-lg font-medium">{t("view.documents")}</h3>
-            {/* Documents list would go here */}
-            <p className="text-sm text-gray-500">{t("view.documentsDescription")}</p>
+        {loanApplication.selectedTenure && (
+          <div className="flex shrink-0 grow basis-0 items-center gap-4 rounded-md border border-solid border-neutral-border bg-default-background px-6 py-6">
+            <IconWithBackground variant="success" icon="FeatherCalendar" />
+            <div className="flex shrink-0 grow basis-0 flex-col items-start">
+              <span className="font-body text-body text-subtext-color">{t("view.selectedTenure")}</span>
+              <span className="font-heading-2 text-heading-2 text-default-font">
+                {t("view.tenureValue", { months: loanApplication.selectedTenure })}
+              </span>
+            </div>
           </div>
         )}
-      </CardContent>
-      <CardFooter className="flex justify-between">
-        <Button type="button" variant="outline" onClick={() => window.history.back()}>
-          {t("view.back")}
-        </Button>
-        <div className="flex gap-2">
-          {visibility.canUpdate && (
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => (window.location.href = `/saas/loanapplication/${loanApplication.id}/edit`)}
-            >
-              {t("view.edit")}
-            </Button>
+
+        {loanApplication.calculatedEMI && (
+          <div className="flex shrink-0 grow basis-0 items-center gap-4 rounded-md border border-solid border-neutral-border bg-default-background px-6 py-6">
+            <IconWithBackground variant="warning" icon="FeatherCreditCard" />
+            <div className="flex shrink-0 grow basis-0 flex-col items-start">
+              <span className="font-body text-body text-subtext-color">{t("view.monthlyEMI")}</span>
+              <span className="font-heading-2 text-heading-2 text-default-font">
+                {new Intl.NumberFormat("en-IN", {
+                  style: "currency",
+                  currency: "INR",
+                  maximumFractionDigits: 0,
+                }).format(loanApplication.calculatedEMI)}
+              </span>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Status Alert */}
+      {loanApplication.status === "PENDING_VERIFICATION" && (
+        <Alert
+          icon="FeatherClock"
+          title={t("alerts.verificationTitle")}
+          description={t("alerts.verificationDescription")}
+        />
+      )}
+
+      {/* Tabs Section */}
+      <div className="flex w-full flex-col items-start gap-6">
+        <Tabs className={"flex-auto"}>
+          <Tabs.Item active={activeTabIndex === 0} onClick={() => handleTabChange(0)}>
+            {t("tabs.documents")}
+          </Tabs.Item>
+
+          {visibility.coApplicants && (
+            <Tabs.Item active={activeTabIndex === 1} onClick={() => handleTabChange(1)}>
+              {t("tabs.coApplicants")}
+            </Tabs.Item>
           )}
-          {visibility.canDelete && (
-            <Button type="button" variant="destructive" onClick={handleDelete} disabled={isDeleting}>
-              {isDeleting ? t("view.deleting") : t("view.delete")}
-            </Button>
+
+          {visibility.verifications && (
+            <Tabs.Item active={activeTabIndex === 2} onClick={() => handleTabChange(2)}>
+              {t("tabs.verifications")}
+            </Tabs.Item>
           )}
-        </div>
-      </CardFooter>
-    </Card>
+
+          {visibility.timelineEvents && (
+            <Tabs.Item active={activeTabIndex === 3} onClick={() => handleTabChange(3)}>
+              {t("tabs.timeline")}
+            </Tabs.Item>
+          )}
+        </Tabs>
+
+        {/* Tab Contents */}
+        {activeTabIndex === 0 && visibility.documents && <DocumentsTab loanApplicationId={loanApplication.id} />}
+
+        {activeTabIndex === 1 && visibility.coApplicants && (
+          <div className="w-full">
+            {loanApplication.coApplicants.length > 0 ? (
+              loanApplication.coApplicants.map((coApplicant) => (
+                <Card key={coApplicant.id} className="mb-4 w-full">
+                  <CardContent className="p-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h3 className="font-heading-3 text-heading-3">
+                          {coApplicant.firstName} {coApplicant.lastName}
+                        </h3>
+                        <p className="text-subtext-color">{coApplicant.email}</p>
+                        <p className="text-subtext-color">{coApplicant.mobileNumber}</p>
+                      </div>
+                      {visibility.canUpdate && (
+                        <Button variant="outline" size="sm" icon="FeatherEdit2">
+                          {t("actions.edit")}
+                        </Button>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))
+            ) : (
+              <Alert
+                icon="FeatherInfo"
+                title={t("alerts.noCoApplicantsTitle")}
+                description={t("alerts.noCoApplicantsDescription")}
+              />
+            )}
+
+            {visibility.canAddCoApplicant && (
+              <Button className="mt-4" icon="FeatherUserPlus">
+                {t("actions.addCoApplicant")}
+              </Button>
+            )}
+          </div>
+        )}
+
+        {activeTabIndex === 2 && visibility.verifications && (
+          <div className="w-full">
+            {loanApplication.verifications.length > 0 ? (
+              loanApplication.verifications.map((verification) => (
+                <Card key={verification.id} className="mb-4 w-full">
+                  <CardContent className="p-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h3 className="font-heading-3 text-heading-3">{verification.type}</h3>
+                        <p className="text-subtext-color">{t(`verificationStatus.${verification.status}`)}</p>
+                        {verification.remarks && <p className="mt-2 text-body">{verification.remarks}</p>}
+                      </div>
+                      <Badge
+                        variant={
+                          verification.status === "APPROVED"
+                            ? "success"
+                            : verification.status === "REJECTED"
+                              ? "destructive"
+                              : "warning"
+                        }
+                      >
+                        {t(`verificationStatus.${verification.status}`)}
+                      </Badge>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))
+            ) : (
+              <Alert
+                icon="FeatherInfo"
+                title={t("alerts.noVerificationsTitle")}
+                description={t("alerts.noVerificationsDescription")}
+              />
+            )}
+
+            {visibility.canAddVerification && (
+              <Button className="mt-4" icon="FeatherPlus">
+                {t("actions.addVerification")}
+              </Button>
+            )}
+          </div>
+        )}
+
+        {activeTabIndex === 3 && visibility.timelineEvents && <Timeline events={loanApplication.timelineEvents} />}
+      </div>
+    </div>
   );
 }

@@ -1,13 +1,15 @@
 "use client";
 
 import React from "react";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
 import { formatDistanceToNow } from "date-fns";
+import { Alert } from "@/subframe/components/Alert";
 import { getTimelineEventMeta } from "@/constants/timelineEventMeta";
-import { TimelineEventType } from "@prisma/client";
+import type { TimelineEvent, TimelineEventType } from "@prisma/client";
 
-const dummyEvents = [
+/* ------------------------------------------------------------------ */
+/* Dummy fallback data (remove once you wire real data)               */
+/* ------------------------------------------------------------------ */
+export const dummyEvents = [
   {
     id: "1",
     timelineEventType: "APPLICATION_CREATED" as TimelineEventType,
@@ -16,10 +18,7 @@ const dummyEvents = [
     userId: "user1",
     createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3),
     remarks: "Loan application created",
-    actionData: {},
     loanApplicationId: "loan123",
-    applicantId: null,
-    documentId: null,
     user: { firstName: "Tom", lastName: "Bradley" },
   },
   {
@@ -30,10 +29,7 @@ const dummyEvents = [
     userId: "user2",
     createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2),
     remarks: null,
-    actionData: {},
     loanApplicationId: "loan123",
-    applicantId: null,
-    documentId: null,
     user: { firstName: "Michael", lastName: "Chen" },
   },
   {
@@ -44,9 +40,6 @@ const dummyEvents = [
     userId: "user3",
     createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24),
     remarks: "Uploaded business plan",
-    actionData: {},
-    loanApplicationId: null,
-    applicantId: null,
     documentId: "doc456",
     user: { firstName: "Tom", lastName: "Bradley" },
   },
@@ -58,20 +51,27 @@ const dummyEvents = [
     userId: "user4",
     createdAt: new Date(Date.now() - 1000 * 60 * 60 * 2),
     remarks: "Please provide last 3 months of business bank statements",
-    actionData: {},
-    loanApplicationId: null,
-    applicantId: null,
     documentId: "doc789",
     user: { firstName: "Sarah", lastName: "Johnson" },
   },
 ];
 
+/* ------------------------------------------------------------------ */
+/* Icon chip with rounded background                                  */
+/* ------------------------------------------------------------------ */
 type IconWithBackgroundProps = {
   icon: React.ElementType;
   variant?: "default" | "success" | "neutral" | "warning" | "info" | "destructive";
+  size?: "small" | "medium" | "large";
 };
 
-const IconWithBackground = ({ icon: Icon, variant = "default" }: IconWithBackgroundProps) => {
+const iconSizes = {
+  small: "h-6 w-6 p-0.5",
+  medium: "h-8 w-8 p-1",
+  large: "h-10 w-10 p-[6px]",
+};
+
+const IconWithBackground = ({ icon: Icon, variant = "default", size = "small" }: IconWithBackgroundProps) => {
   const variantClasses = {
     default: "bg-gray-100 text-gray-700",
     success: "bg-green-100 text-green-700",
@@ -80,61 +80,65 @@ const IconWithBackground = ({ icon: Icon, variant = "default" }: IconWithBackgro
     info: "bg-blue-100 text-blue-700",
     destructive: "bg-red-100 text-red-700",
   };
-
   return (
-    <div className={`flex h-8 w-8 items-center justify-center rounded-full p-1 ${variantClasses[variant]}`}>
-      <Icon size={16} />
+    <div className={`flex items-center justify-center rounded-full ${iconSizes[size]} ${variantClasses[variant]}`}>
+      <Icon size={14} />
     </div>
   );
 };
 
-type TimelineProps = {
-  events?: typeof dummyEvents;
-};
+/* ------------------------------------------------------------------ */
+/* Single timeline row (Subframe spec)                                */
 
-const Timeline = ({ events = dummyEvents }: TimelineProps) => {
+/* ------------------------------------------------------------------ */
+interface TimelineRowProps {
+  event: (typeof dummyEvents)[number];
+  isLast: boolean;
+}
+
+const TimelineRow = ({ event, isLast }: TimelineRowProps) => {
+  const { label, icon, variant } = getTimelineEventMeta(event.timelineEventType);
+  const userName = `${event.user.firstName ?? ""} ${event.user.lastName ?? ""}`.trim();
+  const timeAgo = formatDistanceToNow(new Date(event.createdAt), { addSuffix: true });
+
   return (
-    <div className="flex flex-1 flex-col items-start gap-4">
-      <h3 className="text-2xl font-semibold">Application Timeline</h3>
-      <div className="flex w-full flex-col items-start">
-        {events.map((event, index) => {
-          const { label, icon, variant } = getTimelineEventMeta(event.timelineEventType);
-          const userName = `${event.user.firstName ?? ""} ${event.user.lastName ?? ""}`.trim();
-          const timeAgo = formatDistanceToNow(new Date(event.createdAt), { addSuffix: true });
+    <div className="flex w-full shrink-0 grow basis-0 items-start gap-4">
+      {/* ─ Left rail: icon + connector */}
+      <div className="flex flex-col items-center self-stretch">
+        <div className="flex flex-col items-start gap-1">
+          <IconWithBackground icon={icon} variant={variant} size="medium" />
+        </div>
+        {!isLast && <div className="flex w-0.5 shrink-0 grow basis-0 flex-col items-start gap-2 bg-neutral-border" />}
+      </div>
 
-          return (
-            <div key={event.id} className="flex w-full items-start gap-4">
-              <div className="flex flex-col items-center self-stretch">
-                <div className="flex flex-col items-start gap-1">
-                  <IconWithBackground icon={icon} variant={variant || "default"} />
-                </div>
-                {index < events.length - 1 && <div className="h-full w-0.5 bg-gray-200 pt-4" />}
-              </div>
-              <div className="flex flex-1 flex-col items-start gap-2 py-1.5">
-                <div className="flex w-full flex-wrap items-center gap-2">
-                  <div className="flex flex-1 flex-wrap items-start gap-1">
-                    <span className="font-semibold text-gray-900">{userName}</span>
-                    <span className="text-gray-600">{label.toLowerCase()}</span>
-                  </div>
-                  <span className="text-xs text-gray-500">{timeAgo}</span>
-                </div>
-                {event.remarks && (
-                  <Alert className="max-h-[40px] border-none bg-secondary">
-                    <AlertDescription className="mt-[-8px] flex items-center justify-between">
-                      {event.remarks}
-                      <Button variant="ghost" size="icon" className="h-8 w-8 p-0">
-                        ×
-                      </Button>
-                    </AlertDescription>
-                  </Alert>
-                )}
-              </div>
-            </div>
-          );
-        })}
+      {/* ─ Right panel: text + optional alert */}
+      <div className={`flex shrink-0 grow basis-0 flex-col items-start gap-2 ${isLast ? "py-1" : "pb-6 pt-1.5"}`}>
+        <div className="flex w-full flex-wrap items-center gap-2">
+          <div className="flex shrink-0 grow basis-0 flex-wrap items-start gap-1">
+            <span className="font-body-bold text-body-bold text-default-font">{userName}</span>
+            <span className="font-body text-body text-subtext-color">{label.toLowerCase()}</span>
+          </div>
+          <span className="font-caption text-caption text-subtext-color">{timeAgo}</span>
+        </div>
+        {event.remarks && <Alert title="" description={event.remarks} />}
       </div>
     </div>
   );
 };
+
+/* ------------------------------------------------------------------ */
+/* Timeline wrapper                                                   */
+/* ------------------------------------------------------------------ */
+type TimelineProps = {
+  events?: TimelineEvent[];
+};
+
+const Timeline = ({ events = dummyEvents }: TimelineProps) => (
+  <div className="flex w-full flex-col items-start">
+    {events.map((event, i) => (
+      <TimelineRow key={event.id} event={event} isLast={i === events.length - 1} />
+    ))}
+  </div>
+);
 
 export default Timeline;
