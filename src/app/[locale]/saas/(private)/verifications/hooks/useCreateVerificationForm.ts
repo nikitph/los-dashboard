@@ -139,7 +139,31 @@ export function useCreateVerificationForm({
           locationFromMain: "",
         },
       }),
-      // Initialize other verification types as needed
+      // Initialize vehicle verification fields when defaultType is VEHICLE
+      ...(defaultType === "VEHICLE" && {
+        vehicleVerification: {
+          engineNumber: "",
+          chassisNumber: "",
+          registrationNumber: "",
+          make: "",
+          model: "",
+          vehicleType: "Sedan",
+        },
+      }),
+      // Initialize property verification fields when defaultType is PROPERTY
+      ...(defaultType === "PROPERTY" && {
+        propertyVerification: {
+          ownerFirstName: "",
+          ownerLastName: "",
+          structureType: "Commercial",
+          addressLine1: "",
+          addressLine2: "",
+          addressCity: "",
+          addressState: "",
+          addressZipCode: "",
+          locationFromMain: "",
+        },
+      }),
     },
   });
 
@@ -207,6 +231,18 @@ export function useCreateVerificationForm({
   const onSubmit = async (data: VerificationFormValues) => {
     try {
       setIsSubmitting(true);
+
+      // Ensure vehicle verification data is properly set if this is a vehicle verification
+      if (data.verification.type === "VEHICLE" && !data.vehicleVerification) {
+        data.vehicleVerification = {
+          engineNumber: "",
+          chassisNumber: "",
+          registrationNumber: "",
+          make: "",
+          model: "",
+          vehicleType: "Sedan",
+        };
+      }
 
       const submitData = prepareSubmitData(data);
       const response = await createVerification(submitData);

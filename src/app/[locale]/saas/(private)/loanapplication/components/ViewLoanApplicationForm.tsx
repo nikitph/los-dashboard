@@ -27,7 +27,11 @@ import { useRouter } from "next/navigation";
  * @param {LoanApplicationView} props.loanApplication - The loan application data to display
  * @returns {JSX.Element} Loan application view component
  */
-export function ViewLoanApplicationForm({ loanApplication }: { loanApplication: LoanApplicationView }): JSX.Element {
+export function ViewLoanApplicationForm({
+  loanApplication,
+}: {
+  loanApplication: LoanApplicationView;
+}): React.ReactNode {
   const { visibility, isDeleting, handleDelete } = useViewLoanApplicationForm({ loanApplication });
   const t = useTranslations("LoanApplication");
   const router = useRouter();
