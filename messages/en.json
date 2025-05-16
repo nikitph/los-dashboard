@@ -1886,7 +1886,8 @@
             "placeholder": "Enter contact details"
           },
           "businessExistence": {
-            "label": "Business Existence"
+            "label": "Business Existence",
+            "description": "It has been verified that the business exists."
           },
           "natureOfBusiness": {
             "label": "Nature of Business",

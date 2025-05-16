@@ -1886,7 +1886,8 @@
             "placeholder": "संपर्क विवरण दर्ज करें"
           },
           "businessExistence": {
-            "label": "व्यापार अस्तित्व"
+            "label": "व्यापार अस्तित्व",
+            "description": "यह सत्यापित किया गया है कि व्यापार मौजूद है।"
           },
           "natureOfBusiness": {
             "label": "व्यापार की प्रकृति",

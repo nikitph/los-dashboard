@@ -3,7 +3,7 @@
 import { useAbility } from "@/lib/casl/abilityContext";
 import { handleFormErrors } from "@/lib/formErrorHelper";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useCallback, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -87,6 +87,7 @@ export function useCreateVerificationForm({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const t = useTranslations("Verification");
   const [selectedType, setSelectedType] = useState<VerificationType>(defaultType);
+  const locale = useLocale();
 
   // Compute field visibility based on user permissions
   const visibility = useMemo(() => defineVerificationFieldVisibility(ability), [ability]);
@@ -103,7 +104,7 @@ export function useCreateVerificationForm({
         verificationTime: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
         verificationDate: new Date(),
       },
-      // Initialize residence verification fields when defaultType is RESIDENCE
+      // Initialize based on verification type
       ...(defaultType === "RESIDENCE" && {
         residenceVerification: {
           ownerFirstName: "",
@@ -119,6 +120,24 @@ export function useCreateVerificationForm({
           locationFromMain: "",
         },
       }),
+      // Initialize business verification fields when defaultType is BUSINESS
+      ...(defaultType === "BUSINESS" && {
+        businessVerification: {
+          businessName: "",
+          businessType: "Proprietorship",
+          natureOfBusiness: "Trading",
+          contactDetails: "",
+          salesPerDay: "5,000-10,000",
+          businessExistence: true,
+          addressLine1: "",
+          addressLine2: "",
+          addressCity: "",
+          addressState: "",
+          addressZipCode: "",
+          locationFromMain: "",
+        },
+      }),
+      // Initialize other verification types as needed
     },
   });
 
@@ -197,9 +216,9 @@ export function useCreateVerificationForm({
 
         // Redirect to view page after successful creation
         if (response.data?.id) {
-          router.push(`/saas/verification/${response.data.id}/view`);
+          router.push(`/${locale}/saas/verifications/secondary?lid=${loanApplicationId}`);
         } else {
-          router.push(`/saas/verification/list`);
+          router.push(`/${locale}/saas/verification/list`);
         }
       } else {
         // Handle form errors

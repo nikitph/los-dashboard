@@ -65,6 +65,7 @@ function ResidenceVerification({ loanApplicationId, defaultType = "RESIDENCE" }:
             formattedDate={formattedDate}
             user={user}
             t={t}
+            loanApplicationId={loanApplicationId}
           />
 
           {/* Action Buttons */}

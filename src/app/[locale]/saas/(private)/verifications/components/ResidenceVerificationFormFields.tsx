@@ -52,6 +52,8 @@ interface ResidenceVerificationFormFieldsProps {
    * Translation function
    */
   t: (key: string) => string;
+
+  loanApplicationId: string;
 }
 
 /**
@@ -66,6 +68,7 @@ const ResidenceVerificationFormFields: React.FC<ResidenceVerificationFormFieldsP
   formattedDate,
   user,
   t,
+  loanApplicationId,
 }) => {
   // Destructure formatted date
   const { day, month, year } = formattedDate;
@@ -523,9 +526,10 @@ const ResidenceVerificationFormFields: React.FC<ResidenceVerificationFormFieldsP
         <EnhancedImageUploader
           register={form.register}
           setValue={form.setValue}
+          documentType={"PROPERTY_PHOTO"}
           watch={form.watch}
           errors={[]}
-          verificationId={"d54055d2-66d2-4fad-b28a-256eab56dd54"}
+          loanApplicationId={loanApplicationId}
           fieldName="photographUrl"
           label="Photograph of property"
           currentUserId={user?.id}
