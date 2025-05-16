@@ -1,11 +1,14 @@
+"use client";
+
 import { useAbility } from "@/lib/casl/abilityContext";
 import { handleFormErrors } from "@/lib/formErrorHelper";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { format } from "date-fns";
 import { createVerification } from "../actions/createVerification";
 import { defineVerificationFieldVisibility } from "../lib/defineVerificationFieldVisibility";
 import {
@@ -58,6 +61,15 @@ interface UseCreateVerificationFormReturn {
    * Currently selected verification type
    */
   selectedType: VerificationType | undefined;
+
+  /**
+   * Formatted date values for date input fields
+   */
+  formattedDate: {
+    day: string;
+    month: string;
+    year: string;
+  };
 }
 
 /**
@@ -113,12 +125,58 @@ export function useCreateVerificationForm({
   // Watch for type changes to update the selected type
   const typeWatch = form.watch("verification.type");
 
+  // Get the verification date for formatting
+  const verificationDate = form.watch("verification.verificationDate");
+
+  // Format date for use in the component
+  const formattedDate = useMemo(() => {
+    return {
+      day: verificationDate ? format(verificationDate, "dd") : "",
+      month: verificationDate ? format(verificationDate, "MM") : "",
+      year: verificationDate ? format(verificationDate, "yyyy") : "",
+    };
+  }, [verificationDate]);
+
   // Update selectedType when the form value changes
   useMemo(() => {
     if (typeWatch && typeWatch !== selectedType) {
       setSelectedType(typeWatch);
     }
   }, [typeWatch, selectedType]);
+
+  /**
+   * Prepares data for server submission based on the verification type
+   *
+   * @param {VerificationFormValues} data - Form data
+   * @returns {CreateFullVerificationInput} Data ready for API submission
+   */
+  const prepareSubmitData = useCallback((data: VerificationFormValues): CreateFullVerificationInput => {
+    // Prepare data for submission
+    const submitData: CreateFullVerificationInput = {
+      verification: {
+        loanApplicationId: data.verification.loanApplicationId,
+        type: data.verification.type,
+        status: data.verification.status,
+        result: data.verification.result,
+        remarks: data.verification.remarks,
+        verificationDate: data.verification.verificationDate,
+        verificationTime: data.verification.verificationTime,
+      },
+    };
+
+    // Add specific verification type data based on the selected type
+    if (data.verification.type === "RESIDENCE" && data.residenceVerification) {
+      submitData.residenceVerification = data.residenceVerification;
+    } else if (data.verification.type === "BUSINESS" && data.businessVerification) {
+      submitData.businessVerification = data.businessVerification;
+    } else if (data.verification.type === "PROPERTY" && data.propertyVerification) {
+      submitData.propertyVerification = data.propertyVerification;
+    } else if (data.verification.type === "VEHICLE" && data.vehicleVerification) {
+      submitData.vehicleVerification = data.vehicleVerification;
+    }
+
+    return submitData;
+  }, []);
 
   /**
    * Handles form submission
@@ -129,30 +187,7 @@ export function useCreateVerificationForm({
     try {
       setIsSubmitting(true);
 
-      // Prepare data for submission
-      const submitData: CreateFullVerificationInput = {
-        verification: {
-          loanApplicationId: data.verification.loanApplicationId,
-          type: data.verification.type,
-          status: data.verification.status,
-          result: data.verification.result,
-          remarks: data.verification.remarks,
-          verificationDate: data.verification.verificationDate,
-          verificationTime: data.verification.verificationTime,
-        },
-      };
-
-      // Add specific verification type data based on the selected type
-      if (data.verification.type === "RESIDENCE" && data.residenceVerification) {
-        submitData.residenceVerification = data.residenceVerification;
-      } else if (data.verification.type === "BUSINESS" && data.businessVerification) {
-        submitData.businessVerification = data.businessVerification;
-      } else if (data.verification.type === "PROPERTY" && data.propertyVerification) {
-        submitData.propertyVerification = data.propertyVerification;
-      } else if (data.verification.type === "VEHICLE" && data.vehicleVerification) {
-        submitData.vehicleVerification = data.vehicleVerification;
-      }
-
+      const submitData = prepareSubmitData(data);
       const response = await createVerification(submitData);
 
       if (response.success) {
@@ -186,5 +221,6 @@ export function useCreateVerificationForm({
     isSubmitting,
     onSubmit,
     selectedType,
+    formattedDate,
   };
 }
