@@ -33,7 +33,7 @@ export function defineVerificationFieldVisibility(ability: AppAbility) {
     residentSince: canReadVerification,
     residenceType: canReadVerification,
     structureType: canReadVerification,
-    
+
     // Read permissions for business verification
     businessName: canReadVerification,
     businessType: canReadVerification,
@@ -41,10 +41,10 @@ export function defineVerificationFieldVisibility(ability: AppAbility) {
     businessExistence: canReadVerification,
     natureOfBusiness: canReadVerification,
     salesPerDay: canReadVerification,
-    
+
     // Read permissions for property verification
     // (Property owner fields already covered above)
-    
+
     // Read permissions for vehicle verification
     make: canReadVerification,
     model: canReadVerification,
@@ -52,7 +52,7 @@ export function defineVerificationFieldVisibility(ability: AppAbility) {
     chassisNumber: canReadVerification,
     registrationNumber: canReadVerification,
     vehicleType: canReadVerification,
-    
+
     // Shared address fields for all verification types
     addressCity: canReadVerification,
     addressLine1: canReadVerification,
@@ -69,14 +69,14 @@ export function defineVerificationFieldVisibility(ability: AppAbility) {
     canUpdateResult: canUpdateVerification,
     canUpdateVerificationDate: canUpdateVerification,
     canUpdateVerificationTime: canUpdateVerification,
-    
+
     // Update permissions - residence verification fields
     canUpdateOwnerFirstName: canUpdateVerification,
     canUpdateOwnerLastName: canUpdateVerification,
     canUpdateResidentSince: canUpdateVerification,
     canUpdateResidenceType: canUpdateVerification,
     canUpdateStructureType: canUpdateVerification,
-    
+
     // Update permissions - business verification fields
     canUpdateBusinessName: canUpdateVerification,
     canUpdateBusinessType: canUpdateVerification,
@@ -84,15 +84,15 @@ export function defineVerificationFieldVisibility(ability: AppAbility) {
     canUpdateBusinessExistence: canUpdateVerification,
     canUpdateNatureOfBusiness: canUpdateVerification,
     canUpdateSalesPerDay: canUpdateVerification,
-    
+
     // Update permissions - vehicle verification fields
     canUpdateMake: canUpdateVerification,
-    canUpdateModel: canUpdateVerification, 
+    canUpdateModel: canUpdateVerification,
     canUpdateEngineNumber: canUpdateVerification,
     canUpdateChassisNumber: canUpdateVerification,
     canUpdateRegistrationNumber: canUpdateVerification,
     canUpdateVehicleType: canUpdateVerification,
-    
+
     // Update permissions - shared address fields
     canUpdateAddressCity: canUpdateVerification,
     canUpdateAddressLine1: canUpdateVerification,
@@ -116,4 +116,4 @@ export function defineVerificationFieldVisibility(ability: AppAbility) {
 /**
  * Type definition for the object returned by defineVerificationFieldVisibility
  */
-export type VerificationFieldVisibility = ReturnType<typeof defineVerificationFieldVisibility>; 
+export type VerificationFieldVisibility = ReturnType<typeof defineVerificationFieldVisibility>;
