@@ -49,7 +49,14 @@ export async function getLoanApplication(id: string): Promise<ActionResponse> {
         },
         guarantors: true,
         coApplicants: true,
-        verifications: true,
+        verifications: {
+          include: {
+            residenceVerification: true,
+            vehicleVerification: true,
+            businessVerification: true,
+            propertyVerification: true,
+          },
+        },
         timelineEvents: {
           include: {
             user: true,

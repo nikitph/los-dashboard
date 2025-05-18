@@ -137,6 +137,8 @@ export async function getDocumentUploadUrl(metadata: DocumentMetadata): Promise<
     // Generate a base URL for the file (without presigned params)
     const fileUrl = `${process.env.NEXT_PUBLIC_BACKBLAZE_PUBLIC_URL}/${fileKey}`;
 
+    console.log("validated data", validatedData);
+
     // Pre-create document record in database
     const document = await prisma.document.create({
       data: {
@@ -169,6 +171,8 @@ export async function getDocumentUploadUrl(metadata: DocumentMetadata): Promise<
         bankConfigurationId: validatedData.bankConfigurationId,
       },
     });
+
+    console.log("validated data 2", validatedData);
 
     return {
       success: true,

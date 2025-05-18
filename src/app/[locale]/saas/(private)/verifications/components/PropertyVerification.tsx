@@ -9,7 +9,7 @@ import { VerificationType } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { Form } from "@/components/ui/form";
 import { useUser } from "@/contexts/userContext";
-import ResidenceVerificationFormFields from "./ResidenceVerificationFormFields";
+import PropertyVerificationFormFields from "./PropertyVerificationFormFields";
 
 interface CreateVerificationFormProps {
   loanApplicationId: string;
@@ -17,12 +17,12 @@ interface CreateVerificationFormProps {
 }
 
 /**
- * A form component for creating residence verifications with field-level permission control
+ * A form component for creating property verifications with field-level permission control
  *
  * @param {CreateVerificationFormProps} props - Component props
- * @returns {JSX.Element} The residence verification form
+ * @returns {JSX.Element} The property verification form
  */
-function ResidenceVerification({ loanApplicationId, defaultType = "RESIDENCE" }: CreateVerificationFormProps) {
+function PropertyVerification({ loanApplicationId, defaultType = "PROPERTY" }: CreateVerificationFormProps) {
   const t = useTranslations("Verification");
   const router = useRouter();
   const { user } = useUser();
@@ -31,7 +31,6 @@ function ResidenceVerification({ loanApplicationId, defaultType = "RESIDENCE" }:
   const { form, visibility, isSubmitting, onSubmit, selectedType, formattedDate } = useCreateVerificationForm({
     loanApplicationId,
     defaultType: defaultType as VerificationType,
-    secondary: false,
   });
 
   // Handle back button
@@ -53,14 +52,14 @@ function ResidenceVerification({ loanApplicationId, defaultType = "RESIDENCE" }:
     <div className="flex w-full flex-col items-start gap-6 bg-default-background px-6 py-6">
       <div className="flex w-full items-center gap-2">
         <IconButton size="small" icon="FeatherArrowLeft" onClick={handleBack} />
-        <span className="font-heading-2 text-heading-2 text-default-font">{t("form.sections.residence")}</span>
+        <span className="font-heading-2 text-heading-2 text-default-font">{t("form.sections.property")}</span>
       </div>
 
       {/* Wrap the form with Form component from shadcn/ui */}
       <Form {...form} namespace={"Verification"}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex w-full flex-col items-start gap-6">
           {/* Extract form fields to a separate component */}
-          <ResidenceVerificationFormFields
+          <PropertyVerificationFormFields
             form={form}
             visibility={visibility}
             formattedDate={formattedDate}
@@ -76,7 +75,7 @@ function ResidenceVerification({ loanApplicationId, defaultType = "RESIDENCE" }:
             </Button>
             {visibility.canUpdate && (
               <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? t("form.actions.creating") : "Proceed to Business Verification"}
+                {isSubmitting ? t("form.actions.creating") : t("form.actions.proceed")}
               </Button>
             )}
           </div>
@@ -86,4 +85,4 @@ function ResidenceVerification({ loanApplicationId, defaultType = "RESIDENCE" }:
   );
 }
 
-export default ResidenceVerification;
+export default PropertyVerification;

@@ -19,6 +19,7 @@ import { LoanApplicationView } from "../schemas/loanApplicationSchema";
 import { Separator } from "@/components/ui/separator";
 import { Card, CardContent } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
+import VerificationsTab from "@/app/[locale]/saas/(private)/loanapplication/components/VerificationsTab";
 
 /**
  * Component for displaying detailed loan application information
@@ -27,7 +28,11 @@ import { useRouter } from "next/navigation";
  * @param {LoanApplicationView} props.loanApplication - The loan application data to display
  * @returns {JSX.Element} Loan application view component
  */
-export function ViewLoanApplicationForm({ loanApplication }: { loanApplication: LoanApplicationView }): JSX.Element {
+export function ViewLoanApplicationForm({
+  loanApplication,
+}: {
+  loanApplication: LoanApplicationView;
+}): React.ReactNode {
   const { visibility, isDeleting, handleDelete } = useViewLoanApplicationForm({ loanApplication });
   const t = useTranslations("LoanApplication");
   const router = useRouter();
@@ -277,46 +282,7 @@ export function ViewLoanApplicationForm({ loanApplication }: { loanApplication: 
         )}
 
         {activeTabIndex === 2 && visibility.verifications && (
-          <div className="w-full">
-            {loanApplication.verifications.length > 0 ? (
-              loanApplication.verifications.map((verification) => (
-                <Card key={verification.id} className="mb-4 w-full">
-                  <CardContent className="p-4">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h3 className="font-heading-3 text-heading-3">{verification.type}</h3>
-                        <p className="text-subtext-color">{t(`verificationStatus.${verification.status}`)}</p>
-                        {verification.remarks && <p className="mt-2 text-body">{verification.remarks}</p>}
-                      </div>
-                      <Badge
-                        variant={
-                          verification.status === "APPROVED"
-                            ? "success"
-                            : verification.status === "REJECTED"
-                              ? "destructive"
-                              : "warning"
-                        }
-                      >
-                        {t(`verificationStatus.${verification.status}`)}
-                      </Badge>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))
-            ) : (
-              <Alert
-                icon="FeatherInfo"
-                title={t("alerts.noVerificationsTitle")}
-                description={t("alerts.noVerificationsDescription")}
-              />
-            )}
-
-            {visibility.canAddVerification && (
-              <Button className="mt-4" icon="FeatherPlus">
-                {t("actions.addVerification")}
-              </Button>
-            )}
-          </div>
+          <VerificationsTab loanApplication={loanApplication} visibility={visibility} activeTabIndex={activeTabIndex} />
         )}
 
         {activeTabIndex === 3 && visibility.timelineEvents && <Timeline events={loanApplication.timelineEvents} />}

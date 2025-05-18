@@ -7,6 +7,7 @@ import { Badge } from "@/subframe/components/Badge";
 import { IconButton } from "@/subframe/components/IconButton";
 import * as SubframeCore from "@subframe/core";
 import { useDocuments } from "@/hooks/useDocuments";
+import { DocumentType } from "@prisma/client";
 
 // Types
 interface EnhancedImageUploaderProps {
@@ -14,8 +15,9 @@ interface EnhancedImageUploaderProps {
   setValue?: any;
   watch?: any;
   errors?: any;
-  verificationId?: string | null | undefined;
+  loanApplicationId?: string | null | undefined;
   fieldName?: string;
+  documentType: DocumentType;
   label?: string;
   initialUrls?: string[];
   currentUserId?: string | undefined;
@@ -74,7 +76,8 @@ export default function EnhancedImageUploader({
   setValue,
   watch,
   errors,
-  verificationId,
+  loanApplicationId,
+  documentType,
   fieldName = "images",
   label = "Upload Images",
   initialUrls = [],
@@ -164,8 +167,8 @@ export default function EnhancedImageUploader({
   const handleRemoveImage = async (index: number) => {
     const image = images[index];
 
-    // If the image has an ID and verification ID, it's in the document system
-    if (image.id && verificationId) {
+    // If the image has an ID and loan ID, it's in the document system
+    if (image.id && loanApplicationId) {
       try {
         await removeDocument(image.id);
       } catch (error) {
@@ -225,10 +228,10 @@ export default function EnhancedImageUploader({
 
         const uploadPromise = await (async () => {
           try {
-            if (verificationId) {
+            if (loanApplicationId) {
               const result = await uploadDocument(file, {
-                verificationId,
-                documentType: "VERIFICATION_PHOTO",
+                loanApplicationId: loanApplicationId,
+                documentType: documentType,
                 uploadedById: currentUserId || "",
               });
 
