@@ -1670,11 +1670,11 @@
         "type": "प्रकार",
         "status": "स्थिति",
         "result": "परिणाम",
-        "verificationDate": "दिनांक",
+        "verificationDate": "तारीख",
         "verificationTime": "समय",
         "address": "पता",
-        "verifiedBy": "सत्यापनकर्ता",
-        "actions": "कार्य"
+        "verifiedBy": "सत्यापित करने वाला",
+        "actions": "क्रियाएँ"
       },
       "result": {
         "positive": "सकारात्मक",
@@ -1685,13 +1685,13 @@
         "view": "देखें",
         "edit": "संपादित करें",
         "delete": "हटाएं",
-        "openMenu": "मेन्यू खोलें"
+        "openMenu": "मेनू खोलें"
       },
       "empty": "कोई सत्यापन नहीं मिला"
     },
     "create": {
-      "title": "सत्यापन बनाएं",
-      "subtitle": "एक नया सत्यापन रिकॉर्ड जोड़ें"
+      "title": "सत्यापन बनाएँ",
+      "subtitle": "नया सत्यापन रिकॉर्ड जोड़ें"
     },
     "edit": {
       "title": "सत्यापन संपादित करें",
@@ -1703,32 +1703,32 @@
         "main": "मुख्य जानकारी",
         "address": "पता जानकारी",
         "residence": "निवास विवरण",
-        "business": "व्यापार विवरण",
+        "business": "व्यवसाय विवरण",
         "property": "संपत्ति विवरण",
         "vehicle": "वाहन विवरण",
         "additional": "अतिरिक्त जानकारी"
       },
       "fields": {
         "type": "सत्यापन प्रकार",
-        "verificationDate": "सत्यापन दिनांक",
+        "verificationDate": "सत्यापन तिथि",
         "result": "परिणाम",
-        "verifiedBy": "सत्यापनकर्ता",
+        "verifiedBy": "सत्यापित करने वाला",
         "address": "पता",
         "locationFromMain": "मुख्य से स्थान",
         "created": "बनाया गया",
-        "updated": "अपडेट किया गया",
-        "remarks": "टिप्पणियां",
+        "updated": "अंतिम अपडेट",
+        "remarks": "टिप्पणियाँ",
         "residence": {
           "owner": "मालिक का नाम",
-          "residentSince": "कब से निवासी",
+          "residentSince": "निवासी तब से",
           "residenceType": "निवास प्रकार",
           "structureType": "संरचना प्रकार"
         },
         "business": {
-          "businessName": "व्यापार का नाम",
-          "businessType": "व्यापार प्रकार",
-          "businessExistence": "व्यापार अस्तित्व",
-          "natureOfBusiness": "व्यापार की प्रकृति",
+          "businessName": "व्यवसाय का नाम",
+          "businessType": "व्यवसाय प्रकार",
+          "businessExistence": "व्यवसाय का अस्तित्व",
+          "natureOfBusiness": "व्यवसाय की प्रकृति",
           "salesPerDay": "प्रति दिन बिक्री",
           "contactDetails": "संपर्क विवरण"
         },
@@ -1737,11 +1737,11 @@
           "structureType": "संरचना प्रकार"
         },
         "vehicle": {
-          "makeModel": "मेक और मॉडल",
+          "makeModel": "निर्माता और मॉडल",
           "vehicleType": "वाहन प्रकार",
           "registrationNumber": "पंजीकरण संख्या",
-          "engineNumber": "इंजन नंबर",
-          "chassisNumber": "चेसिस नंबर"
+          "engineNumber": "इंजन संख्या",
+          "chassisNumber": "चेसिस संख्या"
         }
       },
       "result": {
@@ -1761,7 +1761,7 @@
         "main": "मुख्य जानकारी",
         "address": "पता जानकारी",
         "residence": "निवास विवरण",
-        "business": "व्यापार विवरण",
+        "business": "व्यवसाय विवरण",
         "property": "संपत्ति विवरण",
         "vehicle": "वाहन विवरण",
         "additional": "अतिरिक्त जानकारी"
@@ -1772,7 +1772,7 @@
           "placeholder": "सत्यापन प्रकार चुनें",
           "options": {
             "residence": "निवास सत्यापन",
-            "business": "व्यापार सत्यापन",
+            "business": "व्यवसाय सत्यापन",
             "property": "संपत्ति सत्यापन",
             "vehicle": "वाहन सत्यापन"
           }
@@ -1788,12 +1788,12 @@
           }
         },
         "verificationDate": {
-          "label": "सत्यापन दिनांक",
-          "placeholder": "दिनांक चुनें"
+          "label": "सत्यापन तिथि",
+          "placeholder": "तिथि चुनें"
         },
         "verificationTime": {
           "label": "सत्यापन समय",
-          "placeholder": "उदा. 10:00 AM"
+          "placeholder": "उदा. 10:00 पूर्वाह्न"
         },
         "result": {
           "label": "सत्यापन परिणाम"
@@ -1823,12 +1823,12 @@
           "placeholder": "उदा. मुख्य सड़क से 500 मीटर"
         },
         "remarks": {
-          "label": "टिप्पणियां",
+          "label": "टिप्पणियाँ",
           "placeholder": "कोई अतिरिक्त टिप्पणी दर्ज करें"
         },
         "photographUrl": {
-          "label": "फोटोग्राफ URL",
-          "placeholder": "फोटोग्राफ का URL दर्ज करें"
+          "label": "फोटो यूआरएल",
+          "placeholder": "फोटो का यूआरएल दर्ज करें"
         },
         "residence": {
           "ownerFirstName": {
@@ -1840,7 +1840,7 @@
             "placeholder": "मालिक का अंतिम नाम दर्ज करें"
           },
           "residentSince": {
-            "label": "कब से निवासी",
+            "label": "निवासी तब से",
             "placeholder": "उदा. जनवरी 2020"
           },
           "residenceType": {
@@ -1848,8 +1848,8 @@
             "placeholder": "निवास प्रकार चुनें",
             "options": {
               "owned": "स्वामित्व",
-              "rented": "किराये पर",
-              "familyOwned": "परिवार के स्वामित्व में",
+              "rented": "किराए पर",
+              "familyOwned": "पारिवारिक स्वामित्व",
               "other": "अन्य"
             }
           },
@@ -1858,26 +1858,24 @@
             "placeholder": "संरचना प्रकार चुनें",
             "options": {
               "apartment": "अपार्टमेंट",
-              "house": "मकान",
-              "villa": "विला",
-              "condo": "कॉन्डोमिनियम",
-              "other": "अन्य"
+              "duplex": "डुप्लेक्स",
+              "bungalow": "बंगला"
             }
           }
         },
         "business": {
           "businessName": {
-            "label": "व्यापार का नाम",
-            "placeholder": "व्यापार का नाम दर्ज करें"
+            "label": "व्यवसाय का नाम",
+            "placeholder": "व्यवसाय का नाम दर्ज करें"
           },
           "businessType": {
-            "label": "व्यापार प्रकार",
-            "placeholder": "व्यापार प्रकार चुनें",
+            "label": "व्यवसाय प्रकार",
+            "placeholder": "व्यवसाय प्रकार चुनें",
             "options": {
               "retail": "खुदरा",
               "wholesale": "थोक",
-              "manufacturing": "विनिर्माण",
-              "services": "सेवाएं",
+              "manufacturing": "निर्माण",
+              "services": "सेवाएँ",
               "other": "अन्य"
             }
           },
@@ -1886,16 +1884,16 @@
             "placeholder": "संपर्क विवरण दर्ज करें"
           },
           "businessExistence": {
-            "label": "व्यापार अस्तित्व",
-            "description": "यह सत्यापित किया गया है कि व्यापार मौजूद है।"
+            "label": "व्यवसाय का अस्तित्व",
+            "description": "यह सत्यापित किया गया है कि व्यवसाय मौजूद है।"
           },
           "natureOfBusiness": {
-            "label": "व्यापार की प्रकृति",
-            "placeholder": "व्यापार की प्रकृति का वर्णन करें"
+            "label": "व्यवसाय की प्रकृति",
+            "placeholder": "व्यवसाय की प्रकृति का वर्णन करें"
           },
           "salesPerDay": {
             "label": "प्रति दिन बिक्री",
-            "placeholder": "औसत प्रति दिन बिक्री दर्ज करें"
+            "placeholder": "प्रति दिन औसत बिक्री दर्ज करें"
           }
         },
         "property": {
@@ -1914,6 +1912,7 @@
               "commercial": "वाणिज्यिक",
               "residential": "आवासीय",
               "industrial": "औद्योगिक",
+              "mixed": "मिश्रित",
               "land": "भूमि",
               "other": "अन्य"
             }
@@ -1921,7 +1920,7 @@
         },
         "vehicle": {
           "make": {
-            "label": "मेक",
+            "label": "निर्माता",
             "placeholder": "उदा. होंडा"
           },
           "model": {
@@ -1944,50 +1943,55 @@
             "placeholder": "पंजीकरण संख्या दर्ज करें"
           },
           "engineNumber": {
-            "label": "इंजन नंबर",
-            "placeholder": "इंजन नंबर दर्ज करें"
+            "label": "इंजन संख्या",
+            "placeholder": "इंजन संख्या दर्ज करें"
           },
           "chassisNumber": {
-            "label": "चेसिस नंबर",
-            "placeholder": "चेसिस नंबर दर्ज करें"
+            "label": "चेसिस संख्या",
+            "placeholder": "चेसिस संख्या दर्ज करें"
           },
           "taxInvoiceUrl": {
-            "label": "टैक्स इनवॉइस URL",
-            "placeholder": "टैक्स इनवॉइस का URL दर्ज करें"
+            "label": "कर चालान यूआरएल",
+            "placeholder": "कर चालान का यूआरएल दर्ज करें"
           },
           "deliveryChalanUrl": {
-            "label": "डिलीवरी चालान URL",
-            "placeholder": "डिलीवरी चालान का URL दर्ज करें"
+            "label": "डिलीवरी चालान यूआरएल",
+            "placeholder": "डिलीवरी चालान का यूआरएल दर्ज करें"
           },
           "stampedReceiptUrl": {
-            "label": "स्टांप्ड रसीद URL",
-            "placeholder": "स्टांप्ड रसीद का URL दर्ज करें"
+            "label": "स्टैम्प की गई रसीद यूआरएल",
+            "placeholder": "स्टैम्प की गई रसीद का यूआरएल दर्ज करें"
           },
           "rcUrl": {
-            "label": "आरसी URL",
-            "placeholder": "पंजीकरण प्रमाणपत्र का URL दर्ज करें"
+            "label": "आरसी यूआरएल",
+            "placeholder": "पंजीकरण प्रमाणपत्र का यूआरएल दर्ज करें"
           },
           "inspectionReportUrl": {
-            "label": "निरीक्षण रिपोर्ट URL",
-            "placeholder": "निरीक्षण रिपोर्ट का URL दर्ज करें"
+            "label": "निरीक्षण रिपोर्ट यूआरएल",
+            "placeholder": "निरीक्षण रिपोर्ट का यूआरएल दर्ज करें"
           },
           "vehiclePhotoUrl": {
-            "label": "वाहन फोटो URL",
-            "placeholder": "वाहन फोटो का URL दर्ज करें"
+            "label": "वाहन फोटो यूआरएल",
+            "placeholder": "वाहन फोटो का यूआरएल दर्ज करें"
           }
         }
       },
       "actions": {
-        "create": "सत्यापन बनाएं",
-        "creating": "बना रहा है...",
+        "create": "सत्यापन बनाएँ",
+        "creating": "बना रहे हैं...",
         "update": "सत्यापन अपडेट करें",
-        "updating": "अपडेट कर रहा है...",
+        "updating": "अपडेट कर रहे हैं...",
         "cancel": "रद्द करें",
-        "back": "वापस"
+        "back": "वापस जाएँ",
+        "proceed": "वाहन सत्यापन पर जाएँ"
       },
       "errors": {
         "title": "फॉर्म त्रुटि",
-        "description": "कृपया प्रस्तुत करने से पहले फॉर्म में त्रुटियों को सुधारें।"
+        "description": "कृपया सबमिट करने से पहले फॉर्म में त्रुटियाँ ठीक करें।"
+      },
+      "values": {
+        "verified": "सत्यापित",
+        "notVerified": "असत्यापित"
       }
     },
     "toast": {
@@ -1998,7 +2002,7 @@
       "deleted": "सत्यापन हटाया गया",
       "deletedDescription": "सत्यापन सफलतापूर्वक हटाया गया है",
       "error": "त्रुटि",
-      "errorDescription": "एक त्रुटि हुई है। कृपया पुन: प्रयास करें।"
+      "errorDescription": "एक त्रुटि हुई है। कृपया पुनः प्रयास करें।"
     },
     "validation": {
       "loanApplicationId": {
@@ -2047,18 +2051,32 @@
         "required": "मालिक का अंतिम नाम आवश्यक है"
       },
       "residentSince": {
-        "required": "निवास तिथि आवश्यक है",
-        "invalid": "कृपया एक वैध निवास तिथि दर्ज करें"
+        "required": "निवासी तब से आवश्यक है",
+        "invalid": "कृपया एक मान्य तिथि दर्ज करें"
       },
       "residenceType": {
-        "required": "आवास प्रकार आवश्यक है"
+        "required": "निवास प्रकार आवश्यक है"
       },
       "structureType": {
         "required": "संरचना प्रकार आवश्यक है"
       },
       "remarks": {
-        "tooLong": "टिप्पणियां 500 अक्षरों से अधिक नहीं हो सकतीं"
+        "tooLong": "टिप्पणियाँ 500 वर्णों से अधिक नहीं हो सकतीं"
       }
+    },
+    "permissions": {
+      "noCreateAccess": "आपको सत्यापन बनाने की अनुमति नहीं है"
+    },
+    "types": {
+      "RESIDENCE": "निवास",
+      "BUSINESS": "व्यवसाय",
+      "PROPERTY": "संपत्ति",
+      "VEHICLE": "वाहन"
+    },
+    "status": {
+      "PENDING": "लंबित",
+      "COMPLETED": "पूर्ण",
+      "FAILED": "असफल"
     }
   }
 }

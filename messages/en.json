@@ -1762,10 +1762,10 @@
       "sections": {
         "main": "Main Information",
         "address": "Address Information",
-        "residence": "Residence Details",
-        "business": "Business Details",
-        "property": "Property Details",
-        "vehicle": "Vehicle Details",
+        "residence": "Residence Verification",
+        "business": "Business Verification",
+        "property": "Property Verification",
+        "vehicle": "Vehicle Verification",
         "additional": "Additional Information"
       },
       "fields": {
@@ -1914,6 +1914,7 @@
               "commercial": "Commercial",
               "residential": "Residential",
               "industrial": "Industrial",
+              "mixed": "Mixed",
               "land": "Land",
               "other": "Other"
             }
@@ -1983,11 +1984,16 @@
         "update": "Update Verification",
         "updating": "Updating...",
         "cancel": "Cancel",
-        "back": "Back"
+        "back": "Back",
+        "proceed": "Proceed to Vehicle Verification"
       },
       "errors": {
         "title": "Form Error",
         "description": "Please correct the errors in the form before submitting."
+      },
+      "values": {
+        "verified": "Verified",
+        "notVerified": "Not Verified"
       }
     },
     "toast": {
@@ -2059,6 +2065,20 @@
       "remarks": {
         "tooLong": "Remarks cannot exceed 500 characters"
       }
+    },
+    "permissions": {
+      "noCreateAccess": "You don't have permission to create verifications"
+    },
+    "types": {
+      "RESIDENCE": "Residence",
+      "BUSINESS": "Business",
+      "PROPERTY": "Property",
+      "VEHICLE": "Vehicle"
+    },
+    "status": {
+      "PENDING": "Pending",
+      "COMPLETED": "Completed",
+      "FAILED": "Failed"
     }
   }
 }
