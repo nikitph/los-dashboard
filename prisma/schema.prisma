@@ -323,6 +323,7 @@ model Verification {
   vehicleVerification   VehicleVerification?
   loanApplication       LoanApplication        @relation(fields: [loanApplicationId], references: [id])
   verifiedBy            UserProfile?           @relation(fields: [verifiedById], references: [id])
+  timelineEvents        TimelineEvent[]
 }
 
 model ResidenceVerification {
@@ -436,6 +437,9 @@ model TimelineEvent {
   documentId String?
   document   Document? @relation(fields: [documentId], references: [id])
 
+  verificationId String?
+  verification   Verification? @relation(fields: [verificationId], references: [id])
+
   // Indexes for common queries
   @@index([timelineEntityType, timelinEntityId])
   @@index([timelineEventType])
@@ -460,6 +464,7 @@ enum TimelineEntityType {
   APPLICANT
   LOAN_APPLICATION
   DOCUMENT
+  VERIFICATION
 }
 
 enum TimelineEventType {
@@ -468,6 +473,9 @@ enum TimelineEventType {
   APPLICATION_UPDATED
   APPLICATION_DELETED
   APPLICATION_REOPENED
+  APPLICATION_APPROVED
+  APPLICATION_REJECTED
+  APPLICATION_REVIEWED
   STATUS_CHANGE
 
   // Documents
@@ -485,6 +493,8 @@ enum TimelineEventType {
   VERIFICATION_STARTED
   VERIFICATION_COMPLETED
   VERIFICATION_FAILED
+  VERIFICATION_REVIEWED
+  VERIFICATION_REJECTED
   VERIFICATION_REMARK_ADDED
 
   // Approval flow
