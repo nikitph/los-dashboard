@@ -1,7 +1,10 @@
 import {
+  ArrowUp,
   CalendarClock,
+  Check,
   CheckCircle,
   Clock,
+  Cross,
   Eye,
   FileCheck,
   FileSearch,
@@ -78,6 +81,61 @@ export const timelineEventMeta: Record<
   // Security
   ACCESS_GRANTED: { label: "Access granted", icon: Unlock, variant: "success" },
   ACCESS_REVOKED: { label: "Access revoked", icon: Lock, variant: "destructive" },
+  APPLICATION_ESCALATED: {
+    label: "Application Escalated",
+    icon: ArrowUp,
+    variant: "warning",
+  },
+  APPLICATION_APPROVED: {
+    label: "Application Approved",
+    icon: Check,
+    variant: "success",
+  },
+  APPLICATION_REJECTED: {
+    label: "Application Rejected",
+    icon: Cross,
+    variant: "destructive",
+  },
+  APPLICATION_REVIEW_REJECTED: {
+    label: "Application Review Rejected",
+    icon: Cross,
+    variant: "warning",
+  },
+  APPLICATION_REVIEW_APPROVED: {
+    label: "Application Review Approved",
+    icon: Check,
+    variant: "info",
+  },
+  VERIFICATION_CREATED: {
+    label: "Verification Created",
+    icon: PlusCircle,
+    variant: "success",
+  },
+  VERIFICATION_REVIEW_APPROVED: {
+    label: "Verification Review Approved",
+    icon: Check,
+    variant: "info",
+  },
+  VERIFICATION_REVIEW_REJECTED: {
+    label: "Verification Review Rejected",
+    icon: Cross,
+    variant: "warning",
+  },
+  SANCTION_REMARK_ADDED: {
+    label: "Sanction Remark Added",
+    icon: PlusCircle,
+    variant: "neutral",
+  },
+  INSPECTION_REMARK_ADDED: {
+    label: "Inspection Remark Added",
+    icon: PlusCircle,
+    variant: "neutral",
+  },
+  CLERK_REMARK_ADDED: {
+    label: "Clerk Added a remark",
+    icon: PlusCircle,
+    variant: "info",
+  },
 };
 
 export function getTimelineEventMeta(type: TimelineEventType) {

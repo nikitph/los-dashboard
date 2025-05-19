@@ -4,57 +4,7 @@ import React from "react";
 import { formatDistanceToNow } from "date-fns";
 import { Alert } from "@/subframe/components/Alert";
 import { getTimelineEventMeta } from "@/constants/timelineEventMeta";
-import type { TimelineEvent, TimelineEventType } from "@prisma/client";
-
-/* ------------------------------------------------------------------ */
-/* Dummy fallback data (remove once you wire real data)               */
-/* ------------------------------------------------------------------ */
-export const dummyEvents = [
-  {
-    id: "1",
-    timelineEventType: "APPLICATION_CREATED" as TimelineEventType,
-    timelineEntityType: "LOAN_APPLICATION",
-    timelinEntityId: "loan123",
-    userId: "user1",
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3),
-    remarks: "Loan application created",
-    loanApplicationId: "loan123",
-    user: { firstName: "Tom", lastName: "Bradley" },
-  },
-  {
-    id: "2",
-    timelineEventType: "USER_ASSIGNED_ROLE" as TimelineEventType,
-    timelineEntityType: "LOAN_APPLICATION",
-    timelinEntityId: "loan123",
-    userId: "user2",
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2),
-    remarks: null,
-    loanApplicationId: "loan123",
-    user: { firstName: "Michael", lastName: "Chen" },
-  },
-  {
-    id: "3",
-    timelineEventType: "DOCUMENT_UPLOADED" as TimelineEventType,
-    timelineEntityType: "DOCUMENT",
-    timelinEntityId: "doc456",
-    userId: "user3",
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24),
-    remarks: "Uploaded business plan",
-    documentId: "doc456",
-    user: { firstName: "Tom", lastName: "Bradley" },
-  },
-  {
-    id: "4",
-    timelineEventType: "DOCUMENT_REQUESTED" as TimelineEventType,
-    timelineEntityType: "DOCUMENT",
-    timelinEntityId: "doc789",
-    userId: "user4",
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 2),
-    remarks: "Please provide last 3 months of business bank statements",
-    documentId: "doc789",
-    user: { firstName: "Sarah", lastName: "Johnson" },
-  },
-];
+import type { TimelineEvent } from "@prisma/client";
 
 /* ------------------------------------------------------------------ */
 /* Icon chip with rounded background                                  */
@@ -92,7 +42,7 @@ const IconWithBackground = ({ icon: Icon, variant = "default", size = "small" }:
 
 /* ------------------------------------------------------------------ */
 interface TimelineRowProps {
-  event: (typeof dummyEvents)[number];
+  event: any;
   isLast: boolean;
 }
 
@@ -133,12 +83,15 @@ type TimelineProps = {
   events?: TimelineEvent[];
 };
 
-const Timeline = ({ events = dummyEvents }: TimelineProps) => (
-  <div className="flex w-full flex-col items-start">
-    {events.map((event, i) => (
-      <TimelineRow key={event.id} event={event} isLast={i === events.length - 1} />
-    ))}
-  </div>
-);
+const Timeline = ({ events }: TimelineProps) => {
+  const sortedEvents = [...(events ?? [])].sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+  );
+  return (
+    <div className="flex w-full flex-col items-start">
+      {sortedEvents?.map((event, i) => <TimelineRow key={event.id} event={event} isLast={i === events?.length - 1} />)}
+    </div>
+  );
+};
 
 export default Timeline;
