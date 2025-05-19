@@ -418,7 +418,7 @@ model PendingAction {
 model TimelineEvent {
   id                 String             @id @default(dbgenerated("gen_random_uuid()"))
   timelineEntityType TimelineEntityType
-  timelinEntityId    String
+  timelineEntityId   String
   timelineEventType  TimelineEventType
   actionData         Json?
   remarks            String?
@@ -441,7 +441,7 @@ model TimelineEvent {
   verification   Verification? @relation(fields: [verificationId], references: [id])
 
   // Indexes for common queries
-  @@index([timelineEntityType, timelinEntityId])
+  @@index([timelineEntityType, timelineEntityId])
   @@index([timelineEventType])
   @@index([createdAt])
 }
