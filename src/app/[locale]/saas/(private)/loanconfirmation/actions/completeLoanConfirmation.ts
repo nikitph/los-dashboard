@@ -78,6 +78,8 @@ export async function completeLoanConfirmation(data: {
           loanApplicationId: data.loanApplicationId,
           newStatus: "PENDING_INSPECTOR_ASSIGNMENT",
           userId: user.id,
+          userName: user.firstName + " " + user.lastName,
+          role: user.currentRole.role,
           eventType: "APPLICATION_UPDATED",
           remarks: data.remark,
         });
@@ -96,6 +98,8 @@ export async function completeLoanConfirmation(data: {
           loanApplicationId: data.loanApplicationId,
           newStatus: "REJECTED_BY_APPLICANT",
           userId: user.id,
+          userName: user.firstName + " " + user.lastName,
+          role: user.currentRole.role,
           eventType: "APPLICATION_UPDATED",
           remarks: data.remark,
         });
@@ -113,6 +117,8 @@ export async function completeLoanConfirmation(data: {
           loanApplicationId: data.loanApplicationId,
           newStatus: "PENDING_LOAN_OFFICER_ASSIGNMENT",
           userId: user.id,
+          userName: user.firstName + " " + user.lastName,
+          role: user.currentRole.role,
           eventType: "APPLICATION_UPDATED",
           remarks: data.remark,
         });

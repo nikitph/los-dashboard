@@ -55,6 +55,8 @@ export async function createLoanApplication(rawData: CreateLoanApplicationInput)
     const newLoanApplication = await createLoanApplicationWithLog({
       ...validatedData,
       userId: user.id,
+      userName: user.firstName + " " + user.lastName,
+      role: user.currentRole.role,
     });
 
     return {

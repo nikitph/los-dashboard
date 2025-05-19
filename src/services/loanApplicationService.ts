@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma/prisma";
-import { LoanStatus, LoanType, TimelineEventType } from "@prisma/client";
+import { LoanStatus, LoanType, RoleType, TimelineEventType } from "@prisma/client";
 import { logTimelineEvent } from "@/lib/logTimelineEvents";
 
 export async function createLoanApplicationWithLog(input: {
@@ -9,6 +9,8 @@ export async function createLoanApplicationWithLog(input: {
   amountRequested: string | number;
   status: LoanStatus;
   userId: string;
+  userName: string;
+  role: RoleType;
 }) {
   const newLoanApplication = await prisma.loanApplication.create({
     data: {
@@ -28,6 +30,8 @@ export async function createLoanApplicationWithLog(input: {
     timelineEntityId: newLoanApplication.id,
     timelineEventType: "APPLICATION_CREATED",
     userId: input.userId,
+    userName: input.userName,
+    role: input.role,
     remarks: "Loan application created",
     actionData: {},
     loanApplicationId: newLoanApplication.id,
@@ -51,6 +55,8 @@ export async function updateLoanApplicationStatusWithLog(params: {
   loanApplicationId: string;
   newStatus: LoanStatus;
   userId: string;
+  userName: string;
+  role: RoleType;
   eventType: TimelineEventType;
   remarks?: string;
 }) {
@@ -67,6 +73,8 @@ export async function updateLoanApplicationStatusWithLog(params: {
     timelineEntityId: updatedLoanApplication.id,
     timelineEventType: params.eventType,
     userId: params.userId,
+    userName: params.userName,
+    role: params.role,
     remarks: params.remarks || `Loan status updated to ${params.newStatus}`,
     actionData: {},
     loanApplicationId: updatedLoanApplication.id,

@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma/prisma";
+import { RoleType } from "@prisma/client";
 
 type TimelineEntityType = "APPLICANT" | "LOAN_APPLICATION" | "DOCUMENT" | "VERIFICATION";
 type TimelineEventType =
@@ -58,6 +59,8 @@ type LogTimelineEventParams = {
   timelineEntityId: string;
   timelineEventType: TimelineEventType;
   userId: string;
+  userName: string;
+  role: RoleType;
   remarks?: string;
   actionData: Record<string, any>;
   loanApplicationId?: string;
@@ -71,6 +74,8 @@ export async function logTimelineEvent(params: LogTimelineEventParams) {
     timelineEntityId,
     timelineEventType,
     userId,
+    userName,
+    role,
     remarks,
     actionData,
     loanApplicationId,
@@ -84,6 +89,8 @@ export async function logTimelineEvent(params: LogTimelineEventParams) {
       timelineEntityId,
       timelineEventType,
       userId,
+      userName,
+      role,
       remarks,
       actionData,
       loanApplicationId,
