@@ -10,6 +10,7 @@ import {
   CreateFullVerificationInput,
   createFullVerificationSchema
 } from "../../verifications/schemas/verificationSchema";
+import { logTimelineEvent } from "@/lib/logTimelineEvents";
 
 /**
  * Creates a new verification in the database with related type-specific verification data
@@ -99,6 +100,19 @@ export async function createVerification(data: CreateFullVerificationInput): Pro
               verificationId: verification.id,
             },
           });
+
+          await logTimelineEvent({
+            timelineEntityType: "VERIFICATION",
+            timelineEntityId: result.id,
+            timelineEventType: "VERIFICATION_STARTED",
+            userId: user.id,
+            userName: user.firstName + " " + user.lastName,
+            role: user.currentRole.role,
+            remarks: data.verification.remarks,
+            actionData: {},
+            loanApplicationId: data.verification.loanApplicationId,
+            verificationId: verification.id,
+          });
           break;
 
         case "BUSINESS":
@@ -111,6 +125,19 @@ export async function createVerification(data: CreateFullVerificationInput): Pro
               ...data.businessVerification,
               verificationId: verification.id,
             },
+          });
+
+          await logTimelineEvent({
+            timelineEntityType: "VERIFICATION",
+            timelineEntityId: result.id,
+            timelineEventType: "VERIFICATION_CREATED",
+            userId: user.id,
+            userName: user.firstName + " " + user.lastName,
+            role: user.currentRole.role,
+            remarks: data.verification.remarks,
+            actionData: {},
+            loanApplicationId: data.verification.loanApplicationId,
+            verificationId: verification.id,
           });
           break;
 
@@ -125,6 +152,18 @@ export async function createVerification(data: CreateFullVerificationInput): Pro
               verificationId: verification.id,
             },
           });
+          await logTimelineEvent({
+            timelineEntityType: "VERIFICATION",
+            timelineEntityId: result.id,
+            timelineEventType: "VERIFICATION_CREATED",
+            userId: user.id,
+            userName: user.firstName + " " + user.lastName,
+            role: user.currentRole.role,
+            remarks: data.verification.remarks,
+            actionData: {},
+            loanApplicationId: data.verification.loanApplicationId,
+            verificationId: verification.id,
+          });
           break;
 
         case "VEHICLE":
@@ -137,6 +176,18 @@ export async function createVerification(data: CreateFullVerificationInput): Pro
               ...data.vehicleVerification,
               verificationId: verification.id,
             },
+          });
+          await logTimelineEvent({
+            timelineEntityType: "VERIFICATION",
+            timelineEntityId: result.id,
+            timelineEventType: "VERIFICATION_CREATED",
+            userId: user.id,
+            userName: user.firstName + " " + user.lastName,
+            role: user.currentRole.role,
+            remarks: data.verification.remarks,
+            actionData: {},
+            loanApplicationId: data.verification.loanApplicationId,
+            verificationId: verification.id,
           });
           break;
 

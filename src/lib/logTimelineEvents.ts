@@ -6,6 +6,7 @@ type TimelineEventType =
   // Application lifecycle
   | "APPLICATION_CREATED"
   | "APPLICATION_UPDATED"
+  | "APPLICATION_ESCALATED"
   | "APPLICATION_DELETED"
   | "APPLICATION_REOPENED"
   | "APPLICATION_APPROVED"
@@ -27,6 +28,7 @@ type TimelineEventType =
 
   // Verifications
   | "VERIFICATION_STARTED"
+  | "VERIFICATION_CREATED"
   | "VERIFICATION_COMPLETED"
   | "VERIFICATION_FAILED"
   | "VERIFICATION_REVIEW_APPROVED"
@@ -43,7 +45,9 @@ type TimelineEventType =
   // Notes and remarks
   | "NOTE_ADDED"
   | "REMARK_ADDED"
+  | "CLERK_REMARK_ADDED"
   | "SANCTION_REMARK_ADDED"
+  | "INSPECTION_REMARK_ADDED"
 
   // System events
   | "SYSTEM_EVENT"
@@ -66,6 +70,7 @@ type LogTimelineEventParams = {
   loanApplicationId?: string;
   applicantId?: string;
   documentId?: string;
+  verificationId?: string;
 };
 
 export async function logTimelineEvent(params: LogTimelineEventParams) {
@@ -81,6 +86,7 @@ export async function logTimelineEvent(params: LogTimelineEventParams) {
     loanApplicationId,
     applicantId,
     documentId,
+    verificationId,
   } = params;
 
   return prisma.timelineEvent.create({
@@ -96,6 +102,7 @@ export async function logTimelineEvent(params: LogTimelineEventParams) {
       loanApplicationId,
       applicantId,
       documentId,
+      verificationId,
     },
   });
 }
