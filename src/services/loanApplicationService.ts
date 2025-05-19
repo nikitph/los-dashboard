@@ -25,7 +25,7 @@ export async function createLoanApplicationWithLog(input: {
 
   await logTimelineEvent({
     timelineEntityType: "LOAN_APPLICATION",
-    timelinEntityId: newLoanApplication.id,
+    timelineEntityId: newLoanApplication.id,
     timelineEventType: "APPLICATION_CREATED",
     userId: input.userId,
     remarks: "Loan application created",
@@ -64,7 +64,7 @@ export async function updateLoanApplicationStatusWithLog(params: {
 
   await logTimelineEvent({
     timelineEntityType: "LOAN_APPLICATION",
-    timelinEntityId: updatedLoanApplication.id,
+    timelineEntityId: updatedLoanApplication.id,
     timelineEventType: params.eventType,
     userId: params.userId,
     remarks: params.remarks || `Loan status updated to ${params.newStatus}`,
