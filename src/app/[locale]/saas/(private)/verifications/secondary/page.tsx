@@ -4,6 +4,7 @@ import ResidenceVerification from "@/app/[locale]/saas/(private)/verifications/c
 import BusinessVerification from "@/app/[locale]/saas/(private)/verifications/components/BusinessVerification";
 import { prisma } from "@/lib/prisma/prisma";
 import PropertyVerification from "@/app/[locale]/saas/(private)/verifications/components/PropertyVerification";
+import VehicleVerification from "@/app/[locale]/saas/(private)/verifications/components/VehicleVerification";
 
 export default async function CreateVerificationPage({ searchParams }: { searchParams: { lid: string } }) {
   const { lid } = await searchParams;
@@ -26,7 +27,7 @@ export default async function CreateVerificationPage({ searchParams }: { searchP
         return <BusinessVerification loanApplicationId={lid} defaultType="BUSINESS" />;
 
       case "VEHICLE":
-        return <ResidenceVerification loanApplicationId={lid} defaultType="BUSINESS" />;
+        return <VehicleVerification loanApplicationId={lid} defaultType="VEHICLE" />;
 
       case "HOUSE_CONSTRUCTION":
       case "PLOT_PURCHASE":

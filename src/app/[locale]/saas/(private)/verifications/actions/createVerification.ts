@@ -103,7 +103,7 @@ export async function createVerification(data: CreateFullVerificationInput): Pro
 
           await logTimelineEvent({
             timelineEntityType: "VERIFICATION",
-            timelineEntityId: result.id,
+            timelineEntityId: verification.id,
             timelineEventType: "VERIFICATION_STARTED",
             userId: user.id,
             userName: user.firstName + " " + user.lastName,
@@ -111,7 +111,6 @@ export async function createVerification(data: CreateFullVerificationInput): Pro
             remarks: data.verification.remarks,
             actionData: {},
             loanApplicationId: data.verification.loanApplicationId,
-            verificationId: verification.id,
           });
           break;
 
@@ -129,7 +128,7 @@ export async function createVerification(data: CreateFullVerificationInput): Pro
 
           await logTimelineEvent({
             timelineEntityType: "VERIFICATION",
-            timelineEntityId: result.id,
+            timelineEntityId: verification.id,
             timelineEventType: "VERIFICATION_CREATED",
             userId: user.id,
             userName: user.firstName + " " + user.lastName,
@@ -137,7 +136,6 @@ export async function createVerification(data: CreateFullVerificationInput): Pro
             remarks: data.verification.remarks,
             actionData: {},
             loanApplicationId: data.verification.loanApplicationId,
-            verificationId: verification.id,
           });
           break;
 
@@ -154,7 +152,7 @@ export async function createVerification(data: CreateFullVerificationInput): Pro
           });
           await logTimelineEvent({
             timelineEntityType: "VERIFICATION",
-            timelineEntityId: result.id,
+            timelineEntityId: verification.id,
             timelineEventType: "VERIFICATION_CREATED",
             userId: user.id,
             userName: user.firstName + " " + user.lastName,
@@ -162,7 +160,6 @@ export async function createVerification(data: CreateFullVerificationInput): Pro
             remarks: data.verification.remarks,
             actionData: {},
             loanApplicationId: data.verification.loanApplicationId,
-            verificationId: verification.id,
           });
           break;
 
@@ -179,7 +176,7 @@ export async function createVerification(data: CreateFullVerificationInput): Pro
           });
           await logTimelineEvent({
             timelineEntityType: "VERIFICATION",
-            timelineEntityId: result.id,
+            timelineEntityId: verification.id,
             timelineEventType: "VERIFICATION_CREATED",
             userId: user.id,
             userName: user.firstName + " " + user.lastName,
@@ -187,7 +184,6 @@ export async function createVerification(data: CreateFullVerificationInput): Pro
             remarks: data.verification.remarks,
             actionData: {},
             loanApplicationId: data.verification.loanApplicationId,
-            verificationId: verification.id,
           });
           break;
 
