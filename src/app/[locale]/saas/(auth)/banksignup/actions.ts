@@ -3,7 +3,6 @@
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma/prisma";
-import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 
 import {
@@ -301,8 +300,7 @@ export async function signup(formData: SignupSchemaType, bankId: string, locale:
 
     const data = signupSchema.parse(validatedData);
 
-    const cookieStore = cookies();
-    const supabase = createClient(cookieStore);
+    const supabase = await createClient();
 
     // Create user in Supabase Auth
     const { data: authData, error: authError } = await supabase.auth.signUp({

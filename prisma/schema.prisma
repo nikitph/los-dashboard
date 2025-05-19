@@ -423,6 +423,8 @@ model TimelineEvent {
   actionData         Json?
   remarks            String?
   createdAt          DateTime           @default(now())
+  userName           String
+  role               RoleType
 
   // Relationships
   userId String

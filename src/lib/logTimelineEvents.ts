@@ -81,7 +81,7 @@ export async function logTimelineEvent(params: LogTimelineEventParams) {
   return prisma.timelineEvent.create({
     data: {
       timelineEntityType,
-      timelinEntityId: timelineEntityId,
+      timelineEntityId,
       timelineEventType,
       userId,
       remarks,
