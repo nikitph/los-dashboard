@@ -1,0 +1,2 @@
+-- AlterEnum
+ALTER TYPE "TimelineEventType" ADD VALUE 'VERIFICATION_CREATED';
