@@ -119,7 +119,7 @@ export async function completeLoanConfirmation(data: {
           userId: user.id,
           userName: user.firstName + " " + user.lastName,
           role: user.currentRole.role,
-          eventType: "APPLICATION_UPDATED",
+          eventType: "APPLICATION_ESCALATED",
           remarks: data.remark,
         });
         break;
