@@ -21,6 +21,7 @@ export function defineAbilityFor(user: User | null | undefined): AppAbility {
     "BankConfiguration",
     "Subscription",
     "TimelineEvent",
+    "Review",
   ] as const;
 
   if (!user) return build();

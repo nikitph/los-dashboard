@@ -2080,5 +2080,45 @@
       "COMPLETED": "Completed",
       "FAILED": "Failed"
     }
+  },
+  "Review": {
+    "form": {
+      "title": "Review",
+      "fields": {
+        "remarks": {
+          "label": "Remarks",
+          "placeholder": "Enter your review comments here..."
+        },
+        "result": {
+          "label": "Review Result"
+        }
+      },
+      "result": {
+        "positive": "Approved",
+        "negative": "Rejected",
+        "badge": {
+          "success": "Review Approved",
+          "error": "Review Rejected"
+        }
+      },
+      "buttons": {
+        "submit": "Proceed to Physical Verification Review",
+        "submitting": "Submitting..."
+      }
+    },
+    "validation": {
+      "remarks": {
+        "required": "Remarks are required"
+      }
+    },
+    "errors": {
+      "validation": "Please correct the errors in the form",
+      "unauthorized": "You must be logged in to submit a review",
+      "forbidden": "You don't have permission to submit a review"
+    },
+    "toast": {
+      "created": "Review submitted successfully",
+      "error": "Failed to submit review"
+    }
   }
 }

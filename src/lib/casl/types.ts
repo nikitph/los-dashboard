@@ -27,6 +27,7 @@ export type Subjects =
   | "UserRoles"
   | "VehicleVerification"
   | "Verification"
+  | "Review"
   | "all";
 
 export type AppAbility = MongoAbility<[Actions, Subjects]>;
