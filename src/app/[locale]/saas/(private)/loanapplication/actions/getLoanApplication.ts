@@ -49,6 +49,7 @@ export async function getLoanApplication(id: string): Promise<ActionResponse> {
         },
         guarantors: true,
         coApplicants: true,
+        reviews: true,
         verifications: {
           include: {
             residenceVerification: true,
