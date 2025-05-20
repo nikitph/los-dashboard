@@ -146,7 +146,7 @@ export function ReviewPhysicalVerificationForm({
       )}
 
       {loanApplication.reviews
-        // .filter((e) => e.reviewEventType === "INSPECTOR_REVIEW")
+        .filter((e) => e.reviewEventType === "INSPECTOR_REVIEW")
         .map((s) => (
           <ReviewCard key={s.id} review={s} />
         ))}
