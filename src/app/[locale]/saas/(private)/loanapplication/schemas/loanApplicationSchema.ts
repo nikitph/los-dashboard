@@ -192,6 +192,48 @@ export const loanApplicationViewSchema = z.object({
     }),
   ),
 
+  reviews: z.array(
+    z.object({
+      id: z.string(),
+      reviewEntityType: z.enum(["APPLICANT", "LOAN_APPLICATION", "DOCUMENT", "VERIFICATION"]),
+      reviewEntityId: z.string(),
+      reviewEventType: z.enum([
+        "CLERK_REVIEW",
+        "INSPECTOR_REVIEW",
+        "LOAN_OFFICER_REVIEW",
+        "CEO_REVIEW",
+        "LOAN_COMMITTEE_REVIEW",
+        "BOARD_REVIEW",
+        "BANK_ADMIN_REVIEW",
+      ]),
+      actionData: z.record(z.any()).optional(),
+      remarks: z.string().optional().nullable(),
+      result: z.boolean(),
+      createdAt: z.date(),
+      userName: z.string(),
+      role: z.enum([
+        "CLERK",
+        "INSPECTOR",
+        "LOAN_OFFICER",
+        "CEO",
+        "LOAN_COMMITTEE_MEMBER",
+        "BOARD_MEMBER",
+        "BANK_ADMIN",
+      ]),
+      userId: z.string(),
+      user: z.object({
+        id: z.string(),
+        firstName: z.string(),
+        lastName: z.string(),
+        email: z.string(),
+        phoneNumber: z.string(),
+        createdAt: z.date(),
+        updatedAt: z.date(),
+        deletedAt: z.date().nullable().optional(),
+      }),
+    }),
+  ),
+
   // Timeline Events
   timelineEvents: z.array(
     z.object({

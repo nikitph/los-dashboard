@@ -12,9 +12,9 @@ import { useViewLoanApplicationForm } from "../hooks/useViewLoanApplicationForm"
 import { LoanApplicationView } from "../schemas/loanApplicationSchema";
 import { Card, CardContent } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
-import Timeline from "@/components/Timeline";
 import ReviewForm from "../../review/components/ReviewForm";
 import { ReviewEntityType, ReviewEventType } from "@prisma/client";
+import ReviewCard from "@/components/ReviewCard";
 
 /**
  * Component for displaying detailed loan application information
@@ -147,12 +147,11 @@ export function ReviewLoanApplicationForm({
         />
       )}
 
-      <Timeline
-        // @ts-ignore
-        events={loanApplication.timelineEvents.filter((ev) => {
-          return ev.timelineEventType === "CLERK_REMARK_ADDED";
-        })}
-      />
+      {loanApplication.reviews
+        .filter((e) => e.reviewEventType === "CLERK_REVIEW")
+        .map((s) => (
+          <ReviewCard key={s.id} review={s} />
+        ))}
       <ReviewForm
         reviewEntityType={ReviewEntityType.LOAN_APPLICATION}
         reviewEntityId={loanApplication.id}

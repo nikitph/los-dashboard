@@ -792,6 +792,10 @@
       "title": "Review Loan Application",
       "description": "Review loan application details"
     },
+    "physicalReview": {
+      "title": "Review Verifications",
+      "description": "Review verfications"
+    },
     "filter": {
       "search": "Search loan applications",
       "reset": "Reset",

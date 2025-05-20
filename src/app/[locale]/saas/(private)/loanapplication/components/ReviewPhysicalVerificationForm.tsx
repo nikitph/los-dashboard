@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { IconButton } from "@/subframe/components/IconButton";
 import { Badge } from "@/subframe/components/Badge";
 import { Alert } from "@/subframe/components/Alert";
@@ -12,10 +12,9 @@ import { useViewLoanApplicationForm } from "../hooks/useViewLoanApplicationForm"
 import { LoanApplicationView } from "../schemas/loanApplicationSchema";
 import { Card, CardContent } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
-import Timeline from "@/components/Timeline";
 import ReviewForm from "../../review/components/ReviewForm";
 import { ReviewEntityType, ReviewEventType } from "@prisma/client";
-import VerificationsTab from "@/app/[locale]/saas/(private)/loanapplication/components/VerificationsTab";
+import ReviewCard from "@/components/ReviewCard";
 
 /**
  * Component for displaying detailed loan application information
@@ -32,6 +31,7 @@ export function ReviewPhysicalVerificationForm({
   const { visibility, isDeleting, handleDelete } = useViewLoanApplicationForm({ loanApplication });
   const t = useTranslations("LoanApplication");
   const router = useRouter();
+  const locale = useLocale();
 
   // Handle back navigation
   const handleBack = () => {
@@ -57,7 +57,7 @@ export function ReviewPhysicalVerificationForm({
         <div className="flex w-full items-center gap-4">
           <div className="flex shrink-0 grow basis-0 items-center gap-3">
             <IconButton icon="FeatherArrowLeft" onClick={handleBack} />
-            <span className="font-heading-2 text-heading-2 text-default-font">{t("review.title")}</span>
+            <span className="font-heading-2 text-heading-2 text-default-font">{t("physicalReview.title")}</span>
             {visibility.status && <LoanStatusBadge status={loanApplication.status} />}
           </div>
 
@@ -145,27 +145,20 @@ export function ReviewPhysicalVerificationForm({
         />
       )}
 
-      {loanApplication.verifications && loanApplication.verifications.length > 0 ? (
-        <div className="w-full space-y-4">
-          <VerificationsTab loanApplication={loanApplication} />
-        </div>
-      ) : (
-        <p className="text-muted-foreground">No verifications conducted for this loan application.</p>
-      )}
-
-      <Timeline
-        // @ts-ignore
-        events={loanApplication.timelineEvents.filter((ev) => {
-          return ev.timelineEventType === "INSPECTOR_REMARK_ADDED";
-        })}
-      />
+      {loanApplication.reviews
+        // .filter((e) => e.reviewEventType === "INSPECTOR_REVIEW")
+        .map((s) => (
+          <ReviewCard key={s.id} review={s} />
+        ))}
       <ReviewForm
-        reviewEntityType={ReviewEntityType.LOAN_APPLICATION}
-        reviewEntityId={loanApplication.id}
+        reviewEntityType={ReviewEntityType.VERIFICATION}
+        reviewEntityId={loanApplication.verifications[0].id}
         reviewEventType={ReviewEventType.LOAN_OFFICER_REVIEW}
         loanApplicationId={loanApplication.id}
         actionData={{}}
-        onSuccess={() => {}}
+        onSuccess={() => {
+          router.push(`/${locale}/saas/loanapplication/${loanApplication.id}/physicalreview`);
+        }}
         onError={() => {}}
       />
     </div>
