@@ -102,31 +102,6 @@ export async function createVerification(data: CreateFullVerificationInput): Pro
               verificationId: verification.id,
             },
           });
-
-          await logTimelineEvent({
-            timelineEntityType: "VERIFICATION",
-            timelineEntityId: verification.id,
-            timelineEventType: "VERIFICATION_STARTED",
-            userId: user.id,
-            userName: user.firstName + " " + user.lastName,
-            role: user.currentRole.role,
-            remarks: data.verification.remarks,
-            actionData: {},
-            loanApplicationId: data.verification.loanApplicationId,
-          });
-
-          await createReview({
-            reviewEntityType: "VERIFICATION",
-            reviewEntityId: verification.id,
-            reviewEventType: "INSPECTOR_REVIEW",
-            loanApplicationId: data.verification.loanApplicationId,
-            remarks: data.verification.remarks || " - ",
-            result: data.verification.result,
-            actionData: {},
-            userId: user.id,
-            userName: `${user.firstName || ""} ${user.lastName || ""}`.trim(),
-            role: user.currentRole.role as RoleType,
-          });
           break;
 
         case "BUSINESS":
@@ -139,31 +114,6 @@ export async function createVerification(data: CreateFullVerificationInput): Pro
               ...data.businessVerification,
               verificationId: verification.id,
             },
-          });
-
-          await logTimelineEvent({
-            timelineEntityType: "VERIFICATION",
-            timelineEntityId: verification.id,
-            timelineEventType: "VERIFICATION_CREATED",
-            userId: user.id,
-            userName: user.firstName + " " + user.lastName,
-            role: user.currentRole.role,
-            remarks: data.verification.remarks,
-            actionData: {},
-            loanApplicationId: data.verification.loanApplicationId,
-          });
-
-          await createReview({
-            reviewEntityType: "VERIFICATION",
-            reviewEntityId: verification.id,
-            reviewEventType: "INSPECTOR_REVIEW",
-            loanApplicationId: data.verification.loanApplicationId,
-            remarks: data.verification.remarks || " - ",
-            result: data.verification.result,
-            actionData: {},
-            userId: user.id,
-            userName: `${user.firstName || ""} ${user.lastName || ""}`.trim(),
-            role: user.currentRole.role as RoleType,
           });
           break;
 
@@ -178,30 +128,6 @@ export async function createVerification(data: CreateFullVerificationInput): Pro
               verificationId: verification.id,
             },
           });
-          await logTimelineEvent({
-            timelineEntityType: "VERIFICATION",
-            timelineEntityId: verification.id,
-            timelineEventType: "VERIFICATION_CREATED",
-            userId: user.id,
-            userName: user.firstName + " " + user.lastName,
-            role: user.currentRole.role,
-            remarks: data.verification.remarks,
-            actionData: {},
-            loanApplicationId: data.verification.loanApplicationId,
-          });
-
-          await createReview({
-            reviewEntityType: "VERIFICATION",
-            reviewEntityId: verification.id,
-            reviewEventType: "INSPECTOR_REVIEW",
-            loanApplicationId: data.verification.loanApplicationId,
-            remarks: data.verification.remarks || " - ",
-            result: data.verification.result,
-            actionData: {},
-            userId: user.id,
-            userName: `${user.firstName || ""} ${user.lastName || ""}`.trim(),
-            role: user.currentRole.role as RoleType,
-          });
           break;
 
         case "VEHICLE":
@@ -214,30 +140,6 @@ export async function createVerification(data: CreateFullVerificationInput): Pro
               ...data.vehicleVerification,
               verificationId: verification.id,
             },
-          });
-          await logTimelineEvent({
-            timelineEntityType: "VERIFICATION",
-            timelineEntityId: verification.id,
-            timelineEventType: "VERIFICATION_CREATED",
-            userId: user.id,
-            userName: user.firstName + " " + user.lastName,
-            role: user.currentRole.role,
-            remarks: data.verification.remarks,
-            actionData: {},
-            loanApplicationId: data.verification.loanApplicationId,
-          });
-
-          await createReview({
-            reviewEntityType: "VERIFICATION",
-            reviewEntityId: verification.id,
-            reviewEventType: "INSPECTOR_REVIEW",
-            loanApplicationId: data.verification.loanApplicationId,
-            remarks: data.verification.remarks || " - ",
-            result: data.verification.result,
-            actionData: {},
-            userId: user.id,
-            userName: `${user.firstName || ""} ${user.lastName || ""}`.trim(),
-            role: user.currentRole.role as RoleType,
           });
           break;
 
@@ -254,6 +156,31 @@ export async function createVerification(data: CreateFullVerificationInput): Pro
       });
 
       return verification;
+    });
+
+    await logTimelineEvent({
+      timelineEntityType: "VERIFICATION",
+      timelineEntityId: result.id,
+      timelineEventType: data.verification.type === "RESIDENCE" ? "VERIFICATION_STARTED" : "VERIFICATION_CREATED",
+      userId: user.id,
+      userName: user.firstName + " " + user.lastName,
+      role: user.currentRole.role,
+      remarks: data.verification.remarks,
+      actionData: {},
+      loanApplicationId: data.verification.loanApplicationId,
+    });
+
+    await createReview({
+      reviewEntityType: "VERIFICATION",
+      reviewEntityId: result.id,
+      reviewEventType: "INSPECTOR_REVIEW",
+      loanApplicationId: data.verification.loanApplicationId,
+      remarks: data.verification.remarks || " - ",
+      result: data.verification.result,
+      actionData: {},
+      userId: user.id,
+      userName: `${user.firstName || ""} ${user.lastName || ""}`.trim(),
+      role: user.currentRole.role as RoleType,
     });
 
     return {
