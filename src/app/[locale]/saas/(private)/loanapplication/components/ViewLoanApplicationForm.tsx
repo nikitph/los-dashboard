@@ -282,7 +282,7 @@ export function ViewLoanApplicationForm({
         )}
 
         {activeTabIndex === 2 && visibility.verifications && (
-          <VerificationsTab loanApplication={loanApplication} visibility={visibility} activeTabIndex={activeTabIndex} />
+          <VerificationsTab loanApplication={loanApplication} canAddVerification={visibility.canAddVerification} />
         )}
 
         {activeTabIndex === 3 && visibility.timelineEvents && <Timeline events={loanApplication.timelineEvents} />}

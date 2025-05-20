@@ -11,6 +11,8 @@ import {
   createFullVerificationSchema
 } from "../../verifications/schemas/verificationSchema";
 import { logTimelineEvent } from "@/lib/logTimelineEvents";
+import { createReview } from "@/app/[locale]/saas/(private)/review/actions/createReview";
+import { RoleType } from "@prisma/client";
 
 /**
  * Creates a new verification in the database with related type-specific verification data
@@ -112,6 +114,19 @@ export async function createVerification(data: CreateFullVerificationInput): Pro
             actionData: {},
             loanApplicationId: data.verification.loanApplicationId,
           });
+
+          await createReview({
+            reviewEntityType: "VERIFICATION",
+            reviewEntityId: verification.id,
+            reviewEventType: "INSPECTOR_REVIEW",
+            loanApplicationId: data.verification.loanApplicationId,
+            remarks: data.verification.remarks || " - ",
+            result: data.verification.result,
+            actionData: {},
+            userId: user.id,
+            userName: `${user.firstName || ""} ${user.lastName || ""}`.trim(),
+            role: user.currentRole.role as RoleType,
+          });
           break;
 
         case "BUSINESS":
@@ -137,6 +152,19 @@ export async function createVerification(data: CreateFullVerificationInput): Pro
             actionData: {},
             loanApplicationId: data.verification.loanApplicationId,
           });
+
+          await createReview({
+            reviewEntityType: "VERIFICATION",
+            reviewEntityId: verification.id,
+            reviewEventType: "INSPECTOR_REVIEW",
+            loanApplicationId: data.verification.loanApplicationId,
+            remarks: data.verification.remarks || " - ",
+            result: data.verification.result,
+            actionData: {},
+            userId: user.id,
+            userName: `${user.firstName || ""} ${user.lastName || ""}`.trim(),
+            role: user.currentRole.role as RoleType,
+          });
           break;
 
         case "PROPERTY":
@@ -161,6 +189,19 @@ export async function createVerification(data: CreateFullVerificationInput): Pro
             actionData: {},
             loanApplicationId: data.verification.loanApplicationId,
           });
+
+          await createReview({
+            reviewEntityType: "VERIFICATION",
+            reviewEntityId: verification.id,
+            reviewEventType: "INSPECTOR_REVIEW",
+            loanApplicationId: data.verification.loanApplicationId,
+            remarks: data.verification.remarks || " - ",
+            result: data.verification.result,
+            actionData: {},
+            userId: user.id,
+            userName: `${user.firstName || ""} ${user.lastName || ""}`.trim(),
+            role: user.currentRole.role as RoleType,
+          });
           break;
 
         case "VEHICLE":
@@ -184,6 +225,19 @@ export async function createVerification(data: CreateFullVerificationInput): Pro
             remarks: data.verification.remarks,
             actionData: {},
             loanApplicationId: data.verification.loanApplicationId,
+          });
+
+          await createReview({
+            reviewEntityType: "VERIFICATION",
+            reviewEntityId: verification.id,
+            reviewEventType: "INSPECTOR_REVIEW",
+            loanApplicationId: data.verification.loanApplicationId,
+            remarks: data.verification.remarks || " - ",
+            result: data.verification.result,
+            actionData: {},
+            userId: user.id,
+            userName: `${user.firstName || ""} ${user.lastName || ""}`.trim(),
+            role: user.currentRole.role as RoleType,
           });
           break;
 

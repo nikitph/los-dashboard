@@ -7,6 +7,8 @@ import { getAbility } from "@/lib/casl/getAbility";
 import { ActionResponse } from "@/types/globalTypes";
 import { createLoanConfirmationSchema } from "../schemas/loanConfirmationSchema";
 import { updateLoanApplicationStatusWithLog } from "@/services/loanApplicationService";
+import { createReview } from "@/app/[locale]/saas/(private)/review/actions/createReview";
+import { RoleType } from "@prisma/client";
 
 /**
  * Completes the loan confirmation process based on the status
@@ -84,6 +86,19 @@ export async function completeLoanConfirmation(data: {
           remarks: data.remark,
         });
 
+        const response = await createReview({
+          reviewEntityType: "LOAN_APPLICATION",
+          reviewEntityId: data.loanApplicationId,
+          reviewEventType: "CLERK_REVIEW",
+          loanApplicationId: data.loanApplicationId,
+          remarks: data.remark || " - ",
+          result: true,
+          actionData: {},
+          userId: user.id,
+          userName: `${user.firstName || ""} ${user.lastName || ""}`.trim(),
+          role: user.currentRole.role as RoleType,
+        });
+
         break;
 
       case "r": // Rejected - finish application
@@ -121,6 +136,19 @@ export async function completeLoanConfirmation(data: {
           role: user.currentRole.role,
           eventType: "APPLICATION_ESCALATED",
           remarks: data.remark,
+        });
+
+        const result = await createReview({
+          reviewEntityType: "LOAN_APPLICATION",
+          reviewEntityId: data.loanApplicationId,
+          reviewEventType: "CLERK_REVIEW",
+          loanApplicationId: data.loanApplicationId,
+          remarks: data.remark || " - ",
+          result: false,
+          actionData: {},
+          userId: user.id,
+          userName: `${user.firstName || ""} ${user.lastName || ""}`.trim(),
+          role: user.currentRole.role as RoleType,
         });
         break;
 

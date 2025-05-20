@@ -788,6 +788,10 @@
       "documentsDescription": "इस ऋण आवेदन से संबंधित दस्तावेज़",
       "submittedTimeAgo": "{timeAgo} पहले जमा किया गया"
     },
+    "review": {
+      "title": "ऋण आवेदन समीक्षा",
+      "description": "ऋण आवेदन की समीक्षा करें"
+    },
     "filter": {
       "search": "ऋण आवेदन खोजें",
       "reset": "रीसेट करें",

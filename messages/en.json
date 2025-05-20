@@ -788,6 +788,10 @@
       "documentsDescription": "Documents related to this loan application",
       "submittedTimeAgo": "Submitted {timeAgo}"
     },
+    "review": {
+      "title": "Review Loan Application",
+      "description": "Review loan application details"
+    },
     "filter": {
       "search": "Search loan applications",
       "reset": "Reset",

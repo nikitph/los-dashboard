@@ -87,11 +87,10 @@ interface VisibilitySettings {
 
 interface VerificationsTabProps {
   loanApplication: LoanApplication;
-  visibility: VisibilitySettings;
-  activeTabIndex: number;
+  canAddVerification?: boolean;
 }
 
-const VerificationsTab: React.FC<VerificationsTabProps> = ({ loanApplication, visibility, activeTabIndex }) => {
+const VerificationsTab: React.FC<VerificationsTabProps> = ({ loanApplication, canAddVerification = false }) => {
   const t = useTranslations("LoanApplication");
 
   // Function to handle view details button click
@@ -236,11 +235,6 @@ const VerificationsTab: React.FC<VerificationsTabProps> = ({ loanApplication, vi
     );
   };
 
-  // Only render if this is the active tab and verifications are visible
-  if (activeTabIndex !== 2 || !visibility.verifications) {
-    return null;
-  }
-
   return (
     <div className="w-full">
       {loanApplication.verifications && loanApplication.verifications.length > 0 ? (
@@ -257,7 +251,7 @@ const VerificationsTab: React.FC<VerificationsTabProps> = ({ loanApplication, vi
         />
       )}
 
-      {visibility.canAddVerification && (
+      {canAddVerification && (
         <Button className="mt-4" icon="FeatherPlus" onClick={handleAddVerification}>
           {t("actions.addVerification")}
         </Button>

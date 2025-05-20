@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import { IconButton } from "@/subframe/components/IconButton";
 import { Badge } from "@/subframe/components/Badge";
 import { Alert } from "@/subframe/components/Alert";
@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation";
 import Timeline from "@/components/Timeline";
 import ReviewForm from "../../review/components/ReviewForm";
 import { ReviewEntityType, ReviewEventType } from "@prisma/client";
+import VerificationsTab from "@/app/[locale]/saas/(private)/loanapplication/components/VerificationsTab";
 
 /**
  * Component for displaying detailed loan application information
@@ -23,7 +24,7 @@ import { ReviewEntityType, ReviewEventType } from "@prisma/client";
  * @param {LoanApplicationView} props.loanApplication - The loan application data to display
  * @returns {JSX.Element} Loan application view component
  */
-export function ReviewLoanApplicationForm({
+export function ReviewPhysicalVerificationForm({
   loanApplication,
 }: {
   loanApplication: LoanApplicationView;
@@ -31,9 +32,6 @@ export function ReviewLoanApplicationForm({
   const { visibility, isDeleting, handleDelete } = useViewLoanApplicationForm({ loanApplication });
   const t = useTranslations("LoanApplication");
   const router = useRouter();
-  const locale = useLocale();
-
-  console.log("loanApplication", loanApplication);
 
   // Handle back navigation
   const handleBack = () => {
@@ -147,10 +145,18 @@ export function ReviewLoanApplicationForm({
         />
       )}
 
+      {loanApplication.verifications && loanApplication.verifications.length > 0 ? (
+        <div className="w-full space-y-4">
+          <VerificationsTab loanApplication={loanApplication} />
+        </div>
+      ) : (
+        <p className="text-muted-foreground">No verifications conducted for this loan application.</p>
+      )}
+
       <Timeline
         // @ts-ignore
         events={loanApplication.timelineEvents.filter((ev) => {
-          return ev.timelineEventType === "CLERK_REMARK_ADDED";
+          return ev.timelineEventType === "INSPECTOR_REMARK_ADDED";
         })}
       />
       <ReviewForm
@@ -159,9 +165,7 @@ export function ReviewLoanApplicationForm({
         reviewEventType={ReviewEventType.LOAN_OFFICER_REVIEW}
         loanApplicationId={loanApplication.id}
         actionData={{}}
-        onSuccess={() => {
-          router.push(`/${locale}/saas/loanapplication/${loanApplication.id}/physicalreview`);
-        }}
+        onSuccess={() => {}}
         onError={() => {}}
       />
     </div>
