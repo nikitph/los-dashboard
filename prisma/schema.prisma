@@ -26,6 +26,7 @@ model UserProfile {
   userRoles        UserRoles[]
   verifications    Verification[]
   timelineEvents   TimelineEvent[]
+  reviews          Review[]
 }
 
 model UserRoles {
@@ -217,6 +218,7 @@ model LoanApplication {
   bank            Bank            @relation(fields: [bankId], references: [id])
   verifications   Verification[]
   timelineEvents  TimelineEvent[]
+  reviews         Review[]
 }
 
 model Guarantor {
@@ -448,6 +450,25 @@ model TimelineEvent {
   @@index([createdAt])
 }
 
+model Review {
+  id               String           @id @default(dbgenerated("gen_random_uuid()"))
+  reviewEntityType ReviewEntityType
+  reviewEntityId   String
+  reviewEventType  ReviewEventType
+  actionData       Json?
+  remarks          String?
+  result           Boolean
+  createdAt        DateTime         @default(now())
+  userName         String
+  role             RoleType
+
+  // Relationships
+  userId            String
+  user              UserProfile      @relation(fields: [userId], references: [id])
+  loanApplicationId String
+  loanApplication   LoanApplication? @relation(fields: [loanApplicationId], references: [id])
+}
+
 model AuditLog {
   id         String      @id @default(dbgenerated("gen_random_uuid()"))
   action     String
@@ -467,6 +488,23 @@ enum TimelineEntityType {
   LOAN_APPLICATION
   DOCUMENT
   VERIFICATION
+}
+
+enum ReviewEntityType {
+  APPLICANT
+  LOAN_APPLICATION
+  DOCUMENT
+  VERIFICATION
+}
+
+enum ReviewEventType {
+  CLERK_REVIEW
+  VERIFICATION_OFFICER_REVIEW
+  LOAN_OFFICER_REVIEW
+  CEO_REVIEW
+  LOAN_COMMITTEE_REVIEW
+  BOARD_REVIEW
+  BANK_ADMIN_REVIEW
 }
 
 enum TimelineEventType {
