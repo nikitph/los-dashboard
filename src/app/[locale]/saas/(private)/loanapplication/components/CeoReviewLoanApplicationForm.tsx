@@ -23,7 +23,7 @@ import ReviewCard from "@/components/ReviewCard";
  * @param {LoanApplicationView} props.loanApplication - The loan application data to display
  * @returns {JSX.Element} Loan application view component
  */
-export function ReviewPhysicalVerificationForm({
+export function CeoReviewLoanApplicationForm({
   loanApplication,
 }: {
   loanApplication: LoanApplicationView;
@@ -32,6 +32,8 @@ export function ReviewPhysicalVerificationForm({
   const t = useTranslations("LoanApplication");
   const router = useRouter();
   const locale = useLocale();
+
+  console.log("loanApplication", loanApplication);
 
   // Handle back navigation
   const handleBack = () => {
@@ -57,7 +59,7 @@ export function ReviewPhysicalVerificationForm({
         <div className="flex w-full items-center gap-4">
           <div className="flex shrink-0 grow basis-0 items-center gap-3">
             <IconButton icon="FeatherArrowLeft" onClick={handleBack} />
-            <span className="font-heading-2 text-heading-2 text-default-font">{t("physicalReview.title")}</span>
+            <span className="font-heading-2 text-heading-2 text-default-font">{t("review.title")}</span>
             {visibility.status && <LoanStatusBadge status={loanApplication.status} />}
           </div>
 
@@ -145,15 +147,13 @@ export function ReviewPhysicalVerificationForm({
         />
       )}
 
-      {loanApplication.reviews
-        .filter((e) => e.reviewEventType === "INSPECTOR_REVIEW")
-        .map((s) => (
-          <ReviewCard key={s.id} review={s} />
-        ))}
+      {loanApplication.reviews.map((s) => (
+        <ReviewCard key={s.id} review={s} />
+      ))}
       <ReviewForm
-        reviewEntityType={ReviewEntityType.VERIFICATION}
-        reviewEntityId={loanApplication.verifications[0].id}
-        reviewEventType={ReviewEventType.LOAN_OFFICER_REVIEW}
+        reviewEntityType={ReviewEntityType.LOAN_APPLICATION}
+        reviewEntityId={loanApplication.id}
+        reviewEventType={ReviewEventType.CEO_REVIEW}
         loanApplicationId={loanApplication.id}
         actionData={{}}
         onSuccess={() => {
