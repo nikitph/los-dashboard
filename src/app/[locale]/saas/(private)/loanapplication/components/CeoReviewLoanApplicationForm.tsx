@@ -12,9 +12,8 @@ import { useViewLoanApplicationForm } from "../hooks/useViewLoanApplicationForm"
 import { LoanApplicationView } from "../schemas/loanApplicationSchema";
 import { Card, CardContent } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
-import ReviewForm from "../../review/components/ReviewForm";
-import { ReviewEntityType, ReviewEventType } from "@prisma/client";
 import ReviewCard from "@/components/ReviewCard";
+import { Button } from "@/components/subframe/ui";
 
 /**
  * Component for displaying detailed loan application information
@@ -150,17 +149,11 @@ export function CeoReviewLoanApplicationForm({
       {loanApplication.reviews.map((s) => (
         <ReviewCard key={s.id} review={s} />
       ))}
-      <ReviewForm
-        reviewEntityType={ReviewEntityType.LOAN_APPLICATION}
-        reviewEntityId={loanApplication.id}
-        reviewEventType={ReviewEventType.CEO_REVIEW}
-        loanApplicationId={loanApplication.id}
-        actionData={{}}
-        onSuccess={() => {
-          router.push(`/${locale}/saas/loanapplication/sanctionnote?lid${loanApplication.id}`);
-        }}
-        onError={() => {}}
-      />
+      <div className="flex justify-end space-x-2">
+        <Button onClick={() => router.push(`/${locale}/saas/loanapplication/sanctionnote?lid${loanApplication.id}`)}>
+          {t("form.buttons.submit")}
+        </Button>
+      </div>
     </div>
   );
 }
