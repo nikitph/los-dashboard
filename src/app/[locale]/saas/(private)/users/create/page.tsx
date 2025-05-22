@@ -1,34 +1,21 @@
-"use client";
+"use server";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
-import { useUser } from "@/contexts/userContext"; // Example user context
+import { Alert } from "@/components/subframe/ui";
 import UserForm from "../components/UserForm";
-import { useFormTranslation } from "@/hooks/useFormTranslation"; // Adjust path as needed
+import { getServerSessionUser } from "@/lib/getServerUser";
+import { getTranslations } from "next-intl/server";
+import { AlertDescription } from "@/components/ui/alert";
 
-export default function CreateUserPage() {
-  const router = useRouter();
-  const { page, validation, buttons, errors, toast: toastMessages, locale } = useFormTranslation("UserCreateForm");
-  const { user, loading } = useUser();
-  // If needed, fetch bankId from the user context, or from a route param.
-  const [bankId, setBankId] = useState<string>("");
+export default async function CreateUserPage() {
+  const t = await getTranslations("UserCreateForm");
+  const user = await getServerSessionUser();
 
-  useEffect(() => {
-    if (user && user.currentRole.bankId) {
-      setBankId(user.currentRole.bankId);
-    }
-  }, [user]);
-
-  const handleBack = () => {
-    router.push(`/${locale}/saas/users/list`); // Adjust to your user listing route
-  };
-
-  if (loading) {
+  if (!user?.currentRole?.bankId) {
     return (
-      <div className="flex h-screen items-center justify-center">
-        <p>Loading...</p>
+      <div className="flex min-h-screen items-center justify-center">
+        <Alert className="max-w-md">
+          <AlertDescription>No bank selected. Please select a bank first.</AlertDescription>
+        </Alert>
       </div>
     );
   }
@@ -37,14 +24,11 @@ export default function CreateUserPage() {
     <div className="min-h-screen">
       <div className="p-6">
         <div className="mb-6 flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={handleBack} className="shrink-0">
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
-          <h1 className="text-2xl font-semibold tracking-tight">{page("title")}</h1>
+          <h1 className="text-2xl font-semibold tracking-tight">{t("page.title")}</h1>
         </div>
 
         <div>
-          <UserForm bankId={bankId} />
+          <UserForm bankId={user?.currentRole?.bankId} />
         </div>
       </div>
     </div>

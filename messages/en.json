@@ -211,7 +211,7 @@
   },
   "UserCreateForm": {
     "page": {
-      "title": "Create User",
+      "title": "Create Bank User",
       "description": "Add a new user to the system",
       "firstName": "First Name",
       "lastName": "Last Name",
