@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Eye, Loader2, X } from "lucide-react";
 import { DocumentMetadata, useDocuments } from "@/hooks/useDocuments";
+import { Dialog } from "@/components/subframe/ui";
 
 interface ImageUploadButtonProps {
   documentType: DocumentMetadata["documentType"];
@@ -29,6 +30,7 @@ const ImageUploadButton = ({
   const [documentId, setDocumentId] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showRemoveDialog, setShowRemoveDialog] = useState(false);
 
   const { uploadDocument, viewDocument, removeDocument, progress } = useDocuments();
 
@@ -138,10 +140,13 @@ const ImageUploadButton = ({
     }
   };
 
-  const handleRemove = async (e: React.MouseEvent) => {
+  const handleRemoveClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    setShowRemoveDialog(true);
+  };
 
+  const handleConfirmRemove = async () => {
     if (documentId) {
       const success = await removeDocument(documentId, true);
       if (success) {
@@ -153,10 +158,12 @@ const ImageUploadButton = ({
           onRemove();
         }
       }
-    } else if (onRemove) {
-      // If no documentId yet, just notify parent
-      onRemove();
     }
+    setShowRemoveDialog(false);
+  };
+
+  const handleCancelRemove = () => {
+    setShowRemoveDialog(false);
   };
 
   const handleView = async (e: React.MouseEvent) => {
@@ -176,41 +183,69 @@ const ImageUploadButton = ({
   if (!file) return null;
 
   return (
-    <div className="flex items-center gap-2">
-      <div
-        className={`flex items-center justify-between rounded-md border border-gray-300 py-[5px] pl-4 pr-2 text-sm font-medium shadow-sm`}
-      >
-        <span className="max-w-[150px] truncate">{file.name}</span>
-        <div className="ml-2 flex items-center">
-          {isUploading ? (
-            <div className="flex items-center space-x-2 py-[4px]">
-              <Loader2 size={16} className="animate-spin" />
-              <span className="text-xs">{fileProgress}%</span>
-            </div>
-          ) : (
-            <>
-              <button
-                onClick={handleView}
-                className="rounded-full p-1 hover:bg-gray-200"
-                title="View Image"
-                type="button"
-              >
-                <Eye size={16} />
-              </button>
-              <button
-                onClick={handleRemove}
-                className="ml-1 rounded-full p-1 hover:bg-gray-200"
-                title="Remove image"
-                type="button"
-              >
-                <X size={16} />
-              </button>
-            </>
-          )}
+    <>
+      <div className="flex items-center gap-2">
+        <div
+          className={`flex items-center justify-between rounded-md border border-gray-300 py-[5px] pl-4 pr-2 text-sm font-medium shadow-sm`}
+        >
+          <span className="max-w-[150px] truncate">{file.name}</span>
+          <div className="ml-2 flex items-center">
+            {isUploading ? (
+              <div className="flex items-center space-x-2 py-[4px]">
+                <Loader2 size={16} className="animate-spin" />
+                <span className="text-xs">{fileProgress}%</span>
+              </div>
+            ) : (
+              <>
+                <button
+                  onClick={handleView}
+                  className="rounded-full p-1 hover:bg-gray-200"
+                  title="View Image"
+                  type="button"
+                >
+                  <Eye size={16} />
+                </button>
+                <button
+                  onClick={handleRemoveClick}
+                  className="ml-1 rounded-full p-1 hover:bg-gray-200"
+                  title="Remove image"
+                  type="button"
+                >
+                  <X size={16} />
+                </button>
+              </>
+            )}
+          </div>
         </div>
+        {error && <p className="text-xs text-red-500">{error}</p>}
       </div>
-      {error && <p className="text-xs text-red-500">{error}</p>}
-    </div>
+
+      {/* Confirmation Dialog */}
+      <Dialog open={showRemoveDialog} onOpenChange={setShowRemoveDialog}>
+        <Dialog.Content>
+          <div className="p-6">
+            <h2 className="mb-2 text-lg font-semibold">Remove Document</h2>
+            <p className="mb-6 text-gray-600">
+              Are you sure you want to remove {file?.name}? This action cannot be undone.
+            </p>
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={handleCancelRemove}
+                className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleConfirmRemove}
+                className="rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
+              >
+                Remove
+              </button>
+            </div>
+          </div>
+        </Dialog.Content>
+      </Dialog>
+    </>
   );
 };
 

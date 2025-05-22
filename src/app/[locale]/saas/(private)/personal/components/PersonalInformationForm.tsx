@@ -24,7 +24,11 @@ export default function PersonalInformationForm({ initialData, loanApplication }
       applicantId: loanApplication.applicant.id,
     });
 
-  console.log(form.formState.errors);
+  const aadharVerificationStatus = form.watch("aadharVerificationStatus");
+  const panVerificationStatus = form.watch("panVerificationStatus");
+  const dob = form.watch("dateOfBirth");
+
+  console.log("dob", dob);
 
   // Extract form errors for the bottom alert
   const hasErrors = Object.keys(form.formState.errors).length > 0;
@@ -32,7 +36,7 @@ export default function PersonalInformationForm({ initialData, loanApplication }
   return (
     <div className="flex h-full bg-gray-100">
       <div className="flex-1 p-8">
-        <Form {...form}>
+        <Form {...form} namespace={"Applicant"}>
           <form onSubmit={onSubmit} className="space-y-6">
             {/* Date of Birth */}
             <FormField
@@ -49,7 +53,7 @@ export default function PersonalInformationForm({ initialData, loanApplication }
                         type="date"
                         className="max-w-[200px] bg-white"
                         {...field}
-                        value={field.value instanceof Date ? field.value.toISOString().substring(0, 10) : ""}
+                        value={field.value instanceof Date ? field.value.toISOString().substring(0, 10) : field.value}
                       />
                     </FormControl>
                   </div>
@@ -333,7 +337,11 @@ export default function PersonalInformationForm({ initialData, loanApplication }
 
             {/* Submit Button */}
             <div className="justify-left flex">
-              <Button type="submit" className="max-w-[200px] px-6 py-3" disabled={isSubmitting}>
+              <Button
+                type="submit"
+                className="max-w-[200px] px-6 py-3"
+                disabled={isSubmitting || !panVerificationStatus || !aadharVerificationStatus}
+              >
                 {isSubmitting ? t("form.submit.loading") : t("form.submit.button")}
               </Button>
             </div>

@@ -312,10 +312,6 @@ export function useDocuments() {
    */
   const removeDocument = useCallback(
     async (documentId: string, confirmDelete = true): Promise<boolean> => {
-      if (confirmDelete && !window.confirm("Are you sure you want to delete this document?")) {
-        return false;
-      }
-
       try {
         const response = await deleteDocument(documentId);
 

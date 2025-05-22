@@ -6,6 +6,7 @@ import { CameraView } from "./components/CameraView";
 import { PhotoCaptureControls } from "./components/PhotoCaptureControls";
 
 export default function PhotoCapturePage({ searchParams }: { searchParams: { aid: string; lid: string } }) {
+  /* @ts-ignore */
   const { aid, lid } = searchParams;
   const { state, actions, refs } = usePhotoCapture(aid, lid);
 

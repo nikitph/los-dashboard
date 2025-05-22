@@ -341,10 +341,6 @@ export default function DocumentUpload({
 
   // Handle document deletion
   const handleDelete = async (documentId: string) => {
-    if (!window.confirm("Are you sure you want to delete this document?")) {
-      return;
-    }
-
     try {
       const response = await deleteDocument(documentId);
 
