@@ -144,29 +144,30 @@ model Dependent {
 }
 
 model Bank {
-  id                 String               @id @default(dbgenerated("gen_random_uuid()"))
-  name               String
-  createdAt          DateTime             @default(now())
-  updatedAt          DateTime             @updatedAt
-  deletedAt          DateTime?
-  addressLine        String?
-  city               String?
-  contactNumber      String?
-  gstNumber          String?
-  legalEntityName    String?
-  officialEmail      String               @unique
-  panNumber          String?
-  regulatoryLicenses Json?
-  state              String?
-  zipCode            String?
-  onboardingStatus   BankOnboardingStatus @default(BANK_CREATED)
-  applicants         Applicant[]
-  configurations     BankConfiguration[]
-  documents          Document[]
-  loanApplications   LoanApplication[]
-  pendingAction      PendingAction[]
-  subscription       Subscription?
-  UserRoles          UserRoles[]
+  id                             String                          @id @default(dbgenerated("gen_random_uuid()"))
+  name                           String
+  createdAt                      DateTime                        @default(now())
+  updatedAt                      DateTime                        @updatedAt
+  deletedAt                      DateTime?
+  addressLine                    String?
+  city                           String?
+  contactNumber                  String?
+  gstNumber                      String?
+  legalEntityName                String?
+  officialEmail                  String                          @unique
+  panNumber                      String?
+  regulatoryLicenses             Json?
+  state                          String?
+  zipCode                        String?
+  onboardingStatus               BankOnboardingStatus            @default(BANK_CREATED)
+  applicants                     Applicant[]
+  configurations                 BankConfiguration[]
+  documents                      Document[]
+  loanApplications               LoanApplication[]
+  pendingAction                  PendingAction[]
+  subscription                   Subscription?
+  UserRoles                      UserRoles[]
+  applicationNumberConfiguration ApplicationNumberConfiguration?
 }
 
 model Subscription {
@@ -199,26 +200,27 @@ model BankConfiguration {
 }
 
 model LoanApplication {
-  id              String          @id @default(dbgenerated("gen_random_uuid()"))
-  applicantId     String
-  bankId          String
-  loanType        LoanType
-  amountRequested Float
-  selectedTenure  Int?
-  proposedAmount  Float?
-  calculatedEMI   Float?
-  status          LoanStatus
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
-  deletedAt       DateTime?
-  coApplicants    CoApplicant[]
-  documents       Document[]
-  guarantors      Guarantor[]
-  applicant       Applicant       @relation(fields: [applicantId], references: [id])
-  bank            Bank            @relation(fields: [bankId], references: [id])
-  verifications   Verification[]
-  timelineEvents  TimelineEvent[]
-  reviews         Review[]
+  id                    String          @id @default(dbgenerated("gen_random_uuid()"))
+  applicantId           String
+  bankId                String
+  loanApplicationNumber String
+  loanType              LoanType
+  amountRequested       Float
+  selectedTenure        Int?
+  proposedAmount        Float?
+  calculatedEMI         Float?
+  status                LoanStatus
+  createdAt             DateTime        @default(now())
+  updatedAt             DateTime        @updatedAt
+  deletedAt             DateTime?
+  coApplicants          CoApplicant[]
+  documents             Document[]
+  guarantors            Guarantor[]
+  applicant             Applicant       @relation(fields: [applicantId], references: [id])
+  bank                  Bank            @relation(fields: [bankId], references: [id])
+  verifications         Verification[]
+  timelineEvents        TimelineEvent[]
+  reviews               Review[]
 }
 
 model Guarantor {
@@ -481,6 +483,27 @@ model AuditLog {
   ipAddress  String?
   deviceInfo String?
   user       UserProfile @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ApplicationNumberConfiguration {
+  id              String        @id @default(dbgenerated("gen_random_uuid()"))
+  bankId          String        @unique
+  separator       SeparatorType
+  includePrefix   Boolean       @default(false)
+  includeBranch   Boolean       @default(false)
+  includeLoanType Boolean       @default(false)
+  includeDate     Boolean       @default(false)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  bank            Bank          @relation(fields: [bankId], references: [id])
+}
+
+enum SeparatorType {
+  HYPHEN
+  SLASH
+  UNDERSCORE
+  DOT
+  NONE
 }
 
 enum TimelineEntityType {
