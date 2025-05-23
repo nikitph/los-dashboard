@@ -203,16 +203,16 @@ model BankConfiguration {
 
 model ApplicationNumberSequence {
   id            String   @id @default(dbgenerated("gen_random_uuid()"))
-  bankId        String   @unique @map("bank_id")
-  sequenceType  String   @default("default") @map("sequence_type")
-  currentNumber BigInt   @default(0) @map("current_number")
+  bankId        String   @unique
+  sequenceType  String   @default("default")
+  currentNumber BigInt   @default(0)
   prefix        String?
-  createdAt     DateTime @default(now()) @map("created_at")
-  updatedAt     DateTime @updatedAt @map("updated_at")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
   bank Bank @relation(fields: [bankId], references: [id], onDelete: Cascade)
 
-  @@unique([bankId, sequenceType], name: "unique_bank_sequence")
+  @@unique([bankId, sequenceType])
   @@index([bankId, sequenceType])
 }
 
