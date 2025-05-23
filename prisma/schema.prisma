@@ -168,6 +168,8 @@ model Bank {
   subscription                   Subscription?
   UserRoles                      UserRoles[]
   applicationNumberConfiguration ApplicationNumberConfiguration?
+
+  ApplicationNumberSequence ApplicationNumberSequence?
 }
 
 model Subscription {
@@ -197,6 +199,22 @@ model BankConfiguration {
   deletedAt      DateTime?
   bank           Bank       @relation(fields: [bankId], references: [id])
   documents      Document[]
+}
+
+model ApplicationNumberSequence {
+  id            String   @id @default(dbgenerated("gen_random_uuid()"))
+  bankId        String   @unique @map("bank_id")
+  sequenceType  String   @default("default") @map("sequence_type")
+  currentNumber BigInt   @default(0) @map("current_number")
+  prefix        String?
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  bank Bank @relation(fields: [bankId], references: [id], onDelete: Cascade)
+
+  @@unique([bankId, sequenceType], name: "unique_bank_sequence")
+  @@index([bankId, sequenceType])
+  @@map("application_number_sequences")
 }
 
 model LoanApplication {
