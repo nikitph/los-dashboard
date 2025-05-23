@@ -486,16 +486,24 @@ model AuditLog {
 }
 
 model ApplicationNumberConfiguration {
-  id              String        @id @default(dbgenerated("gen_random_uuid()"))
-  bankId          String        @unique
-  separator       SeparatorType
-  includePrefix   Boolean       @default(false)
-  includeBranch   Boolean       @default(false)
-  includeLoanType Boolean       @default(false)
-  includeDate     Boolean       @default(false)
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
-  bank            Bank          @relation(fields: [bankId], references: [id])
+  id                  String        @id @default(dbgenerated("gen_random_uuid()"))
+  bankId              String        @unique
+  bankName            String?
+  branchNumber        String?
+  loanTypeCode        String?
+  serialNumberPadding Int           @default(5)
+  separator           SeparatorType
+  includePrefix       Boolean       @default(false)
+  includeBranch       Boolean       @default(false)
+  includeLoanType     Boolean       @default(false)
+  includeDate         Boolean       @default(false)
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+  deletedAt           DateTime?
+  bank                Bank          @relation(fields: [bankId], references: [id])
+
+  @@index([bankId])
+  @@index([createdAt])
 }
 
 enum SeparatorType {
