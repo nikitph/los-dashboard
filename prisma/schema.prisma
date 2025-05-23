@@ -214,7 +214,6 @@ model ApplicationNumberSequence {
 
   @@unique([bankId, sequenceType], name: "unique_bank_sequence")
   @@index([bankId, sequenceType])
-  @@map("application_number_sequences")
 }
 
 model LoanApplication {
