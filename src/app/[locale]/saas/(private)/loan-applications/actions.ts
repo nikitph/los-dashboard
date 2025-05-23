@@ -121,6 +121,8 @@ export async function createInitialLoanApplication(formData: InitialLoanApplicat
 
       console.log("userRoles 7", newUserRoles);
 
+      console.log("error", error);
+
       /* Create an applicant role for the user */
       if (!error && newUserRoles) {
         const applicantRole = await prisma.userRoles.create({
@@ -166,6 +168,7 @@ export async function createInitialLoanApplication(formData: InitialLoanApplicat
       errors: { root: "Unknown error" },
     };
   } catch (error) {
+    console.log("error", error);
     return handleActionError(error);
   }
 }

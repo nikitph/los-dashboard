@@ -212,7 +212,6 @@ model ApplicationNumberSequence {
 
   bank Bank @relation(fields: [bankId], references: [id], onDelete: Cascade)
 
-  @@unique([bankId, sequenceType])
   @@index([bankId, sequenceType])
 }
 
