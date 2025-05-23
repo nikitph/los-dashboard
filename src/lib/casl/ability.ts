@@ -7,6 +7,7 @@ export function defineAbilityFor(user: User | null | undefined): AppAbility {
 
   const manageableSubjects = [
     "UserProfile",
+    "ApplicationNumberConfiguration",
     "LoanApplication",
     "LoanObligation",
     "LoanObligationDetail",

@@ -62,7 +62,7 @@ export function useNewLoanApplicationForm() {
       }
       toast({
         title: "Success",
-        description: "Successfully created loan application",
+        description: `Successfully created loan application ${result.data.loanApplicationNumber}`,
         variant: "default",
       });
       router.push(`/${locale}/saas/personal?lid=${result.data.id}`);

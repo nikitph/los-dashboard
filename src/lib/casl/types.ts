@@ -5,6 +5,7 @@ export type Actions = "manage" | "create" | "read" | "update" | "delete";
 // Model names as string subjects
 export type Subjects =
   | "Applicant"
+  | "ApplicationNumberConfiguration"
   | "AuditLog"
   | "Bank"
   | "BankConfiguration"

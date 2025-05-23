@@ -209,6 +209,153 @@
       "subscriptionCancelled": "Subscription cancelled successfully"
     }
   },
+  "ApplicationNumberConfigurations": {
+    "form": {
+      "title": "Loan Application Number Configuration",
+      "sections": {
+        "format": {
+          "title": "Configure Format"
+        },
+        "settings": {
+          "title": "Format Settings"
+        },
+        "preview": {
+          "title": "Application Number Preview",
+          "description": "This is how the application number will appear in your system"
+        },
+        "rules": {
+          "title": "Application Number Rules",
+          "serialNumber": "Serial number is always included by default",
+          "bankPrefix": "Bank name prefix uses the first 3 letters of the bank's name",
+          "dateFormat": "Date format is DDMMYY (day, month, year)",
+          "serialPadding": "Serial numbers are always padded with leading zeros",
+          "samples": {
+            "title": "Sample Application Numbers"
+          }
+        },
+        "tip": {
+          "message": "Creating a structured application number format helps in quick identification and categorization of applications. Consider what information is most important for your bank's workflow."
+        }
+      },
+      "fields": {
+        "includePrefix": {
+          "label": "Bank Name Prefix (First 3 letters)",
+          "placeholder": "Include bank name prefix"
+        },
+        "includeBranch": {
+          "label": "Branch Serial Number",
+          "placeholder": "Include branch number"
+        },
+        "includeLoanType": {
+          "label": "Type of Loan",
+          "placeholder": "Include loan type code"
+        },
+        "includeDate": {
+          "label": "Date of Application",
+          "placeholder": "Include application date"
+        },
+        "serialNumber": {
+          "label": "Serial Number",
+          "placeholder": "Serial number (always included)"
+        },
+        "separator": {
+          "label": "Separator",
+          "placeholder": "Select separator type"
+        },
+        "bankName": {
+          "label": "Bank Name",
+          "placeholder": "Enter bank name"
+        },
+        "branchNumber": {
+          "label": "Branch Number",
+          "placeholder": "Enter branch number"
+        },
+        "loanTypeCode": {
+          "label": "Loan Type Code",
+          "placeholder": "Select loan type"
+        },
+        "serialNumberPadding": {
+          "label": "Serial Number Padding",
+          "placeholder": "Number of digits for serial number"
+        }
+      },
+      "actions": {
+        "reset": "Reset",
+        "save": "Save Configuration",
+        "update": "Update Configuration",
+        "saving": "Saving...",
+        "cancel": "Cancel"
+      }
+    },
+    "validation": {
+      "bankId": {
+        "required": "Bank ID is required"
+      },
+      "bankName": {
+        "required": "Bank name is required",
+        "minLength": "Bank name must be at least 2 characters"
+      },
+      "branchNumber": {
+        "required": "Branch number is required when branch is included",
+        "format": "Branch number should be numeric"
+      },
+      "loanTypeCode": {
+        "required": "Loan type code is required when loan type is included"
+      },
+      "separator": {
+        "required": "Separator type is required"
+      },
+      "serialNumberPadding": {
+        "min": "Serial number padding must be at least 1 digit",
+        "max": "Serial number padding cannot exceed 10 digits"
+      }
+    },
+    "errors": {
+      "notFound": "Application number configuration not found",
+      "duplicate": "Configuration already exists for this bank",
+      "createFailed": "Failed to create configuration",
+      "updateFailed": "Failed to update configuration",
+      "deleteFailed": "Failed to delete configuration",
+      "invalidData": "Invalid configuration data provided",
+      "unauthorized": "You are not authorized to perform this action"
+    },
+    "toast": {
+      "created": "Application number configuration created successfully",
+      "updated": "Application number configuration updated successfully",
+      "deleted": "Application number configuration deleted successfully",
+      "createError": "Failed to create application number configuration",
+      "updateError": "Failed to update application number configuration",
+      "deleteError": "Failed to delete application number configuration"
+    },
+    "list": {
+      "title": "Application Number Configurations",
+      "columns": {
+        "bankName": "Bank Name",
+        "separator": "Separator",
+        "format": "Format",
+        "preview": "Preview",
+        "createdAt": "Created",
+        "updatedAt": "Updated",
+        "actions": "Actions"
+      },
+      "filters": {
+        "search": "Search configurations...",
+        "separator": "Filter by separator",
+        "bank": "Filter by bank"
+      },
+      "empty": {
+        "title": "No configurations found",
+        "description": "Create your first application number configuration to get started."
+      },
+      "actions": {
+        "create": "Create Configuration",
+        "view": "View",
+        "edit": "Edit",
+        "delete": "Delete",
+        "duplicate": "Duplicate"
+      }
+    }
+  },
   "UserCreateForm": {
     "page": {
       "title": "Create Bank User",
