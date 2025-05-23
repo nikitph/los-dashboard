@@ -203,7 +203,7 @@ model LoanApplication {
   id                    String          @id @default(dbgenerated("gen_random_uuid()"))
   applicantId           String
   bankId                String
-  loanApplicationNumber String
+  loanApplicationNumber String?
   loanType              LoanType
   amountRequested       Float
   selectedTenure        Int?
