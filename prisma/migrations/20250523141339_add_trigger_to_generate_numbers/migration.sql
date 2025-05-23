@@ -6,7 +6,7 @@
 -- 1. Create the sequence counter table
 CREATE TABLE IF NOT EXISTS application_number_sequences (
                                                             id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-                                                            bank_id UUID REFERENCES "Bank"(id) ON DELETE CASCADE,
+                                                            bank_id TEXT REFERENCES "Bank"(id) ON DELETE CASCADE,
                                                             sequence_type TEXT NOT NULL DEFAULT 'default',
                                                             current_number BIGINT NOT NULL DEFAULT 0,
                                                             prefix TEXT,
