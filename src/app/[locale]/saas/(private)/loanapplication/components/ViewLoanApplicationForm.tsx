@@ -95,7 +95,7 @@ export function ViewLoanApplicationForm({
         <div className="flex w-full items-center gap-2">
           {visibility.id && (
             <Badge variant="neutral" icon="FeatherHash">
-              LA-{loanApplication.id.substring(0, 6)}
+              {loanApplication.loanApplicationNumber}
             </Badge>
           )}
           <div className="flex h-4 w-px flex-none flex-col items-center gap-2 bg-neutral-border" />

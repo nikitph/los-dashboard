@@ -83,6 +83,7 @@ export const loanApplicationApiSchema = createLoanApplicationSchema.strict();
 export const loanApplicationViewSchema = z.object({
   id: z.string(),
   applicantId: z.string(),
+  loanApplicationNumber: z.string(),
   bankId: z.string(),
   loanType: loanTypeEnum,
   amountRequested: z.number(),
