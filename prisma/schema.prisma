@@ -177,15 +177,114 @@ model Subscription {
   bankId    String   @unique
   startDate DateTime
 
-  endDate       DateTime?
-  status        String
-  amount        Float
-  deletedAt     DateTime?
-  billingCycle  BillingCycle
-  paymentMethod Json?
-  planType      PlanType
-  documents     Document[]
-  bank          Bank         @relation(fields: [bankId], references: [id])
+  endDate      DateTime?
+  status       SubscriptionStatus @default(ACTIVE)
+  amount       Float
+  deletedAt    DateTime?
+  billingCycle BillingCycle
+  planType     PlanType
+
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  autoRenew          Boolean   @default(true)
+  trialEndDate       DateTime?
+  cancelledAt        DateTime?
+  cancellationReason String?
+
+  documents           Document[]
+  bank                Bank                  @relation(fields: [bankId], references: [id])
+  subscriptionPayment SubscriptionPayment[]
+  subscriptionInvoice SubscriptionInvoice[]
+}
+
+model SubscriptionPayment {
+  id                    String                    @id @default(dbgenerated("gen_random_uuid()"))
+  subscriptionId        String
+  subscriptionInvoiceId String?                   @unique
+  amount                Int
+  currency              String                    @default("INR")
+  status                SubscriptionPaymentStatus @default(PENDING)
+  paymentType           SubscriptionPaymentType
+
+  razorpayOrderId   String? @unique
+  razorpayPaymentId String? @unique
+  razorpaySignature String?
+
+  method        String? // card, netbanking, upi etc.
+  failureReason String?
+
+  billingPeriodStart DateTime
+  billingPeriodEnd   DateTime
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  subscription        Subscription         @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+  subscriptionInvoice SubscriptionInvoice? @relation(fields: [subscriptionInvoiceId], references: [id], onDelete: Cascade)
+}
+
+model SubscriptionInvoice {
+  id             String                    @id @default(dbgenerated("gen_random_uuid()"))
+  subscriptionId String
+  invoiceNumber  String                    @unique
+  amount         Int
+  tax            Int?
+  discount       Int?
+  totalAmount    Int
+  currency       String                    @default("INR")
+  status         SubscriptionInvoiceStatus @default(DRAFT)
+
+  // Invoice details
+  description String?
+  dueDate     DateTime
+  issuedDate  DateTime @default(now())
+
+  billingPeriodStart DateTime
+  billingPeriodEnd   DateTime
+
+  paidAt DateTime?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  subscription        Subscription         @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+  subscriptionPayment SubscriptionPayment?
+}
+
+enum SubscriptionStatus {
+  TRIAL
+  ACTIVE
+  PAST_DUE
+  CANCELLED
+  EXPIRED
+  SUSPENDED
+}
+
+enum SubscriptionPaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+  CANCELLED
+  REFUNDED
+}
+
+enum SubscriptionPaymentType {
+  INITIAL
+  RENEWAL
+  UPGRADE
+  DOWNGRADE
+  ADDON
+}
+
+enum SubscriptionInvoiceStatus {
+  DRAFT
+  SENT
+  PAID
+  OVERDUE
+  CANCELLED
+  REFUNDED
 }
 
 model BankConfiguration {
