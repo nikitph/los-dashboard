@@ -1,6 +1,4 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/Sidebar";
-import { AppSidebar } from "@/components/ui/navigation/AppSidebar";
-import { Breadcrumbs } from "@/components/ui/navigation/Breadcrumbs";
 import type { Metadata } from "next";
 import { ThemeProvider } from "next-themes";
 import { cookies } from "next/headers";
@@ -14,8 +12,8 @@ import { setRequestLocale } from "next-intl/server";
 import { Toaster } from "@/components/ui/toaster";
 import { AbilityProvider } from "@/lib/casl/abilityContext";
 import { getServerSessionUser } from "@/lib/getServerUser";
-import { Inter } from "next/font/google";
-import localFont from "next/font/local";
+import { Geist_Mono, Inter } from "next/font/google";
+import { SettingsSidebar } from "@/components/ui/navigation/SettingsSidebar";
 
 // Load Inter font for sans-serif
 const inter = Inter({
@@ -26,10 +24,10 @@ const inter = Inter({
 });
 
 // Keep Geist Mono if you still want to use it for monospace
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
+const geistMono = Geist_Mono({
+  subsets: ["latin"],
   variable: "--font-geist-mono",
-  weight: "100 900",
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });
 
 export const metadata: Metadata = {
@@ -89,12 +87,11 @@ export default async function RootLayout({
             <UserProvider initialUser={serverUser}>
               <AbilityProvider>
                 <SidebarProvider defaultOpen={defaultOpen}>
-                  <AppSidebar />
+                  <SettingsSidebar />
                   <div className="w-full">
                     <header className="sticky top-0 z-10 flex h-16 shrink-0 items-center gap-2 border-b border-gray-200 bg-white px-4 dark:border-gray-800 dark:bg-gray-950">
                       <SidebarTrigger className="-ml-1" />
                       <div className="mr-2 h-4 w-px bg-gray-200 dark:bg-gray-800" />
-                      <Breadcrumbs />
                     </header>
                     <main>{children}</main>
                   </div>

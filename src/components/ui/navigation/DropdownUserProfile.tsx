@@ -14,12 +14,13 @@ import {
   DropdownMenuSubMenuTrigger,
   DropdownMenuTrigger,
 } from "@/components/DropdownMenu";
-import { ArrowUpRight, Monitor, Moon, Sun } from "lucide-react";
+import { Monitor, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import * as React from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useUser } from "@/contexts/userContext";
 import { useRouter } from "next/navigation";
+import { Link } from "@/i18n/navigation";
 
 export type DropdownUserProfileProps = {
   children: React.ReactNode;
@@ -57,7 +58,7 @@ export function DropdownUserProfile({ children, align = "start" }: DropdownUserP
       <DropdownMenu>
         <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
         <DropdownMenuContent align={align} className="sm:!min-w-[calc(var(--radix-dropdown-menu-trigger-width))]">
-          <DropdownMenuLabel>emma.stone@acme.com</DropdownMenuLabel>
+          <DropdownMenuLabel>{user?.email}</DropdownMenuLabel>
           <DropdownMenuGroup>
             <DropdownMenuSubMenu>
               <DropdownMenuSubMenuTrigger>Theme</DropdownMenuSubMenuTrigger>
@@ -87,16 +88,7 @@ export function DropdownUserProfile({ children, align = "start" }: DropdownUserP
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
             <DropdownMenuItem>
-              Changelog
-              <ArrowUpRight className="mb-1 ml-1 size-3 shrink-0 text-gray-500 dark:text-gray-500" aria-hidden="true" />
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              Documentation
-              <ArrowUpRight className="mb-1 ml-1 size-3 shrink-0 text-gray-500" aria-hidden="true" />
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              Join Slack community
-              <ArrowUpRight className="mb-1 ml-1 size-3 shrink-0 text-gray-500" aria-hidden="true" />
+              <Link href="/saas/account">Settings</Link>
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
