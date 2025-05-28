@@ -8,11 +8,14 @@ import * as SubframeCore from "@subframe/core";
 import { PaymentMethodRow } from "@/subframe/components/PaymentMethodRow";
 import { Alert } from "@/subframe/components/Alert";
 import { PricingPlanCard } from "@/subframe/components/PricingPlanCard";
+import SubscriptionPaymentButton from "@/components/SubscriptionPaymentButton";
+import { toastSuccess } from "@/lib/toastUtils";
 
 function BillingSettings() {
   return (
     <div className="flex h-full w-full items-start mobile:flex-col mobile:flex-nowrap mobile:gap-0">
-      <div className="items-left container flex max-w-none shrink-0 grow basis-0 flex-col gap-6 self-stretch bg-default-background p-8 shadow-sm">
+      <div
+        className="items-left container flex max-w-none shrink-0 grow basis-0 flex-col gap-6 self-stretch bg-default-background p-8 shadow-sm">
         <div className="flex w-full max-w-[768px] flex-col items-start gap-12">
           <div className="flex w-full flex-col items-start gap-1">
             <span className="w-full font-heading-2 text-heading-2 text-default-font">Billing</span>
@@ -20,9 +23,20 @@ function BillingSettings() {
               See your usage and manage your payment methods, subscription.
             </span>
           </div>
+          <SubscriptionPaymentButton
+            subscriptionId={""}
+            bankName={"Test"}
+            amount={5000}
+            planType={"MONTHLY"}
+            billingCycle={"MONTHLY"}
+            onSuccess={(para) => {
+              toastSuccess({ title: "Payment was a success", description: "Success" });
+            }}
+          />
           <div className="flex w-full flex-col items-start gap-6">
             <span className="font-heading-3 text-heading-3 text-default-font">Usage</span>
-            <div className="flex w-full flex-col items-start gap-2 rounded-md border border-solid border-neutral-border bg-default-background px-6 py-6 shadow-sm">
+            <div
+              className="flex w-full flex-col items-start gap-2 rounded-md border border-solid border-neutral-border bg-default-background px-6 py-6 shadow-sm">
               <span className="font-body-bold text-body-bold text-default-font">Seats</span>
               <Progress value={25} />
               <div className="flex w-full flex-wrap items-center gap-2">
@@ -32,13 +46,15 @@ function BillingSettings() {
                 <Button
                   variant="brand-tertiary"
                   iconRight="FeatherArrowRight"
-                  onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
+                  onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+                  }}
                 >
                   Upgrade
                 </Button>
               </div>
             </div>
-            <div className="flex w-full flex-wrap items-start gap-4 rounded-md bg-neutral-50 px-6 py-6 mobile:flex-col mobile:flex-wrap mobile:gap-6">
+            <div
+              className="flex w-full flex-wrap items-start gap-4 rounded-md bg-neutral-50 px-6 py-6 mobile:flex-col mobile:flex-wrap mobile:gap-6">
               <div className="flex shrink-0 grow basis-0 flex-col items-start justify-center gap-1">
                 <div className="flex items-center gap-1">
                   <span className="font-body text-body text-subtext-color">Events booked</span>
@@ -85,7 +101,8 @@ function BillingSettings() {
           <div className="flex w-full flex-col items-start gap-6">
             <div className="flex w-full items-center gap-2">
               <span className="shrink-0 grow basis-0 font-heading-3 text-heading-3 text-default-font">Payment</span>
-              <Button icon="FeatherPlus" onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}>
+              <Button icon="FeatherPlus" onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+              }}>
                 Add
               </Button>
             </div>
@@ -111,7 +128,8 @@ function BillingSettings() {
               title="You have 21 days left in your Basic plan trial."
               description="To avoid any disruptions to your current workflow, upgrade your plan below."
             />
-            <div className="flex w-full flex-wrap items-start gap-4 rounded-md bg-neutral-50 px-6 py-6 mobile:flex-col mobile:flex-wrap mobile:gap-4">
+            <div
+              className="flex w-full flex-wrap items-start gap-4 rounded-md bg-neutral-50 px-6 py-6 mobile:flex-col mobile:flex-wrap mobile:gap-4">
               <div className="flex shrink-0 grow basis-0 flex-col items-start gap-1">
                 <span className="font-body text-body text-subtext-color">Start date</span>
                 <span className="font-heading-3 text-heading-3 text-default-font">March 22, 2023</span>
@@ -137,7 +155,8 @@ function BillingSettings() {
                     className="h-10 w-full flex-none"
                     variant="brand-secondary"
                     size="large"
-                    onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
+                    onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+                    }}
                   >
                     Downgrade
                   </Button>
@@ -168,7 +187,8 @@ function BillingSettings() {
                     variant="neutral-secondary"
                     size="large"
                     icon="FeatherCheck"
-                    onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
+                    onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+                    }}
                   >
                     Current plan
                   </Button>
@@ -197,7 +217,8 @@ function BillingSettings() {
                   <Button
                     className="h-10 w-full flex-none"
                     size="large"
-                    onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
+                    onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+                    }}
                   >
                     Contact us
                   </Button>

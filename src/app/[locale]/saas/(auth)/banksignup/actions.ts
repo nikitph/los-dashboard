@@ -407,9 +407,8 @@ export async function createSubscription(data: SubscriptionCreateInput, locale: 
         billingCycle: data.billingCycle,
         startDate: data.startDate,
         endDate: data.endDate,
-        status: data.status,
+        status: "ACTIVE",
         amount: data.amount,
-        paymentMethod: data.paymentMethod,
       },
     });
 
