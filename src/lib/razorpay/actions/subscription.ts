@@ -1,4 +1,3 @@
-// lib/actions/subscription-actions.ts
 "use server";
 
 import { razorpay } from "../razorpay";
@@ -44,7 +43,7 @@ interface VerifyPaymentResult {
  */
 export async function createSubscriptionPayment(
   subscriptionId: string,
-  paymentType: PaymentType = "RENEWAL"
+  paymentType: PaymentType = "RENEWAL",
 ): Promise<CreatePaymentResult> {
   try {
     // Get authenticated user
@@ -54,20 +53,11 @@ export async function createSubscriptionPayment(
     }
 
     let subscription = await prisma.subscription.findUnique({
-      where: { bankId: user.currentRole.bankId }
+      where: { bankId: user.currentRole.bankId },
     });
 
     if (!subscription) {
-      subscription = await prisma.subscription.create({
-        data: {
-          bankId: user.currentRole.bankId ?? "",
-          planType: "STANDARD",
-          billingCycle: "MONTHLY",
-          startDate: new Date(),
-          status: "ACTIVE",
-          amount: 5000
-        }
-      });
+      return { success: false, error: "Something went wrong in subscription creation" };
     }
 
     // Calculate billing period
@@ -91,8 +81,8 @@ export async function createSubscriptionPayment(
         bankId: subscription.bankId,
         bankName: subscription.bankId,
         paymentType,
-        billingCycle: subscription.billingCycle
-      }
+        billingCycle: subscription.billingCycle,
+      },
     });
 
     // Create NEW invoice for this payment attempt
@@ -107,8 +97,8 @@ export async function createSubscriptionPayment(
         dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days from now
         billingPeriodStart,
         billingPeriodEnd,
-        status: "SENT"
-      }
+        status: "SENT",
+      },
     });
 
     // Create subscription payment record linked to the NEW invoice
@@ -121,8 +111,8 @@ export async function createSubscriptionPayment(
         paymentType: paymentType,
         razorpayOrderId: razorpayOrder.id,
         billingPeriodStart,
-        billingPeriodEnd
-      }
+        billingPeriodEnd,
+      },
     });
 
     // Revalidate relevant pages
@@ -139,14 +129,14 @@ export async function createSubscriptionPayment(
         invoiceId: invoice.id,
         bankName: subscription.bankId,
         planType: subscription.planType,
-        billingCycle: subscription.billingCycle
-      }
+        billingCycle: subscription.billingCycle,
+      },
     };
   } catch (error) {
     console.error("Error creating subscription payment:", error);
     return {
       success: false,
-      error: "Failed to create subscription payment"
+      error: "Failed to create subscription payment",
     };
   }
 }
@@ -162,7 +152,7 @@ export async function createSubscriptionPayment(
 export async function verifySubscriptionPayment(
   razorpayOrderId: string,
   razorpayPaymentId: string,
-  razorpaySignature: string
+  razorpaySignature: string,
 ): Promise<VerifyPaymentResult> {
   try {
     // Verify signature
@@ -181,10 +171,10 @@ export async function verifySubscriptionPayment(
       where: { razorpayOrderId },
       include: {
         subscription: {
-          include: { bank: true }
+          include: { bank: true },
         },
-        subscriptionInvoice: true
-      }
+        subscriptionInvoice: true,
+      },
     });
 
     if (!subscriptionPayment) {
@@ -197,8 +187,8 @@ export async function verifySubscriptionPayment(
       data: {
         razorpayPaymentId,
         razorpaySignature,
-        status: "SUCCESS"
-      }
+        status: "SUCCESS",
+      },
     });
 
     // Update invoice
@@ -207,8 +197,8 @@ export async function verifySubscriptionPayment(
         where: { id: subscriptionPayment.subscriptionInvoice.id },
         data: {
           status: "PAID",
-          paidAt: new Date()
-        }
+          paidAt: new Date(),
+        },
       });
     }
 
@@ -220,8 +210,8 @@ export async function verifySubscriptionPayment(
       where: { id: subscription.id },
       data: {
         status: "ACTIVE",
-        endDate: newEndDate
-      }
+        endDate: newEndDate,
+      },
     });
 
     // Revalidate relevant pages
@@ -234,14 +224,14 @@ export async function verifySubscriptionPayment(
       data: {
         subscriptionId: subscription.id,
         bankName: subscription.bank.name,
-        newEndDate: newEndDate.toISOString()
-      }
+        newEndDate: newEndDate.toISOString(),
+      },
     };
   } catch (error) {
     console.error("Error verifying subscription payment:", error);
     return {
       success: false,
-      error: "Payment verification failed"
+      error: "Payment verification failed",
     };
   }
 }
@@ -255,7 +245,7 @@ export async function verifySubscriptionPayment(
  */
 export async function handleFailedPayment(
   razorpayOrderId: string,
-  failureReason?: string
+  failureReason?: string,
 ): Promise<{ success: boolean; error?: string }> {
   try {
     // Find the failed payment
@@ -263,8 +253,8 @@ export async function handleFailedPayment(
       where: { razorpayOrderId },
       include: {
         subscription: { include: { bank: true } },
-        subscriptionInvoice: true
-      }
+        subscriptionInvoice: true,
+      },
     });
 
     if (!failedPayment) {
@@ -276,8 +266,8 @@ export async function handleFailedPayment(
       where: { id: failedPayment.id },
       data: {
         status: "FAILED",
-        failureReason
-      }
+        failureReason,
+      },
     });
 
     // Mark the associated invoice as overdue
@@ -285,8 +275,8 @@ export async function handleFailedPayment(
       await prisma.subscriptionInvoice.update({
         where: { id: failedPayment.subscriptionInvoice.id },
         data: {
-          status: "OVERDUE"
-        }
+          status: "OVERDUE",
+        },
       });
     }
 
@@ -294,8 +284,8 @@ export async function handleFailedPayment(
     await prisma.subscription.update({
       where: { id: failedPayment.subscriptionId },
       data: {
-        status: "PAST_DUE"
-      }
+        status: "PAST_DUE",
+      },
     });
 
     // Revalidate relevant pages
@@ -324,12 +314,12 @@ export async function getSubscriptionPaymentHistory(subscriptionId: string) {
 
     const payments = await prisma.subscriptionPayment.findMany({
       where: {
-        subscriptionId
+        subscriptionId,
       },
       include: {
-        subscriptionInvoice: true
+        subscriptionInvoice: true,
       },
-      orderBy: { createdAt: "desc" }
+      orderBy: { createdAt: "desc" },
     });
 
     return payments;
@@ -356,13 +346,13 @@ export async function getPendingInvoices(subscriptionId: string) {
       where: {
         subscriptionId,
         status: {
-          in: ["SENT", "OVERDUE"]
-        }
+          in: ["SENT", "OVERDUE"],
+        },
       },
       include: {
-        subscriptionPayment: true
+        subscriptionPayment: true,
       },
-      orderBy: { createdAt: "desc" }
+      orderBy: { createdAt: "desc" },
     });
 
     return pendingInvoices;

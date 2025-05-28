@@ -16,11 +16,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import {
   generateSubscriptionCreateSchema,
   PlanDetails,
-  SubscriptionCreateInput,
+  SubscriptionCreateInput
 } from "@/app/[locale]/saas/(auth)/banksignup/schema";
 import { createSubscription, updateBankOnboardingStatus } from "@/app/[locale]/saas/(auth)/banksignup/actions";
 import { handleFormErrors } from "@/lib/formErrorHelper";
 import { useFormTranslation } from "@/hooks/useFormTranslation";
+import { createSubscriptionPayment, verifySubscriptionPayment } from "@/lib/razorpay/actions/subscription";
+import { toastSuccess } from "@/lib/toastUtils";
 
 interface SubscriptionFormProps {
   className?: string;
@@ -37,16 +39,16 @@ export default function BankSubscriptionForm({ className, bankId }: Subscription
   const pricing = {
     BASIC: {
       MONTHLY: 2000,
-      ANNUAL: 21600, // 10% discount on yearly
+      ANNUAL: 21600 // 10% discount on yearly
     },
     STANDARD: {
       MONTHLY: 5000,
-      ANNUAL: 54000, // 10% discount on yearly
+      ANNUAL: 54000 // 10% discount on yearly
     },
     PREMIUM: {
       MONTHLY: 10000,
-      ANNUAL: 108000, // 10% discount on yearly
-    },
+      ANNUAL: 108000 // 10% discount on yearly
+    }
   };
 
   const subscriptionSchema = generateSubscriptionCreateSchema(validation);
@@ -61,8 +63,8 @@ export default function BankSubscriptionForm({ className, bankId }: Subscription
       startDate: new Date(),
       status: "Active",
       amount: pricing.STANDARD.MONTHLY,
-      paymentMethod: { type: "default" },
-    },
+      paymentMethod: { type: "default" }
+    }
   });
 
   // Handle billing cycle switch
@@ -92,13 +94,86 @@ export default function BankSubscriptionForm({ className, bankId }: Subscription
         return;
       }
 
-      await updateBankOnboardingStatus(bankId, "SUBSCRIPTION_CREATED");
-      router.refresh();
-      router.push("/saas/dashboard");
+      if (!window.Razorpay) {
+        const script = document.createElement("script");
+        script.src = "https://checkout.razorpay.com/v1/checkout.js";
+        script.async = true;
+        document.body.appendChild(script);
+
+        await new Promise((resolve) => {
+          script.onload = resolve;
+        });
+      }
+
+      // Create subscription payment using server action
+      const paymentResult = await createSubscriptionPayment(response.data.id, "INITIAL");
+
+      if (!paymentResult.success || !paymentResult.data) {
+        throw new Error(paymentResult.error || "Failed to create subscription payment");
+      }
+
+      const paymentData = paymentResult.data;
+
+      // Initialize Razorpay payment
+      const options = {
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+        amount: paymentData.amount,
+        currency: paymentData.currency,
+        name: "CreditIQ",
+        description: `${data.planType} Plan - ${billingCycle} Subscription`,
+        order_id: paymentData.orderId,
+        handler: async function(response: any) {
+          try {
+            // Verify payment using server action
+            const verifyResult = await verifySubscriptionPayment(
+              response.razorpay_order_id,
+              response.razorpay_payment_id,
+              response.razorpay_signature
+            );
+
+            if (!verifyResult.success) {
+              throw new Error(verifyResult.error || "Payment verification failed");
+            }
+
+            toastSuccess({ title: "Payment was successful", description: response.razorpay_payment_id });
+            await updateBankOnboardingStatus(bankId, "SUBSCRIPTION_CREATED");
+            router.refresh();
+            router.push("/en/saas/dashboard");
+          } catch (error) {
+            console.error("Payment verification error:", error);
+          }
+        },
+        modal: {
+          ondismiss: function() {
+            setIsSubmitting(false);
+          }
+        },
+        prefill: {
+          name: bankId,
+          email: "admin@" + bankId.toLowerCase().replace(/\s+/g, "") + ".com"
+        },
+        theme: {
+          color: "#3399cc"
+        },
+        notes: {
+          subscriptionId: response.data.id,
+          bankName: bankId,
+          planType: data.planType,
+          billingCycle
+        }
+      };
+
+      const rzp = new window.Razorpay(options);
+
+      rzp.on("payment.failed", function(response: any) {
+        console.error("Payment failed:", response.error);
+        setIsSubmitting(false);
+      });
+      rzp.open();
     } catch (error) {
       form.setError("root", {
         type: "manual",
-        message: errors("unexpected"),
+        message: errors("unexpected")
       });
     } finally {
       setIsSubmitting(false);
@@ -117,7 +192,7 @@ export default function BankSubscriptionForm({ className, bankId }: Subscription
       description: page(`plans.${planKey}.description`),
       feature1: page(`plans.${planKey}.feature1`),
       feature2: page(`plans.${planKey}.feature2`),
-      feature3: page(`plans.${planKey}.feature3`),
+      feature3: page(`plans.${planKey}.feature3`)
     };
   };
 

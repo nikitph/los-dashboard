@@ -387,7 +387,7 @@ export async function createSubscription(data: SubscriptionCreateInput, locale: 
     const existingSubscription = await prisma.subscription.findFirst({
       where: {
         bankId: data.bankId,
-        status: "Active",
+        status: "ACTIVE",
       },
     });
 
