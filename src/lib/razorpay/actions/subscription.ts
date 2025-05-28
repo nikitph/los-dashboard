@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma/prisma";
 import { getServerSessionUser } from "@/lib/getServerUser";
 import { revalidatePath } from "next/cache";
 import crypto from "crypto";
+import { addMonths } from "date-fns";
 
 // Types for better type safety
 type PaymentType = "INITIAL" | "RENEWAL" | "UPGRADE" | "DOWNGRADE" | "ADDON";
@@ -204,7 +205,8 @@ export async function verifySubscriptionPayment(
 
     // Update subscription status and extend end date
     const subscription = subscriptionPayment.subscription;
-    const newEndDate = new Date(subscriptionPayment.billingPeriodEnd);
+    const baseDate = subscription.endDate && subscription.endDate > new Date() ? subscription.endDate : new Date();
+    const newEndDate = addMonths(baseDate, 1);
 
     await prisma.subscription.update({
       where: { id: subscription.id },
@@ -218,6 +220,7 @@ export async function verifySubscriptionPayment(
     revalidatePath(`/admin/subscriptions/${subscription.id}`);
     revalidatePath("/admin/subscriptions");
     revalidatePath(`/bank/${subscription.bankId}/subscription`);
+    revalidatePath(`/en/saas/billingsettings`);
 
     return {
       success: true,
@@ -346,7 +349,7 @@ export async function getPendingInvoices(subscriptionId: string) {
       where: {
         subscriptionId,
         status: {
-          in: ["SENT", "OVERDUE"],
+          in: ["SENT", "OVERDUE", "PAID"],
         },
       },
       include: {

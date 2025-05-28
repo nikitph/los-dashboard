@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createSubscriptionPayment, verifySubscriptionPayment } from "@/lib/razorpay/actions/subscription";
+import { toastSuccess } from "@/lib/toastUtils";
 
 interface SubscriptionPaymentButtonProps {
   subscriptionId: string;
@@ -76,7 +77,7 @@ export default function SubscriptionPaymentButton({
         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
         amount: paymentData.amount,
         currency: paymentData.currency,
-        name: "Your SaaS Platform",
+        name: "CreditIQ",
         description: `${planType} Plan - ${billingCycle} Subscription`,
         order_id: paymentData.orderId,
         handler: async function (response: any) {
@@ -92,12 +93,8 @@ export default function SubscriptionPaymentButton({
               throw new Error(verifyResult.error || "Payment verification failed");
             }
 
-            if (onSuccess) {
-              onSuccess(response.razorpay_payment_id);
-            } else {
-              // Default success behavior
-              router.push(`/admin/subscriptions/${subscriptionId}?payment=success`);
-            }
+            toastSuccess({ title: "Payment was successful", description: response.razorpay_payment_id });
+            setLoading(false);
           } catch (error) {
             console.error("Payment verification error:", error);
             if (onError) {
@@ -171,7 +168,7 @@ export default function SubscriptionPaymentButton({
       case "INITIAL":
         return "bg-green-600 hover:bg-green-700";
       case "RENEWAL":
-        return "bg-blue-600 hover:bg-blue-700";
+        return "bg-black hover:bg-gray-800";
       case "UPGRADE":
         return "bg-purple-600 hover:bg-purple-700";
       default:
