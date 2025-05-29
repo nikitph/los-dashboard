@@ -9,12 +9,14 @@ import { Badge } from "@/subframe/components/Badge";
 import { IconButton } from "@/subframe/components/IconButton";
 import { Link } from "@/i18n/navigation";
 import { format } from "date-fns";
+import { useUser } from "@/contexts/userContext";
 
 function Dashboard() {
+  const { user } = useUser();
   return (
     <div className="flex w-full flex-col items-start gap-6 px-6 py-6">
       <div className="flex w-full flex-col items-start gap-1">
-        <span className="font-heading-1 text-heading-1 text-default-font">Welcome back, Sarah</span>
+        <span className="font-heading-1 text-heading-1 text-default-font">Welcome back, {user?.firstName}</span>
         <span className="font-body text-body text-subtext-color">{format(new Date(), "EEEE, MMMM d, yyyy")}</span>
       </div>
       <div className="flex w-full items-center justify-between">
