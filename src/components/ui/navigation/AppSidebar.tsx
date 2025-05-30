@@ -3,19 +3,7 @@
 import { usePathname } from "next/navigation";
 import { Divider } from "@/components/Divider";
 import { Input } from "@/components/Input";
-import {
-  Building,
-  Building2,
-  Check,
-  DollarSign,
-  DollarSign as Dollar,
-  FileCheck,
-  FileText,
-  FileUser,
-  Home,
-  Users,
-  UsersRound,
-} from "lucide-react";
+import { Building, Building2, FileText, FileUser, Home, User, Users, UsersRound } from "lucide-react";
 import * as React from "react";
 import { useEffect, useState } from "react";
 import { Logo } from "../../../../public/Logo";
@@ -70,30 +58,6 @@ const applicantSections = [
       },
     ],
   },
-  {
-    name: "Income",
-    href: "/saas/income/list",
-    icon: DollarSign,
-    openIcon: Dollar,
-    children: [
-      {
-        name: "List",
-        href: "/saas/income/list",
-      },
-    ],
-  },
-  {
-    name: "Loan Eligibility",
-    href: "/saas/loaneligibility/list",
-    icon: FileCheck,
-    openIcon: Check,
-    children: [
-      {
-        name: "List",
-        href: "/saas/loaneligibility/list",
-      },
-    ],
-  },
 ] as const;
 
 const otherSections = [
@@ -102,6 +66,12 @@ const otherSections = [
     href: "/saas/banks/list",
     icon: Building,
     openIcon: Building2,
+  },
+  {
+    name: "Users",
+    href: "/saas/users/list",
+    icon: User,
+    openIcon: UsersRound,
   },
 ] as const;
 
