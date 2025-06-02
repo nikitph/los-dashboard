@@ -1,14 +1,12 @@
 export const siteConfig = {
-  name: "Loans Online",
-  url: "https://planner.tremor.so",
-  description: "Loans Online Dashboard",
+  name: "CreditIQ",
+  url: "https://creditiq.online",
+  description: "CreditIQ is a SaaS platform.",
   baseLinks: {
-    quotes: {
-      overview: "/quotes/overview",
-      monitoring: "/quotes/monitoring",
-      audits: "/quotes/audits",
+    dashboard: {
+      home: "/saas/dashboard",
     },
   },
-}
+};
 
-export type siteConfig = typeof siteConfig
+export type siteConfig = typeof siteConfig;
