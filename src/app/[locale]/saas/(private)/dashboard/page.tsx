@@ -2,7 +2,6 @@
 
 import React from "react";
 import { Button } from "@/subframe/components/Button";
-import * as SubframeCore from "@subframe/core";
 import { TextField } from "@/subframe/components/TextField";
 import { Table } from "@/subframe/components/Table";
 import { Badge } from "@/subframe/components/Badge";
@@ -10,6 +9,7 @@ import { IconButton } from "@/subframe/components/IconButton";
 import { Link } from "@/i18n/navigation";
 import { format } from "date-fns";
 import { useUser } from "@/contexts/userContext";
+import { Icon } from "@subframe/core/dist/cjs/components/icon";
 
 function Dashboard() {
   const { user } = useUser();
@@ -32,28 +32,28 @@ function Dashboard() {
       <div className="grid w-full grid-cols-4 items-start gap-4 mobile:grid mobile:grid-cols-1">
         <div className="flex flex-col items-start gap-1 rounded-md border border-solid border-neutral-border bg-default-background px-4 py-4">
           <div className="flex items-center gap-2">
-            <SubframeCore.Icon className="font-body text-body text-neutral-900" name="FeatherFileText" />
+            <Icon className="font-body text-body text-neutral-900" name="FeatherFileText" />
             <span className="font-caption text-caption text-subtext-color">Today&#39;s Applications</span>
           </div>
           <span className="font-heading-1 text-heading-1 text-default-font">24</span>
         </div>
         <div className="flex flex-col items-start gap-1 rounded-md border border-solid border-neutral-border bg-default-background px-4 py-4">
           <div className="flex items-center gap-2">
-            <SubframeCore.Icon className="font-body text-body text-warning-600" name="FeatherClock" />
+            <Icon className="font-body text-body text-warning-600" name="FeatherClock" />
             <span className="font-caption text-caption text-subtext-color">Pending Documents</span>
           </div>
           <span className="font-heading-1 text-heading-1 text-default-font">12</span>
         </div>
         <div className="flex flex-col items-start gap-1 rounded-md border border-solid border-neutral-border bg-default-background px-4 py-4">
           <div className="flex items-center gap-2">
-            <SubframeCore.Icon className="font-body text-body text-success-600" name="FeatherCheckCircle" />
+            <Icon className="font-body text-body text-success-600" name="FeatherCheckCircle" />
             <span className="font-caption text-caption text-subtext-color">Ready for Review</span>
           </div>
           <span className="font-heading-1 text-heading-1 text-default-font">8</span>
         </div>
         <div className="flex flex-col items-start gap-1 rounded-md border border-solid border-neutral-border bg-default-background px-4 py-4">
           <div className="flex items-center gap-2">
-            <SubframeCore.Icon className="font-body text-body text-error-600" name="FeatherAlertCircle" />
+            <Icon className="font-body text-body text-error-600" name="FeatherAlertCircle" />
             <span className="font-caption text-caption text-subtext-color">Rejected Applications</span>
           </div>
           <span className="font-heading-1 text-heading-1 text-default-font">3</span>
@@ -136,14 +136,14 @@ function Dashboard() {
           </div>
           <div className="flex w-full flex-col items-start gap-2 rounded-md border border-solid border-neutral-border bg-default-background px-4 py-4">
             <div className="flex w-full items-center gap-3">
-              <SubframeCore.Icon className="font-body text-body text-warning-600" name="FeatherFileText" />
+              <Icon className="font-body text-body text-warning-600" name="FeatherFileText" />
               <div className="flex grow flex-col items-start">
                 <span className="font-body-bold text-body-bold text-default-font">Document Collection</span>
                 <span className="font-caption text-caption text-subtext-color">3 applications need documents</span>
               </div>
             </div>
             <div className="flex w-full items-center gap-3">
-              <SubframeCore.Icon className="font-body text-body text-neutral-600" name="FeatherUserCheck" />
+              <Icon className="font-body text-body text-neutral-600" name="FeatherUserCheck" />
               <div className="flex grow flex-col items-start">
                 <span className="font-body-bold text-body-bold text-default-font">Verification Required</span>
                 <span className="font-caption text-caption text-subtext-color">
