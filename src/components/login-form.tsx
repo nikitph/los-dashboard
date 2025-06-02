@@ -1,35 +1,26 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
+import { useState } from "react";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 
-export function LoginForm({
-                            className,
-                            ...props
-                          }: React.ComponentPropsWithoutRef<"div">) {
-  const [phone, setPhone] = useState("")
-  const [error, setError] = useState("")
+export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRef<"div">) {
+  const [phone, setPhone] = useState("");
+  const [error, setError] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    const phonePattern = /^\d{10}$/
+    e.preventDefault();
+    const phonePattern = /^\d{10}$/;
 
     if (!phonePattern.test(phone)) {
-      setError("Phone number must be exactly 10 digits.")
+      setError("Phone number must be exactly 10 digits.");
     } else {
-      setError("")
-      // Proceed with login logic here
-      console.log("Phone Number Submitted:", phone)
+      setError("");
+      console.log("Phone Number Submitted:", phone);
     }
-  }
+  };
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -42,7 +33,7 @@ export function LoginForm({
             <div className="grid gap-6">
               <div>
                 <div className="grid gap-2">
-                  <div className="flex flex-col items-center mb-4">
+                  <div className="mb-4 flex flex-col items-center">
                     <Input
                       id="phone"
                       type="tel"
@@ -52,9 +43,7 @@ export function LoginForm({
                       maxLength={10}
                       required
                     />
-                    {error && (
-                      <p className="text-red-500 text-sm mt-2">{error}</p>
-                    )}
+                    {error && <p className="mt-2 text-sm text-red-500">{error}</p>}
                   </div>
                 </div>
                 <Button type="submit" className="w-full">
@@ -72,10 +61,8 @@ export function LoginForm({
         </CardContent>
       </Card>
       <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 [&_a]:hover:text-primary">
-        By clicking continue, you agree to our{" "}
-        <a href="#">Terms of Service</a> and{" "}
-        <a href="#">Privacy Policy</a>.
+        By clicking continue, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
       </div>
     </div>
-  )
+  );
 }
