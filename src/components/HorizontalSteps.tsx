@@ -21,23 +21,29 @@ export const Step: React.FC<StepProps> = ({ title, description, isCompleted, isA
           className={cn(
             "flex h-5 w-5 items-center justify-center rounded-full border-[1px]",
             isCompleted
-              ? "border-primary bg-primary text-primary-foreground"
+              ? "border-green-400 bg-green-400 text-white"
               : isActive
-                ? "border-primary"
+                ? "border-blue-500 bg-blue-500 text-white"
                 : "border-gray-300",
           )}
         >
-          {isCompleted ? <Check className="h-3 w-3" /> : <span className="text-xs font-medium">{index + 1}</span>}
+          {isCompleted ? (
+            <Check className="h-3 w-3" color={"white"} />
+          ) : isActive ? (
+            <span className="text-xs font-medium text-white">{index + 1}</span>
+          ) : (
+            <span className="text-xs font-medium text-gray-300">{index + 1}</span>
+          )}
         </div>
       </div>
       {
         <div className="ml-2">
-          {/*<p*/}
-          {/*  className={cn("text-sm font-medium", isActive || isCompleted ? "text-foreground" : "text-muted-foreground")}*/}
-          {/*>*/}
-          {/*  {title}*/}
-          {/*</p>*/}
-          {description && <div className="text-sm text-muted-foreground">{description}</div>}
+          {description &&
+            (isActive ? (
+              <div className="text-sm font-bold text-blue-500">{description}</div>
+            ) : (
+              <div className="text-sm text-gray-300">{description}</div>
+            ))}
         </div>
       }
     </div>
@@ -64,7 +70,7 @@ export function HorizontalSteps({ steps, currentStep, onStepChange }: StepperPro
                 index={index}
                 isActive={index === currentStep}
               />
-              {index < steps.length - 1 && <ChevronRight className="hidden text-muted-foreground md:block" />}
+              {index < steps.length - 1 && <ChevronRight className="hidden size-4 text-gray-400 md:block" />}
             </React.Fragment>
           ))}
         </div>
