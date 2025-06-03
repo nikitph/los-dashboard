@@ -1,6 +1,5 @@
 "use client";
 
-import { CreditCard } from "lucide-react";
 import { useState } from "react";
 import { BankCreationForm } from "@/app/[locale]/saas/(auth)/banksignup/components/BankCreationForm";
 import { HorizontalSteps } from "@/components/HorizontalSteps";
@@ -9,6 +8,7 @@ import { signup } from "@/app/[locale]/saas/(auth)/banksignup/actions";
 import { BankInformationForm } from "@/app/[locale]/saas/(auth)/banksignup/components/BankInformationForm";
 import { Bank } from "@prisma/client";
 import BankSubscriptionForm from "@/app/[locale]/saas/(auth)/banksignup/components/BankSubscriptionForm";
+import { FullLogo } from "../../../../../../public/FullLogo";
 
 export default function BankSignupPage() {
   const [currentStep, setCurrentStep] = useState(0);
@@ -23,10 +23,9 @@ export default function BankSignupPage() {
     <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10">
       <div className="flex w-full max-w-lg flex-col justify-center gap-6">
         <a href="#" className="flex items-center gap-2 self-center font-medium">
-          <div className="flex h-6 w-6 items-center justify-center rounded-md bg-primary text-primary-foreground">
-            <CreditCard className="size-4" />
+          <div className="flex max-w-[180px] items-center justify-center rounded-md text-primary-foreground">
+            <FullLogo />
           </div>
-          Credit IQ
         </a>
         {currentStep > 0 && <HorizontalSteps steps={steps} currentStep={currentStep} onStepChange={setCurrentStep} />}
         {currentStep === 0 && <BankCreationForm setCurrentStep={setCurrentStep} setBank={setBank} />}

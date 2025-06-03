@@ -56,6 +56,7 @@ export async function createBank(formData: BankCreateInput, locale: string): Pro
     const bank = await prisma.bank.create({
       data: {
         name: validatedData.name,
+        onboardingStatus: "BANK_CREATED",
         officialEmail: validatedData.officialEmail,
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -460,15 +461,8 @@ export async function cancelSubscription(subscriptionId: string): Promise<Action
     const updatedSubscription = await prisma.subscription.update({
       where: { id: subscriptionId },
       data: {
-        status: "Cancelled",
+        status: "CANCELLED",
         endDate: new Date(),
-      },
-    });
-
-    await prisma.bank.update({
-      where: { id: subscription.bankId },
-      data: {
-        onboardingStatus: "ADMIN_CREATED",
       },
     });
 
