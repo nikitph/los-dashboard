@@ -1,9 +1,8 @@
 "use client";
 
-import { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import { createContext, ReactNode, useCallback, useContext, useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { User } from "@/types/globalTypes";
-import { getServerSessionUser } from "@/lib/getServerUser";
 
 type UserContextType = {
   user: User | null;
@@ -11,59 +10,38 @@ type UserContextType = {
   setCurrentRole: (role: { role: string; bankId: string | null }) => void;
 };
 
-const UserContext = createContext<UserContextType>({
-  user: null,
-  loading: true,
-  setCurrentRole: () => {},
-});
+const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider = ({ children, initialUser = null }: { children: ReactNode; initialUser?: User | null }) => {
   const [user, setUser] = useState<User | null>(initialUser);
-  const [loading, setLoading] = useState(true);
-  const supabase = createClient();
+  const loading = false;
 
-  const setCurrentRole = (role: { role: string; bankId: string | null }) => {
-    if (user) {
-      setUser({
-        ...user,
-        currentRole: role,
-      });
-    }
-  };
+  const setCurrentRole = useCallback((role: { role: string; bankId: string | null }) => {
+    setUser((prevUser) => (prevUser ? { ...prevUser, currentRole: role } : null));
+  }, []);
 
   useEffect(() => {
-    const initializeUser = async () => {
-      try {
-        // Get the initial user server-side - this avoids the "null" flicker
-        const serverUser = await getServerSessionUser();
-        if (serverUser) {
-          setUser(serverUser);
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    initializeUser();
+    const supabase = createClient();
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (session?.user) {
-        const serverUser = await getServerSessionUser();
-        if (serverUser) setUser(serverUser);
-        else setUser(null);
-      } else {
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log("Auth state changed, event:", event);
+      if (event === "SIGNED_OUT") {
         setUser(null);
       }
     });
 
-    return () => {
-      subscription?.unsubscribe();
-    };
+    return () => subscription?.unsubscribe();
   }, []);
 
   return <UserContext.Provider value={{ user, loading, setCurrentRole }}>{children}</UserContext.Provider>;
 };
 
-export const useUser = () => useContext(UserContext);
+export const useUser = () => {
+  const context = useContext(UserContext);
+  if (context === undefined) {
+    throw new Error("useUser must be used within a UserProvider");
+  }
+  return context;
+};
