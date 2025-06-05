@@ -56,7 +56,8 @@ export const config = {
     // - /api routes
     // - /_next (Next.js internals)
     // - /_vercel (Vercel internals)
+    // - /monitoring (Sentry tunnel route)
     // - Static files (images, favicon, etc.)
-    "/((?!api|_next|_vercel|.*\\..*).*)",
+    "/((?!api|_next|_vercel|monitoring|.*\\..*).*)",
   ],
 };
