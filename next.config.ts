@@ -11,7 +11,7 @@ const nextConfig = {
     return [
       {
         source: "/",
-        destination: "/quotes/overview",
+        destination: "/en/saas/banksignup",
         permanent: true,
       },
     ];
