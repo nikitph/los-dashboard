@@ -1,3 +1,6 @@
+import { BankOnboardingStatus } from "@prisma/client";
+import { z } from "zod";
+
 export type SuccessResponse<T> = {
   success: true;
   message: string;
@@ -22,3 +25,21 @@ export type User = {
   roles: { role: string; bankId: string | null }[];
   currentRole: { role: string; bankId: string | null };
 };
+
+export interface OnboardingStep {
+  id: string;
+  title: string;
+  description?: string;
+  component: React.ComponentType<StepProps>;
+  validationSchema: z.ZodSchema;
+  canAccess: (currentStatus: BankOnboardingStatus) => boolean;
+  isCompleted: (currentStatus: BankOnboardingStatus) => boolean;
+  completesStatus: BankOnboardingStatus;
+  order: number;
+}
+
+export interface StepProps {
+  onNext: (data: any) => void;
+  onPrevious: () => void;
+  initialData?: any;
+}

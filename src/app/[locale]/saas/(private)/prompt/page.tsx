@@ -791,7 +791,7 @@ function LoanApplicationChatInterface() {
                     <CreditCard className="h-8 w-8 text-white" />
                   </div>
                   <h1 className="mb-2 text-2xl font-bold text-gray-900">Loan Application Assistant</h1>
-                  <p className="text-gray-600">I'll help you complete your loan application step by step</p>
+                  <p className="text-gray-600">I will help you complete your loan application step by step</p>
                 </div>
 
                 <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
