@@ -1,0 +1,2 @@
+-- AlterEnum
+ALTER TYPE "BankOnboardingStatus" ADD VALUE 'LOAN_CONFIGURATIONS_CREATED';
