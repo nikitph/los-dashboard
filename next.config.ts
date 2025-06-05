@@ -18,7 +18,7 @@ const nextConfig = {
   },
 };
 
-const withNextIntl = createNextIntlPlugin();
+const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
 export default withSentryConfig(withNextIntl(nextConfig), {
   // For all available options, see:

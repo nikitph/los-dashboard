@@ -1,68 +1,62 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
+import createIntlMiddleware from "next-intl/middleware";
 import { createClient } from "@/lib/supabase/middleware";
+import { routing } from "./i18n/routing";
 
-// Your supported locales
-const PUBLIC_LOCALES = ["en", "hi"];
-const DEFAULT_LOCALE = "en";
-
-function getLocaleFromPath(pathname: string): string | null {
-  const locale = pathname.split("/")[1];
-  return PUBLIC_LOCALES.includes(locale) ? locale : null;
-}
+// Create the intl middleware
+const intlMiddleware = createIntlMiddleware(routing);
 
 export async function middleware(request: NextRequest) {
-  const { supabase, response } = createClient(request);
+  // Handle internationalization first
+  const intlResponse = intlMiddleware(request);
 
-  // Extract locale from path or fallback
-  const locale = getLocaleFromPath(request.nextUrl.pathname) || DEFAULT_LOCALE;
-
-  // If locale prefix is missing, rewrite to include it
-  if (!getLocaleFromPath(request.nextUrl.pathname)) {
-    const url = request.nextUrl.clone();
-    url.pathname = `/${locale}${url.pathname}`;
-    return NextResponse.redirect(url);
+  // Skip auth logic for non-SAAS routes
+  const pathname = request.nextUrl.pathname;
+  if (!pathname.includes("/saas/")) {
+    return intlResponse;
   }
 
-  // Get session from Supabase
+  // Handle Supabase auth for SAAS routes
+  const { supabase } = createClient(request);
   const {
     data: { session },
   } = await supabase.auth.getSession();
 
-  const pathname = request.nextUrl.pathname;
-
-  // Strip locale to simplify logic
+  // Extract locale and clean path
+  const segments = pathname.split("/");
+  const locale = segments[1]; // en or hi
   const pathWithoutLocale = pathname.replace(`/${locale}`, "");
 
-  // Auth routes - redirect to dashboard if logged in
-  if (
-    pathWithoutLocale.startsWith("/saas/login") ||
-    pathWithoutLocale.startsWith("/saas/signup") ||
-    pathWithoutLocale.startsWith("/saas/banksignup")
-  ) {
+  // Redirect authenticated users away from auth pages
+  const authPages = ["/saas/login", "/saas/signup", "/saas/banksignup"];
+  if (authPages.some((page) => pathWithoutLocale.startsWith(page))) {
     if (session) {
-      return NextResponse.redirect(new URL(`/${locale}/saas/dashboard`, request.url));
+      return Response.redirect(new URL(`/${locale}/saas/dashboard`, request.url));
     }
-    return response;
+    return intlResponse;
   }
 
-  // Protected routes - redirect to login if not authenticated
-  if (pathWithoutLocale.startsWith("/saas/dashboard") || pathWithoutLocale.startsWith("/saas/(private)")) {
+  // Protect dashboard and private routes
+  const protectedRoutes = ["/saas/dashboard", "/saas/(private)"];
+  if (protectedRoutes.some((route) => pathWithoutLocale.startsWith(route))) {
     if (!session) {
-      return NextResponse.redirect(new URL(`/${locale}/saas/login`, request.url));
+      return Response.redirect(new URL(`/${locale}/saas/login`, request.url));
     }
-    return response;
+    return intlResponse;
   }
 
-  return response;
+  return intlResponse;
 }
 
 // Specify which routes the middleware should run on
 // TODO correct this for banksignup
 export const config = {
   matcher: [
-    "/:locale(saas|en|hi)/saas/login/:path*",
-    "/:locale(saas|en|hi)/saas/signup/:path*",
-    "/:locale(saas|en|hi)/saas/dashboard/:path*",
-    "/:locale(saas|en|hi)/saas/(private)/:path*",
+    // Match all pathnames except for
+    // - /api routes
+    // - /_next (Next.js internals)
+    // - /_vercel (Vercel internals)
+    // - Static files (images, favicon, etc.)
+    "/((?!api|_next|_vercel|.*\\..*).*)",
   ],
 };
