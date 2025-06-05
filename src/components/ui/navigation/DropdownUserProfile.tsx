@@ -17,9 +17,7 @@ import {
 import { Monitor, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import * as React from "react";
-import { createClient } from "@/lib/supabase/client";
 import { useUser } from "@/contexts/userContext";
-import { useRouter } from "next/navigation";
 import { Link } from "@/i18n/navigation";
 
 export type DropdownUserProfileProps = {
@@ -30,25 +28,11 @@ export type DropdownUserProfileProps = {
 export function DropdownUserProfile({ children, align = "start" }: DropdownUserProfileProps) {
   const [mounted, setMounted] = React.useState(false);
   const { theme, setTheme } = useTheme();
-  const supabase = createClient();
-  const { user } = useUser();
-  const router = useRouter();
+  const { user, signOut } = useUser();
+
   React.useEffect(() => {
     setMounted(true);
   }, []);
-
-  const handleSignOut = async () => {
-    try {
-      const { error } = await supabase.auth.signOut();
-      if (error) {
-        console.error("Error signing out:", error.message);
-        return;
-      }
-      router.push("/saas/signup");
-    } catch (error) {
-      console.error("Error during sign-out:", error);
-    }
-  };
 
   if (!mounted) {
     return null;
@@ -96,7 +80,7 @@ export function DropdownUserProfile({ children, align = "start" }: DropdownUserP
             <DropdownMenuItem
               onSelect={(event) => {
                 event.preventDefault();
-                handleSignOut();
+                signOut();
               }}
             >
               Sign out
